@@ -2,11 +2,12 @@
 
 import { useDeferredValue, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowDown, Check, ClipboardList, HeartPulse, Loader2, LayoutGrid, Lock, Minus, Newspaper, Package, Plus, Printer, Search, ShieldCheck, Truck, Wrench, X, Briefcase } from "lucide-react";
+import { ArrowDown, ArrowLeftRight, Briefcase, Building2, Check, ChevronDown, ClipboardList, FileDown, HeartPulse, IdCard, Landmark, LayoutGrid, Loader2, Lock, Minus, Newspaper, Package, Percent, PhoneCall, Plus, Receipt, ScanFace, Search, ShieldCheck, Stamp, Truck, Users, Wrench, X } from "lucide-react";
+import Image from "next/image";
 import { activities, type Activity } from "@/lib/activity-data";
 import { calc, popularCodes } from "@/lib/calculator-config";
 import { ACTIVITY_COUNT } from "@/lib/activities";
-import { INDICATIVE_NOTE } from "@/lib/config";
+import { INDICATIVE_NOTE, LOGO_LIGHT } from "@/lib/config";
 import { countries, fullPhone } from "@/lib/countries";
 import { useFormSubmit } from "./useFormSubmit";
 
@@ -21,17 +22,17 @@ const label = "mb-1 block text-[12px] font-extrabold uppercase tracking-[0.2em] 
 
 function Stepper({ value, onChange, min = 0, max, name }: { value: number; onChange: (n: number) => void; min?: number; max: number; name: string }) {
   return (
-    <div className="flex items-center gap-4">
+    <div className="inline-flex items-center gap-1 rounded-full border border-line bg-white px-2 py-1.5">
       <button
         type="button"
         aria-label={`Fewer ${name}`}
         onClick={() => onChange(Math.max(min, value - 1))}
         disabled={value <= min}
-        className="flex h-10 w-10 items-center justify-center rounded-full border border-heading/25 text-heading transition hover:border-navy disabled:opacity-40"
+        className="flex h-8 w-8 items-center justify-center rounded-full text-heading transition hover:bg-tint disabled:text-body/40"
       >
         <Minus className="h-4 w-4" />
       </button>
-      <span aria-live="polite" className="w-8 text-center font-display text-[24px] font-bold text-heading">
+      <span aria-live="polite" className="w-8 text-center text-[16px] font-bold text-heading">
         {value}
       </span>
       <button
@@ -39,7 +40,7 @@ function Stepper({ value, onChange, min = 0, max, name }: { value: number; onCha
         aria-label={`More ${name}`}
         onClick={() => onChange(Math.min(max, value + 1))}
         disabled={value >= max}
-        className="flex h-10 w-10 items-center justify-center rounded-full border border-heading/25 text-heading transition hover:border-navy disabled:opacity-40"
+        className="flex h-8 w-8 items-center justify-center rounded-full text-heading transition hover:bg-tint disabled:text-body/40"
       >
         <Plus className="h-4 w-4" />
       </button>
@@ -47,25 +48,27 @@ function Stepper({ value, onChange, min = 0, max, name }: { value: number; onCha
   );
 }
 
-function Toggle({ on, onClick, children, hint, price }: { on: boolean; onClick: () => void; children: React.ReactNode; hint?: string; price: string }) {
+function Switch({ on, onClick, label }: { on: boolean; onClick: () => void; label: string }) {
   return (
     <button
       type="button"
-      aria-pressed={on}
+      role="switch"
+      aria-checked={on}
+      aria-label={label}
       onClick={onClick}
-      className={`flex w-full items-start gap-4 rounded-2xl border p-5 text-left transition ${on ? "border-gold bg-gold/5" : "border-line bg-white hover:border-heading/30"}`}
+      className={`relative h-8 w-14 shrink-0 rounded-full transition ${on ? "bg-navy" : "bg-navy/15"}`}
     >
-      <span className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border ${on ? "border-gold bg-gold text-midnight" : "border-heading/30"}`}>
-        {on && <Check className="h-3.5 w-3.5" />}
-      </span>
-      <span className="min-w-0 flex-1">
-        <span className="block text-[15px] font-bold text-heading">{children}</span>
-        {hint && <span className="mt-1 block text-[13px] leading-relaxed text-body">{hint}</span>}
-      </span>
-      <span className="shrink-0 text-[15px] font-bold text-navy">{price}</span>
+      <span className={`absolute top-1 h-6 w-6 rounded-full bg-white shadow transition-all ${on ? "left-7" : "left-1"}`} />
     </button>
   );
 }
+
+const groupOf = (label: string) =>
+  /^(Licence|Multi-year|\d+ activities|\d+ additional)/.test(label)
+    ? "Business licence"
+    : /^(Establishment|E-channel|Investor|Employee|Change of status)/.test(label)
+      ? "Visa fees"
+      : "Value-added services";
 
 type Bucket = "Popular" | "Trading" | "Media & Publishing" | "Professional" | "Business Services" | "Industry & Transport" | "Health, Education & Leisure" | "Regulated" | "All";
 
@@ -218,6 +221,13 @@ export default function CostCalculator() {
 
   const minLicence = Math.min(...Object.values(calc.licence));
   const [step, setStep] = useState(1);
+  const [showFees, setShowFees] = useState(false);
+  const breakdown = ["Business licence", "Visa fees", "Value-added services"]
+    .map((name) => {
+      const items = lines.filter((l) => groupOf(l.label) === name);
+      return { name, items, total: items.reduce((t, l) => t + l.amount, 0) };
+    })
+    .filter((g) => g.items.length);
   const reach = (n: number) => unlocked && n <= step;
   const go = (n: number) => document.getElementById(`calc-step-${n}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
   const advance = (n: number) => {
@@ -646,72 +656,164 @@ export default function CostCalculator() {
 
           {/* 03 structure */}
           <div id="calc-step-3" className={sectionCls(3)}>
-            <p className={stepNo}>03</p>
-            <h2 className={stepTitle}>Company details</h2>
-            <p className="mt-3 max-w-xl text-[15px] leading-relaxed">Choose the structure that fits your goals.</p>
-            <div className="mt-8">
-              <p className={label}>Number of shareholders</p>
-              <Stepper value={shareholders} onChange={setShareholders} min={1} max={calc.maxShareholders} name="shareholders" />
-              <p className="mt-3 text-[13px] leading-relaxed text-body">
-                Up to {calc.includedShareholders} shareholders are included. Each additional shareholder is {aed(calc.extraShareholder)}.
-              </p>
+            <div className="flex items-baseline gap-3">
+              <span className="text-[14px] font-extrabold tracking-widest text-navy">03</span>
+              <h2 className={stepTitle}>Company details</h2>
             </div>
-            <fieldset className="mt-10">
-              <legend className={label}>Licence validity</legend>
-              <p className="mb-4 max-w-xl text-[14px] leading-relaxed text-body">Enjoy long-term savings with a multi-year licence.</p>
-              <div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-5">
-                {calc.terms.map((t, i) => (
-                  <button
-                    key={t.years}
-                    type="button"
-                    aria-pressed={termIndex === i}
-                    onClick={() => setTermIndex(i)}
-                    className={`rounded-2xl border p-4 text-left transition ${termIndex === i ? "border-navy bg-navy/5" : "border-line bg-white hover:border-heading/30"}`}
-                  >
-                    <span className="block font-display text-[19px] font-bold text-heading">
-                      {t.years} {t.years === 1 ? "year" : "years"}
-                    </span>
-                    <span className="mt-1 block text-[13px] text-body">{t.discount ? `Save ${t.discount}%` : "Standard rate"}</span>
-                  </button>
-                ))}
+            <p className="mt-3 text-[15px] leading-relaxed">Choose the structure that aligns with your goals.</p>
+
+            <p className="mt-8 text-[15px] font-bold text-heading">No. of shareholders</p>
+            <div className="mt-3 flex flex-wrap gap-3">
+              {[1, 2, 3, 4, 5].map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  aria-pressed={shareholders === n}
+                  onClick={() => setShareholders(n)}
+                  className={`h-14 w-14 rounded-xl border text-[17px] font-bold transition ${shareholders === n ? "border-navy bg-navy text-white" : "border-navy/40 bg-white text-heading hover:border-navy"}`}
+                >
+                  {n}
+                </button>
+              ))}
+              <button
+                type="button"
+                aria-pressed={shareholders >= 6}
+                onClick={() => setShareholders((n) => Math.max(6, n))}
+                className={`h-14 min-w-[4.5rem] rounded-xl border px-4 text-[17px] font-bold transition ${shareholders >= 6 ? "border-navy bg-navy text-white" : "border-navy/40 bg-white text-heading hover:border-navy"}`}
+              >
+                6+
+              </button>
+            </div>
+            {shareholders >= 6 && (
+              <div className="mt-4 flex flex-wrap items-center gap-4">
+                <span className="text-[14px] text-body">Total shareholders</span>
+                <Stepper value={shareholders} onChange={setShareholders} min={6} max={calc.maxShareholders} name="shareholders" />
+              </div>
+            )}
+            <p className="mt-4 text-[14px] leading-relaxed text-body">
+              Add up to {calc.includedShareholders} shareholders at no additional cost. {aed(calc.extraShareholder)} per additional shareholder is applicable.
+            </p>
+
+            <div className="mt-10 flex flex-wrap items-baseline justify-between gap-2">
+              <p className="font-display text-[22px] font-bold text-heading">Licence validity</p>
+              <p className="text-[14px] text-body">Enjoy long-term savings on annual renewal costs with a multi-year licence.</p>
+            </div>
+            <fieldset className="mt-5">
+              <legend className="sr-only">Licence validity</legend>
+              <div className="flex gap-4 overflow-x-auto pb-4">
+                {calc.terms.map((t, i) => {
+                  const price = Math.round(annualLicence * t.years * (1 - t.discount / 100));
+                  const on = termIndex === i;
+                  return (
+                    <button
+                      key={t.years}
+                      type="button"
+                      aria-pressed={on}
+                      onClick={() => setTermIndex(i)}
+                      className={`w-[200px] shrink-0 rounded-2xl border p-5 text-left transition ${on ? "border-navy bg-navy/5 ring-2 ring-navy" : "border-navy/30 bg-white hover:border-navy"}`}
+                    >
+                      <span className="flex items-center justify-between">
+                        <span className={`flex h-6 w-6 items-center justify-center rounded-full border ${on ? "border-navy bg-navy text-white" : "border-navy/40"}`}>{on && <Check className="h-3.5 w-3.5" />}</span>
+                        {t.discount > 0 && <span className="rounded-full bg-[#0f7d46]/10 px-3 py-1 text-[13px] font-bold text-[#0f7d46]">Save {t.discount}%</span>}
+                      </span>
+                      <span className="mt-4 block font-display text-[22px] font-bold text-heading">
+                        {t.years} {t.years === 1 ? "year" : "years"}
+                      </span>
+                      <span className="block text-[14px] text-body">{t.discount ? "Locks today’s fees" : "Standard rate"}</span>
+                      <span className="mt-3 block text-[18px] font-bold text-navy">{aed(price)}</span>
+                    </button>
+                  );
+                })}
               </div>
             </fieldset>
-            <p className="mt-6 text-[13px] leading-relaxed text-body">Looking for a different length? An adviser can price any term between 1 and 10 years.</p>
-            {step <= 3 && (
-              <button type="button" onClick={() => advance(4)} className={`${nextBtn} mt-8`}>
-                Next: Visas ↓
-              </button>
-            )}
+            <p className="text-[14px] text-body">Looking for a different length? An adviser can price any term between 1 and 10 years.</p>
+            <hr className="my-6 border-line" />
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <p className="flex items-center gap-2 text-[16px] font-bold text-heading">
+                <Check className="h-5 w-5 text-[#0f7d46]" />
+                {term.years} {term.years === 1 ? "year" : "years"} · {shareholders} {shareholders === 1 ? "shareholder" : "shareholders"}
+              </p>
+              {step <= 3 && (
+                <button type="button" onClick={() => advance(4)} className="flex items-center gap-2 rounded-full bg-navy px-6 py-3 text-[15px] font-bold text-white transition hover:bg-slate-accent">
+                  Next: Visas <ArrowDown className="h-4 w-4" />
+                </button>
+              )}
+            </div>
           </div>
 
           {/* 04 visas */}
           <div id="calc-step-4" className={sectionCls(4)}>
-            <p className={stepNo}>04</p>
-            <h2 className={stepTitle}>Share your visa requirements</h2>
-            <p className="mt-3 max-w-xl text-[15px] leading-relaxed">Choose how many visas you need for yourself, your team and your dependants.</p>
-            <p className={`${label} mt-8`}>Do you need a residence visa?</p>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Toggle on={needVisa} onClick={() => setNeedVisa(true)} hint="Visa fees apply per visa." price="">
-                Yes, I need visas
-              </Toggle>
-              <Toggle on={!needVisa} onClick={() => setNeedVisa(false)} hint="No visa or immigration fees apply." price="">
-                No, licence only
-              </Toggle>
+            <div className="flex items-baseline gap-3">
+              <span className="text-[14px] font-extrabold tracking-widest text-navy">04</span>
+              <h2 className={stepTitle}>Share your visa requirements</h2>
             </div>
+            <p className="mt-3 text-[15px] leading-relaxed">Choose how many visas you need for yourself, your team and your dependants.</p>
+
+            <p className="mt-8 text-[15px] font-bold text-heading">Do you need a residence visa?</p>
+            <div className="mt-3 grid grid-cols-2 gap-2 rounded-2xl bg-navy/5 p-2">
+              <button
+                type="button"
+                aria-pressed={needVisa}
+                onClick={() => setNeedVisa(true)}
+                className={`rounded-xl px-4 py-3 text-center transition ${needVisa ? "bg-navy text-white shadow-lg" : "text-body hover:bg-white"}`}
+              >
+                <span className="flex items-center justify-center gap-2 text-[16px] font-bold">
+                  {needVisa && <Check className="h-4 w-4" />} Yes, I need visa(s)
+                </span>
+                <span className="block text-[12px] font-semibold">Visa fees apply per visa</span>
+              </button>
+              <button
+                type="button"
+                aria-pressed={!needVisa}
+                onClick={() => setNeedVisa(false)}
+                className={`rounded-xl px-4 py-3 text-center transition ${!needVisa ? "bg-navy text-white shadow-lg" : "text-body hover:bg-white"}`}
+              >
+                <span className="flex items-center justify-center gap-2 text-[16px] font-bold">
+                  {!needVisa && <Check className="h-4 w-4" />} No, licence only
+                </span>
+                <span className={`block text-[12px] font-semibold ${!needVisa ? "text-white/80" : "text-[#0f7d46]"}`}>No visa or immigration fees apply</span>
+              </button>
+            </div>
+
             {needVisa && (
-              <div className="mt-8 space-y-6">
-                <p className="text-[14px] leading-relaxed text-body">
-                  The establishment card ({aed(calc.visa.establishmentCard)}) and e-channel registration ({aed(calc.visa.eChannel)}) are added once if you need any visa. Medical insurance is not included.
-                </p>
+              <div className="mt-5 space-y-3">
+                <div className="rounded-2xl border border-dashed border-heading/25 bg-tint/60 p-5">
+                  <div className="flex flex-wrap items-center gap-4">
+                    <Building2 className="h-5 w-5 text-body" />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[16px] font-bold text-heading">Establishment card and e-channel</p>
+                      <p className="text-[13px] text-body">These charges only apply if you need visas.</p>
+                    </div>
+                    <p className="text-[17px] font-bold text-heading">{aed(calc.visa.establishmentCard + calc.visa.eChannel)}</p>
+                    <button type="button" onClick={() => setShowFees((v) => !v)} aria-expanded={showFees} className="flex items-center gap-1 text-[14px] font-bold text-navy">
+                      {showFees ? "Hide" : "View"} breakdown <ChevronDown className={`h-4 w-4 transition ${showFees ? "rotate-180" : ""}`} />
+                    </button>
+                  </div>
+                  {showFees && (
+                    <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                      <div className="rounded-xl border border-line bg-white p-4">
+                        <p className="text-[12px] font-extrabold uppercase tracking-widest text-navy">Establishment card</p>
+                        <p className="mt-1 text-[17px] font-bold text-heading">{aed(calc.visa.establishmentCard)}</p>
+                      </div>
+                      <div className="rounded-xl border border-line bg-white p-4">
+                        <p className="text-[12px] font-extrabold uppercase tracking-widest text-navy">E-channel registration</p>
+                        <p className="mt-1 text-[17px] font-bold text-heading">{aed(calc.visa.eChannel)}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
                 {(
                   [
-                    ["Investor or partner visa", investor, setInvestor, calc.visa.investor, "visas"],
-                    ["Employee visa", employee, setEmployee, calc.visa.employee, "employee visas"],
-                    ["Change of status", statusChange, setStatusChange, calc.visa.changeOfStatus, "status changes"],
+                    ["Investor / partner visa", investor, setInvestor, calc.visa.investor, "visas", IdCard, false],
+                    ["Employee visa", employee, setEmployee, calc.visa.employee, "employee visas", ScanFace, false],
+                    ["Change of status", statusChange, setStatusChange, calc.visa.changeOfStatus, "status changes", ArrowLeftRight, true],
                   ] as const
-                ).map(([name, value, set, price, unit]) => (
-                  <div key={name} className="flex flex-wrap items-center justify-between gap-4 border-b border-heading/15 pb-6">
-                    <div>
+                ).map(([name, value, set, price, unit, Icon, dashed]) => (
+                  <div key={name} className={`flex flex-wrap items-center gap-4 rounded-2xl border p-5 ${dashed ? "border-dashed border-heading/25 bg-tint/60" : "border-line bg-white"}`}>
+                    <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${dashed ? "text-body" : "bg-navy/10 text-navy"}`}>
+                      <Icon className="h-5 w-5" />
+                    </span>
+                    <div className="min-w-0 flex-1">
                       <p className="text-[16px] font-bold text-heading">{name}</p>
                       <p className="text-[13px] text-body">
                         {aed(price)} each{name === "Change of status" ? ". Required if you are already in the UAE." : ""}
@@ -720,147 +822,266 @@ export default function CostCalculator() {
                     <Stepper value={value} onChange={set} max={calc.visa.maxEach} name={unit} />
                   </div>
                 ))}
-                <p className="text-[14px]">
+                <p className="pt-2 text-[14px]">
                   Need your visa faster?{" "}
                   <Link href="/book-appointment" className="font-bold text-navy underline decoration-gold decoration-2 underline-offset-4">
-                    Talk to an adviser
+                    Speak to an adviser
                   </Link>
                   .
                 </p>
               </div>
             )}
-            {step <= 4 && (
-              <button type="button" onClick={() => advance(5)} className={`${nextBtn} mt-8`}>
-                {needVisa ? "Next: Extras ↓" : "No visas · Next: Extras ↓"}
-              </button>
-            )}
+            <hr className="my-6 border-line" />
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <p className="flex items-start gap-2 text-[16px] font-bold text-heading">
+                <Check className="mt-0.5 h-5 w-5 text-[#0f7d46]" />
+                <span>
+                  {needVisa && investor + employee + statusChange > 0 ? `${investor + employee} ${investor + employee === 1 ? "visa" : "visas"} added` : "No visas added"}
+                  <span className="block text-[14px] font-normal text-body">Scroll down, you’re almost done!</span>
+                </span>
+              </p>
+              {step <= 4 && (
+                <button type="button" onClick={() => advance(5)} className="flex items-center gap-2 rounded-full bg-navy px-6 py-3 text-[15px] font-bold text-white transition hover:bg-slate-accent">
+                  Next: Extras <ArrowDown className="h-4 w-4" />
+                </button>
+              )}
+            </div>
           </div>
 
           {/* 05 extras */}
           <div id="calc-step-5" className={sectionCls(5)}>
-            <p className={stepNo}>05</p>
-            <h2 className={stepTitle}>Value-added services</h2>
-            <p className="mt-3 max-w-xl text-[15px] leading-relaxed">Optional concierge services to help you launch faster. Add only what you need.</p>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              <Toggle on={bank} onClick={() => setBank((v) => !v)} hint="Help opening a corporate bank account." price={aed(calc.extras.bank)}>
-                Bank account assistance
-              </Toggle>
-              <Toggle on={taxPackage} onClick={() => setTaxPackage((v) => !v)} hint="Corporate tax registration and a first set of bookkeeping." price={aed(calc.extras.taxPackage)}>
-                Corporate tax startup package
-              </Toggle>
-              <Toggle on={stamp} onClick={() => setStamp((v) => !v)} hint="Often requested by banks and authorities." price={aed(calc.extras.stamp)}>
-                Company stamp
-              </Toggle>
-              <Toggle on={vat} onClick={() => setVat((v) => !v)} hint="Required once your turnover passes the VAT threshold." price={aed(calc.extras.vat)}>
-                VAT registration
-              </Toggle>
+            <div className="flex items-baseline gap-3">
+              <span className="text-[14px] font-extrabold tracking-widest text-navy">05</span>
+              <h2 className={stepTitle}>Value-added services</h2>
             </div>
-            <div className="mt-8 space-y-6">
-              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-heading/15 pb-6">
-                <div>
-                  <p className="text-[16px] font-bold text-heading">Virtual receptionist</p>
-                  <p className="text-[13px] text-body">{aed(calc.extras.receptionistPerYear)} per year. For how many years?</p>
-                </div>
-                <Stepper value={receptionist} onChange={setReceptionist} max={10} name="years" />
-              </div>
-              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-heading/15 pb-6">
-                <div>
-                  <p className="text-[16px] font-bold text-heading">Dependent visa</p>
-                  <p className="text-[13px] text-body">{aed(calc.extras.dependentVisa)} each, for a spouse, child or parent.</p>
-                </div>
-                <Stepper value={dependents} onChange={setDependents} max={10} name="dependent visas" />
-              </div>
-            </div>
-            <p className="mt-4 text-[13px] leading-relaxed text-body">We recommend the services that keep your company compliant and running smoothly.</p>
+            <p className="mt-3 text-[15px] leading-relaxed">Optional concierge services to help you launch faster.</p>
+
+            <ul className="mt-6 divide-y divide-line overflow-hidden rounded-2xl border border-line">
+              {[
+                { icon: Landmark, title: "Business bank account opening assistance", badge: "Popular", tone: "bg-gold/20 text-bronze", text: "We help you open a corporate bank account.", price: calc.extras.bank, on: bank, toggle: () => setBank((v) => !v) },
+                {
+                  icon: Receipt,
+                  title: "Corporate tax startup package",
+                  badge: "Recommended",
+                  tone: "bg-navy/10 text-navy",
+                  bullets: ["Corporate tax registration", "Bookkeeping for a first set of transactions", "Profit and loss, balance sheet and cash flow statements", "Confirmation of corporate tax filing"],
+                  price: calc.extras.taxPackage,
+                  on: taxPackage,
+                  toggle: () => setTaxPackage((v) => !v),
+                },
+                { icon: Stamp, title: "Company stamp", text: "Commonly requested by banks and government entities.", price: calc.extras.stamp, on: stamp, toggle: () => setStamp((v) => !v) },
+                { icon: Percent, title: "VAT registration", text: "Mandatory once your turnover passes the VAT threshold.", price: calc.extras.vat, on: vat, toggle: () => setVat((v) => !v) },
+                {
+                  icon: PhoneCall,
+                  title: "Virtual receptionist",
+                  text: "A dedicated UAE landline and a virtual assistant to answer your calls.",
+                  price: calc.extras.receptionistPerYear,
+                  per: "per year",
+                  on: receptionist > 0,
+                  toggle: () => setReceptionist((v) => (v > 0 ? 0 : 1)),
+                  stepper: (
+                    <div className="mt-3 flex flex-wrap items-center gap-3 text-[14px]">
+                      For how many years?
+                      <Stepper value={receptionist} onChange={setReceptionist} min={1} max={10} name="years" />
+                    </div>
+                  ),
+                },
+                {
+                  icon: Users,
+                  title: "Dependent visa",
+                  text: "For spouses, children or parents you wish to sponsor.",
+                  price: calc.extras.dependentVisa,
+                  on: dependents > 0,
+                  toggle: () => setDependents((v) => (v > 0 ? 0 : 1)),
+                  stepper: (
+                    <div className="mt-3 flex flex-wrap items-center gap-3 text-[14px]">
+                      How many?
+                      <Stepper value={dependents} onChange={setDependents} min={1} max={10} name="dependent visas" />
+                    </div>
+                  ),
+                },
+              ].map((r) => {
+                const Icon = r.icon;
+                return (
+                  <li key={r.title} className="flex items-start gap-4 bg-white p-5 sm:p-6">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-navy/10 text-navy">
+                      <Icon className="h-5 w-5" />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[16px] font-bold leading-snug text-heading">
+                        {r.title}
+                        {r.badge && <span className={`ml-3 rounded-full px-3 py-0.5 align-middle text-[12px] font-bold ${r.tone}`}>{r.badge}</span>}
+                      </p>
+                      {r.text && <p className="mt-1 text-[14px] leading-relaxed text-body">{r.text}</p>}
+                      {r.bullets && (
+                        <ul className="mt-2 list-disc space-y-1 pl-5 text-[14px] text-body">
+                          {r.bullets.map((x) => (
+                            <li key={x}>{x}</li>
+                          ))}
+                        </ul>
+                      )}
+                      {r.on && r.stepper}
+                    </div>
+                    <div className="shrink-0 text-right">
+                      <p className="text-[17px] font-bold text-heading">{aed(r.price)}</p>
+                      {r.per && <p className="text-[12px] text-body">{r.per}</p>}
+                    </div>
+                    <Switch on={r.on} onClick={r.toggle} label={`Add ${r.title}`} />
+                  </li>
+                );
+              })}
+            </ul>
+            <p className="mt-4 text-[14px] leading-relaxed text-body">We strongly recommend selecting the services that keep your company compliant and running smoothly.</p>
             {step <= 5 && (
-              <button type="button" onClick={() => advance(6)} className={`${nextBtn} mt-8`}>
-                See my total estimate ↓
-              </button>
+              <div className="mt-6 flex justify-end">
+                <button type="button" onClick={() => advance(6)} className="flex items-center gap-2 rounded-full bg-navy px-6 py-3 text-[15px] font-bold text-white transition hover:bg-slate-accent">
+                  See my total estimate <ArrowDown className="h-4 w-4" />
+                </button>
+              </div>
             )}
           </div>
 
           {/* 06 final quote */}
-          <div id="calc-step-6" className={sectionCls(6)}>
-            <p className={stepNo}>06</p>
-            <h2 className={stepTitle}>Your total estimate</h2>
-            <div className="mt-8 rounded-2xl border border-line bg-tint p-6 sm:p-8">
-              <p className="text-[12px] font-extrabold uppercase tracking-[0.2em] text-bronze">Workdane Management Consultancy</p>
-              <p className="mt-1 font-display text-[22px] font-bold text-heading">Business setup quote</p>
-              <dl className="mt-5 grid gap-x-8 gap-y-3 text-[14px] sm:grid-cols-2">
-                <div><dt className="text-body">Prepared for</dt><dd className="font-bold text-heading">{details.name || "—"}</dd></div>
-                <div><dt className="text-body">Date</dt><dd className="font-bold text-heading">{today}</dd></div>
-                <div><dt className="text-body">Email</dt><dd className="break-all font-bold text-heading">{details.email || "—"}</dd></div>
-                <div><dt className="text-body">Phone</dt><dd className="font-bold text-heading">{details.phone ? fullPhone(details.dial, details.phone) : "—"}</dd></div>
-              </dl>
-              <p className="mt-6 text-[13px] font-bold uppercase tracking-widest text-bronze">Your estimated business setup cost</p>
-              <p className="font-display text-[40px] font-bold leading-tight text-navy">{aed(total)}</p>
-              <p className="text-[13px] text-body">All selections included.</p>
-              <ul className="mt-5 space-y-2.5 border-t border-line pt-5 text-[15px]">
-                {lines.map((l) => (
-                  <li key={l.label} className="flex justify-between gap-4">
-                    <span>{l.label}</span>
-                    <span className={`shrink-0 font-bold ${l.amount < 0 ? "text-[#0f7d46]" : "text-heading"}`}>{l.amount < 0 ? `− ${aed(-l.amount)}` : aed(l.amount)}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-5 flex justify-between border-t border-line pt-4 font-display text-[19px] font-bold text-heading">
-                <span>Estimated total</span>
-                <span>{aed(total)}</span>
+          <div id="calc-step-6" className={`${sectionCls(6)} !p-0 overflow-hidden`}>
+            <div className="bg-[#06132a] p-7 text-white sm:p-10">
+              <div className="flex items-baseline gap-3">
+                <span className="text-[14px] font-extrabold tracking-widest text-gold-light">06</span>
+                <h2 className="font-display text-[26px] font-bold">Your total estimate</h2>
               </div>
-              <p className="mt-5 text-[13px] leading-relaxed text-body">
-                The quoted amount is an estimate based on your selections. The final amount is confirmed by your business setup adviser before any payment is made. Government fees are subject to change without notice.
+              <p className="mt-6 text-[12px] font-bold uppercase tracking-[0.2em] text-white/70">Your estimated business setup cost</p>
+              <p className="mt-2 flex flex-wrap items-baseline gap-x-4 font-display text-[44px] font-bold leading-none sm:text-[56px]">
+                {aed(total)} <span className="text-[15px] font-normal text-white/70">All selections included.</span>
               </p>
+              <div className="mt-6 flex flex-wrap gap-3 text-[14px]">
+                <span className="rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-white/70">
+                  Activities <strong className="ml-1 text-white">{picked.length} selected</strong>
+                </span>
+                <span className="rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-white/70">
+                  Licence <strong className="ml-1 text-white">{term.years} {term.years === 1 ? "year" : "years"}</strong>
+                </span>
+                <span className="rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-white/70">
+                  Shareholders <strong className="ml-1 text-white">{shareholders}</strong>
+                </span>
+              </div>
             </div>
 
-            {status === "sent" ? (
-              <div role="status" className="mt-6 rounded-xl bg-[#0f7d46]/10 p-4 text-[15px] leading-relaxed text-heading">
-                <p className="font-bold">On its way.</p>
-                We have your selections and will email you the full breakdown. An adviser will follow up shortly.
+            <div className="p-7 sm:p-10">
+              <p className="font-display text-[22px] font-bold text-heading">Cost breakdown</p>
+              <div className="mt-4 space-y-3">
+                {breakdown.map((g) => (
+                  <details key={g.name} open className="group rounded-2xl border border-line">
+                    <summary className="flex cursor-pointer list-none items-center gap-3 px-5 py-4 [&::-webkit-details-marker]:hidden">
+                      <ChevronDown className="h-4 w-4 text-body transition group-open:rotate-0 -rotate-90" />
+                      <span className="flex-1 text-[16px] font-bold text-heading">
+                        {g.name}
+                        {g.name === "Business licence" && <span className="ml-3 rounded-full bg-tint px-3 py-0.5 text-[12px] font-bold text-body">{term.years} {term.years === 1 ? "year" : "years"}</span>}
+                      </span>
+                      <span className="text-[16px] font-bold text-heading">{aed(g.total)}</span>
+                    </summary>
+                    <ul className="space-y-2 border-t border-line px-5 py-4 text-[15px]">
+                      {g.items.map((l) => (
+                        <li key={l.label} className="flex justify-between gap-4">
+                          <span>{l.label}</span>
+                          <span className={l.amount < 0 ? "text-[#0f7d46]" : ""}>{l.amount < 0 ? `− ${aed(-l.amount)}` : aed(l.amount)}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
+                ))}
               </div>
-            ) : (
-              <div className="mt-6 flex flex-wrap items-center gap-3 print:hidden">
-                <button
-                  type="button"
-                  onClick={emailQuote}
-                  disabled={!unlocked || picked.length === 0 || sending}
-                  className={`${nextBtn} flex items-center gap-2`}
-                >
-                  {sending && <Loader2 className="h-4 w-4 animate-spin" />}
-                  {sending ? "Sending..." : "Email me this quote"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => window.print()}
-                  disabled={picked.length === 0}
-                  className="flex items-center gap-2 rounded-full border border-heading/25 px-6 py-3.5 text-[15px] font-bold text-heading transition hover:border-navy disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  <Printer className="h-4 w-4" />
-                  Save as PDF
-                </button>
-                <p className="w-full text-[14px] sm:w-auto sm:ml-2">
-                  Prefer to split your costs?{" "}
-                  <Link href="/pay-as-you-go" className="font-bold text-navy underline decoration-gold decoration-2 underline-offset-4">
-                    Explore pay-as-you-go
-                  </Link>
-                </p>
+              <div className="mt-5 flex items-center justify-between rounded-2xl bg-[#06132a] px-6 py-5 text-white">
+                <span className="text-[16px] font-bold">Estimated total</span>
+                <span className="font-display text-[26px] font-bold">{aed(total)}</span>
               </div>
-            )}
-            {status === "error" && (
-              <div role="alert" className="mt-4 border-l-4 border-red-500 bg-red-50 p-3 text-[14px] text-red-900">
-                {message}
-                {whatsapp && (
-                  <a href={whatsapp} target="_blank" rel="noreferrer" className="mt-1 block font-bold underline">
-                    Send it on WhatsApp instead
-                  </a>
-                )}
-              </div>
-            )}
+              <p className="mt-6 text-[15px]">
+                Prefer to split your costs? Explore our{" "}
+                <Link href="/pay-as-you-go" className="font-bold text-navy underline decoration-gold decoration-2 underline-offset-4">
+                  pay-as-you-go
+                </Link>{" "}
+                option.
+              </p>
+              <p className="mt-6 rounded-xl border-l-4 border-navy bg-navy/5 p-4 text-[14px] leading-relaxed text-heading">
+                The quoted amount is an estimate based on your selections. The final amount is confirmed by your business setup adviser before any payment is made. Government fees are subject to change without prior notice.
+              </p>
+
+              {status === "sent" ? (
+                <div role="status" className="mt-6 rounded-xl bg-[#0f7d46]/10 p-4 text-[15px] leading-relaxed text-heading">
+                  <p className="font-bold">On its way.</p>
+                  We have your selections and will email you the full breakdown. An adviser will follow up shortly.
+                </div>
+              ) : (
+                <div className="mt-6 flex flex-wrap items-center gap-3 print:hidden">
+                  <button
+                    type="button"
+                    onClick={emailQuote}
+                    disabled={!unlocked || picked.length === 0 || sending}
+                    className="flex items-center gap-2 rounded-full bg-navy px-8 py-4 text-[15px] font-bold text-white transition hover:bg-slate-accent disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {sending && <Loader2 className="h-4 w-4 animate-spin" />}
+                    {sending ? "Sending..." : "Email me this quote"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => window.print()}
+                    disabled={picked.length === 0}
+                    className="flex items-center gap-2 rounded-full border border-navy px-7 py-4 text-[15px] font-bold text-navy transition hover:bg-navy/5 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <FileDown className="h-4 w-4" />
+                    Save as PDF
+                  </button>
+                </div>
+              )}
+              {status === "error" && (
+                <div role="alert" className="mt-4 border-l-4 border-red-500 bg-red-50 p-3 text-[14px] text-red-900">
+                  {message}
+                  {whatsapp && (
+                    <a href={whatsapp} target="_blank" rel="noreferrer" className="mt-1 block font-bold underline">
+                      Send it on WhatsApp instead
+                    </a>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="lg:hidden">{summary}</div>
         </div>
 
         <div className="hidden lg:block">{summary}</div>
+      </div>
+      <div className="quote-sheet hidden print:block" aria-hidden>
+        <div className="flex items-center gap-4 bg-gradient-to-r from-[#022364] to-[#073eab] px-8 py-6 text-white">
+          <Image src={LOGO_LIGHT.src} alt="Workdane Management Consultancy" width={LOGO_LIGHT.width} height={LOGO_LIGHT.height} className="h-20 w-auto" />
+        </div>
+        <div className="px-8 py-6">
+          <p className="text-[12px] font-bold uppercase tracking-widest text-[#07399d]">Workdane Management Consultancy</p>
+          <p className="mt-1 text-[24px] font-bold">Business setup quote</p>
+          <div className="mt-4 grid grid-cols-2 gap-4 text-[13px]">
+            <div><p className="text-[11px] uppercase tracking-widest text-gray-500">Prepared for</p><p className="font-bold">{details.name}</p></div>
+            <div><p className="text-[11px] uppercase tracking-widest text-gray-500">Email</p><p className="font-bold">{details.email}</p></div>
+            <div><p className="text-[11px] uppercase tracking-widest text-gray-500">Phone</p><p className="font-bold">{fullPhone(details.dial, details.phone)}</p></div>
+            <div><p className="text-[11px] uppercase tracking-widest text-gray-500">Date</p><p className="font-bold">{today}</p></div>
+          </div>
+          <hr className="my-5" />
+          <p className="text-[11px] font-bold uppercase tracking-widest text-[#07399d]">Your estimated business setup cost</p>
+          <p className="text-[40px] font-bold leading-tight text-[#07399d]">{aed(total)} <span className="text-[13px] font-normal text-gray-500">All selections included.</span></p>
+          <div className="mt-3 flex gap-3 text-[12px]">
+            <span className="rounded-lg border px-3 py-1.5">Activities <strong>{picked.length} selected</strong></span>
+            <span className="rounded-lg border px-3 py-1.5">Licence <strong>{term.years} {term.years === 1 ? "year" : "years"}</strong></span>
+            <span className="rounded-lg border px-3 py-1.5">Shareholders <strong>{shareholders}</strong></span>
+          </div>
+          <p className="mt-6 text-[16px] font-bold">Cost breakdown</p>
+          {breakdown.map((g) => (
+            <div key={g.name} className="mt-3 rounded-xl border px-4 py-3">
+              <div className="flex justify-between font-bold"><span>{g.name}</span><span>{aed(g.total)}</span></div>
+              {g.items.map((l) => (
+                <div key={l.label} className="mt-1 flex justify-between border-t pt-1 text-[13px]"><span>{l.label}</span><span>{l.amount < 0 ? `− ${aed(-l.amount)}` : aed(l.amount)}</span></div>
+              ))}
+            </div>
+          ))}
+          <div className="mt-4 flex justify-between rounded-xl bg-[#f1f4fb] px-4 py-3 text-[16px] font-bold"><span>Estimated total</span><span className="text-[#07399d]">{aed(total)}</span></div>
+          <p className="mt-4 text-[11px] leading-relaxed text-gray-500">The quoted amount is an estimate based on your selections. The final amount is confirmed by your business setup adviser before any payment is made. Government fees are subject to change without prior notice.</p>
+        </div>
       </div>
     </section>
   );

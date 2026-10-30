@@ -410,8 +410,8 @@ a[class*="rounded-full"]:active {
 }
 
 @media print {
-  header, footer, nav[aria-label="Breadcrumb"], .print\:hidden { display: none !important; }
-  body { background: #fff !important; }
-  section.hero-bg { display: none !important; }
-  [data-floating], .fixed { display: none !important; }
+  @page { margin: 0; size: A4; }
+  body * { visibility: hidden !important; }
+  .quote-sheet, .quote-sheet * { visibility: visible !important; }
+  .quote-sheet { position: absolute; left: 0; top: 0; width: 100%; background: #fff; color: #0b1730; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
