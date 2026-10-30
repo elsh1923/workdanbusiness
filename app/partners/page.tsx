@@ -15,7 +15,27 @@ export default function Partners() {
         intro="Reach founders, SMEs and corporate teams by becoming part of our network."
       />
 
-      <section id="channel-partner" className="scroll-mt-28 bg-white px-6 py-28 sm:px-12 lg:px-16">
+      <section className="bg-surface px-6 py-24 sm:px-12 lg:px-16">
+        <div className="mx-auto max-w-[1320px]">
+          <Eyebrow>How it works</Eyebrow>
+          <h2 className="font-display text-[28px] font-bold leading-snug text-heading sm:text-[32px]">How to become a channel partner</h2>
+          <ol className="mt-10 grid border-t border-heading/15 md:grid-cols-3 md:gap-x-12">
+            {[
+              { title: "Register", text: "Send us your company details with the form below so we can review your application." },
+              { title: "Sign", text: "Once approved, we agree the partner terms with you in writing." },
+              { title: "Submit", text: "Start referring clients or submit their applications through us." },
+            ].map((s, i) => (
+              <li key={s.title} className="border-b border-heading/15 py-8">
+                <span className="font-display text-[24px] text-heading/25">0{i + 1}</span>
+                <h3 className="mt-3 font-display text-[19px] font-bold text-heading">{s.title}</h3>
+                <p className="mt-2 text-[15px] leading-relaxed">{s.text}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section id="channel-partner" className="scroll-mt-28 border-t border-line bg-white px-6 py-28 sm:px-12 lg:px-16">
         <div className="mx-auto grid max-w-[1320px] gap-16 lg:grid-cols-2 lg:gap-24">
           <div>
             <Eyebrow>Channel partner</Eyebrow>

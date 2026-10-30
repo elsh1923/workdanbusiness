@@ -208,3 +208,78 @@ export const plusPages: PlusPage[] = [
 ];
 
 export const plusPageById = (id: string) => plusPages.find((p) => p.id === id);
+
+export const plusExtras: Record<string, { documents: string[]; faqs: { q: string; a: string }[] }> = {
+  "corporate-banking": {
+    documents: ["Passport copies of owners and signatories", "Company licence and registration documents", "Proof of address for each owner", "A short description of your business and expected activity"],
+    faqs: [
+      { q: "Why do I need a corporate bank account?", a: "Most companies need one to invoice customers, receive payments and pay suppliers and staff." },
+      { q: "Can you guarantee the account will be opened?", a: "No. Each bank makes its own decision. We prepare a complete application and follow it up to give it the best chance." },
+      { q: "Do I need to be in the UAE?", a: "Some banks ask for a meeting. We tell you in advance whether your chosen bank needs you to attend." },
+    ],
+  },
+  "vip-medical": {
+    documents: ["Passport copy", "Passport-size photo", "Entry permit or visa application number", "Appointment confirmation we send you"],
+    faqs: [
+      { q: "What does the screening include?", a: "A standard visa medical test at an approved centre. We tell you what to bring and what to expect." },
+      { q: "Can my family use it?", a: "Yes. Dependants applying for a residence visa need the same screening, and we can book them together." },
+      { q: "Is the result immediate?", a: "Timing depends on the centre. We follow the result and link it to your visa file." },
+    ],
+  },
+  "customs-code": {
+    documents: ["Company licence", "Passport copies of owners", "Company stamp where required", "Details of the goods you plan to import or export"],
+    faqs: [
+      { q: "Do I need a customs code?", a: "If you import or export goods under your company name, you normally do." },
+      { q: "Does my licence need a trading activity?", a: "Yes, the licence should include the trading activities that match your goods." },
+      { q: "How long does registration take?", a: "It depends on the authority and the completeness of your file. We confirm timing when we start." },
+    ],
+  },
+  "virtual-receptionist": {
+    documents: ["Your company name and greeting wording", "Business hours", "Numbers calls should be forwarded to", "A list of common questions callers ask"],
+    faqs: [
+      { q: "Will calls be answered in my company name?", a: "Yes. We use the greeting you give us." },
+      { q: "Can I keep my existing number?", a: "Number options are confirmed when you sign up. Often calls are forwarded from a new line." },
+      { q: "How do I get messages?", a: "You receive summaries by email or WhatsApp, depending on what you prefer." },
+    ],
+  },
+  "dedicated-account-manager": {
+    documents: ["Your company licence and visa details", "A list of upcoming renewals you already know of", "Your preferred way to be contacted"],
+    faqs: [
+      { q: "What does my manager do?", a: "Tracks your renewals and deadlines, and is your first contact for amendments, new applications and questions." },
+      { q: "Is the manager one person?", a: "You have a named contact. Cover is arranged when they are away." },
+      { q: "How is the service priced?", a: "Scope and price are agreed in writing before you start." },
+    ],
+  },
+  "family-visas": {
+    documents: ["Your own residence visa and Emirates ID", "Passports of family members", "Marriage and birth certificates, attested where needed", "Proof of address and income documents where required"],
+    faqs: [
+      { q: "Who can I sponsor?", a: "Usually a spouse, children and sometimes parents. The immigration authority sets the conditions." },
+      { q: "Do certificates need attestation?", a: "Often yes. Our documentation service can arrange attestation and translation." },
+      { q: "Do family members need a medical test?", a: "Yes, as part of the residence visa process." },
+    ],
+  },
+  documentation: {
+    documents: ["The original or a clear copy of each document", "The country of issue", "Where the document will be used", "The language it needs to be translated into"],
+    faqs: [
+      { q: "What is attestation?", a: "Official confirmation by the relevant authorities that a document is genuine, so it is accepted in the UAE." },
+      { q: "Can you translate documents?", a: "Yes, we arrange legal translation into Arabic or English." },
+      { q: "How long does it take?", a: "It depends on the issuing country and the authority. We give you an estimate for your documents." },
+    ],
+  },
+  "business-finance": {
+    documents: ["Company licence", "Recent bank statements", "Financial statements or management accounts", "A short description of why you need the funds"],
+    faqs: [
+      { q: "Do you lend money?", a: "No. We introduce you to lenders and help you prepare your application." },
+      { q: "Will I be approved?", a: "Approval and terms are decided by the lender." },
+      { q: "Can new companies apply?", a: "Some lenders consider new companies. Requirements vary, and we explain them for your case." },
+    ],
+  },
+  coworking: {
+    documents: ["Your company licence, if you have one", "Passport copies for users of the space", "How many people will use it and how often"],
+    faqs: [
+      { q: "Can I use the address for my licence?", a: "Where the licence allows a flexible desk arrangement, yes. We confirm this for your structure." },
+      { q: "Is there meeting room access?", a: "Meeting space is available on request. Details are confirmed for your location." },
+      { q: "Can I change my plan later?", a: "Plans can usually be changed. The terms are in your agreement." },
+    ],
+  },
+};

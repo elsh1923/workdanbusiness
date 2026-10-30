@@ -3,11 +3,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, Check } from "lucide-react";
+import Accordion from "@/components/Accordion";
 import CtaBand from "@/components/CtaBand";
+import EnquiryForm from "@/components/EnquiryForm";
 import Eyebrow from "@/components/Eyebrow";
 import PageHero from "@/components/PageHero";
 import { plusServices } from "@/lib/content";
-import { plusPageById, plusPages } from "@/lib/service-pages";
+import { plusExtras, plusPageById, plusPages } from "@/lib/service-pages";
 
 export function generateStaticParams() {
   return plusPages.map((p) => ({ slug: p.id }));
@@ -26,6 +28,7 @@ async function PlusPageContent({ params }: { params: Promise<{ slug: string }> }
   const p = plusPageById(slug);
   if (!s || !p) notFound();
 
+  const extras = plusExtras[slug];
   const others = plusServices.filter((x) => x.id !== slug).slice(0, 4);
 
   return (
@@ -66,6 +69,50 @@ async function PlusPageContent({ params }: { params: Promise<{ slug: string }> }
         </div>
         <p className="mx-auto mt-12 max-w-[1320px] text-[13px] leading-relaxed text-body">{p.note}</p>
       </section>
+
+      {extras && (
+        <section className="border-t border-line bg-white px-6 py-24 sm:px-12 lg:px-16">
+          <div className="mx-auto grid max-w-[1320px] gap-16 lg:grid-cols-2 lg:gap-24">
+            <div>
+              <Eyebrow>Documents required</Eyebrow>
+              <ul className="space-y-4">
+                {extras.documents.map((d) => (
+                  <li key={d} className="flex gap-3 text-[15px] leading-relaxed">
+                    <Check className="mt-0.5 h-5 w-5 shrink-0 text-gold" />
+                    {d}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-6 text-[13px] leading-relaxed text-body">We confirm the exact list for your case after your first message.</p>
+            </div>
+            <div className="border border-line border-t-2 border-t-gold bg-white p-8 shadow-[0_24px_60px_-35px_rgba(12,42,85,0.35)] sm:p-10">
+              <h2 className="font-display text-[24px] font-bold text-heading">Let’s get started</h2>
+              <div className="mt-6">
+                <EnquiryForm
+                  fields={[
+                    { name: "name", label: "Full name", required: true },
+                    { name: "email", label: "Email", type: "email", required: true },
+                    { name: "phone", label: "Phone / WhatsApp", type: "tel", required: true },
+                    { name: "message", label: "Anything we should know? (optional)", type: "textarea" },
+                  ]}
+                  submitLabel="Send request"
+                  formName={`${s.title} enquiry`}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {extras && (
+        <section className="bg-tint px-6 py-24 sm:px-12 lg:px-16">
+          <div className="mx-auto max-w-3xl">
+            <Eyebrow>Questions</Eyebrow>
+            <h2 className="mb-8 font-display text-[28px] font-bold leading-snug text-heading sm:text-[32px]">Frequently asked questions</h2>
+            <Accordion items={extras.faqs} />
+          </div>
+        </section>
+      )}
 
       <section className="border-t border-line bg-white px-6 py-24 sm:px-12 lg:px-16">
         <div className="mx-auto max-w-[1320px]">

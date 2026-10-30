@@ -5,6 +5,7 @@ import Eyebrow from "@/components/Eyebrow";
 import PageHero from "@/components/PageHero";
 import { setupSteps } from "@/lib/content";
 import { faqGroups } from "@/lib/faqs";
+import { landings } from "@/lib/landing-pages";
 
 const checklist = [
   { title: "Passport copies", text: "A clear copy of the passport for every owner and for each person who will manage the company." },
@@ -57,6 +58,18 @@ export default function BusinessSetupGuide() {
             <h2 className="mb-8 font-display text-[28px] font-bold leading-snug text-heading sm:text-[32px]">Common questions</h2>
             <Accordion items={faqGroups[1].items.concat(faqGroups[0].items.slice(1, 2))} />
           </div>
+        </div>
+        <div className="mx-auto mt-16 max-w-[1320px]">
+          <Eyebrow>Setting up from or in</Eyebrow>
+          <ul className="flex flex-wrap gap-3">
+            {landings.map((l) => (
+              <li key={l.slug}>
+                <Link href={`/business-setup/${l.slug}`} className="inline-block rounded-full border border-line bg-white px-5 py-2.5 text-[15px] font-semibold text-navy transition hover:border-gold">
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
         <div className="mx-auto mt-16 flex max-w-[1320px] flex-wrap gap-8">
           <Link href="/cost-calculator" className="group flex items-center gap-2 font-display text-[18px] font-bold text-heading hover:text-navy">

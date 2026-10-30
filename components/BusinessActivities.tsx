@@ -77,10 +77,13 @@ export default function BusinessActivities() {
 
   // Menu links look like /business-activities?category=IT%20Services
   useEffect(() => {
-    const wanted = new URLSearchParams(window.location.search).get("category");
+    const params = new URLSearchParams(window.location.search);
+    const wanted = params.get("category");
+    const search = params.get("q");
     // Reading the address bar after load keeps the page static.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     if (wanted && chips.includes(wanted)) setCategory(wanted);
+    if (search) setQuery(search.slice(0, 80));
   }, []);
 
   useEffect(() => {
