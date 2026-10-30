@@ -58,7 +58,7 @@ export default function Header() {
               />
             </button>
           ))}
-          <Link href="/#contact" className="px-2.5 py-2 text-[16px] font-semibold text-heading transition hover:text-navy">
+          <Link href="/contact" className="px-2.5 py-2 text-[16px] font-semibold text-heading transition hover:text-navy">
             <RollText>Contact</RollText>
           </Link>
         </nav>
@@ -157,7 +157,7 @@ export default function Header() {
               )}
             </div>
           ))}
-          <Link href="/#contact" onClick={() => setMenu(false)} className="block border-b border-line py-4 text-[16px] font-bold text-heading">
+          <Link href="/contact" onClick={() => setMenu(false)} className="block border-b border-line py-4 text-[16px] font-bold text-heading">
             Contact
           </Link>
           <Link

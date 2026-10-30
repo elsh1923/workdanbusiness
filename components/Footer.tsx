@@ -10,7 +10,7 @@ const company = [
   { label: "Insights", href: "/insights" },
   { label: "Partners", href: "/partners" },
   { label: "Resource Hub", href: "/resource-hub" },
-  { label: "Contact", href: "/#contact" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const heading = "mb-5 text-[14px] font-extrabold uppercase tracking-[0.3em] text-gold-light";
