@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -19,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return { title: `${c.name} Licence | Workdane Management Consultancy`, description: c.intro };
 }
 
-export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+async function CategoryPageContent({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const c = categoryBySlug(slug);
   if (!c) notFound();
@@ -121,5 +122,13 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
 
       <CtaBand />
     </>
+  );
+}
+
+export default function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+  return (
+    <Suspense>
+      <CategoryPageContent params={params} />
+    </Suspense>
   );
 }

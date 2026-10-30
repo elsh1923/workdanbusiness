@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -19,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return { title: `${s.title} | Workdane Plus`, description: s.text };
 }
 
-export default async function PlusPage({ params }: { params: Promise<{ slug: string }> }) {
+async function PlusPageContent({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const s = plusServices.find((x) => x.id === slug);
   const p = plusPageById(slug);
@@ -84,5 +85,13 @@ export default async function PlusPage({ params }: { params: Promise<{ slug: str
 
       <CtaBand />
     </>
+  );
+}
+
+export default function PlusPage({ params }: { params: Promise<{ slug: string }> }) {
+  return (
+    <Suspense>
+      <PlusPageContent params={params} />
+    </Suspense>
   );
 }

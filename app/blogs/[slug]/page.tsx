@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -16,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return p ? { title: `${p.title} | Workdane`, description: p.summary } : {};
 }
 
-export default async function Post({ params }: { params: Promise<{ slug: string }> }) {
+async function PostContent({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const p = postBySlug(slug);
   if (!p) notFound();
@@ -47,5 +48,13 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
       </article>
       <CtaBand />
     </>
+  );
+}
+
+export default function Post({ params }: { params: Promise<{ slug: string }> }) {
+  return (
+    <Suspense>
+      <PostContent params={params} />
+    </Suspense>
   );
 }

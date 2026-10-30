@@ -78,12 +78,16 @@ export default function BusinessActivities() {
   // Menu links look like /business-activities?category=IT%20Services
   useEffect(() => {
     const wanted = new URLSearchParams(window.location.search).get("category");
+    // Reading the address bar after load keeps the page static.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (wanted && chips.includes(wanted)) setCategory(wanted);
   }, []);
 
   useEffect(() => {
     try {
       const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]");
+      // localStorage only exists in the browser, so it is read after load.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (Array.isArray(stored)) setSaved(stored.filter((id): id is string => typeof id === "string" && !!activities[Number(id)]));
     } catch {}
   }, []);
@@ -152,7 +156,7 @@ export default function BusinessActivities() {
     setPage(1);
   };
 
-  const Head = ({ k, label, className = "" }: { k: SortKey; label: string; className?: string }) => (
+  const head = (k: SortKey, label: string, className = "") => (
     <button
       type="button"
       onClick={() => sortBy(k)}
@@ -203,7 +207,7 @@ export default function BusinessActivities() {
           >
             <Bookmark className="h-4 w-4" />
             Saved
-            <span className="gold-gradient min-w-7 rounded-full px-2 py-0.5 text-center text-[13px] font-bold text-midnight">{String(saved.length).padStart(2, "0")}</span>
+            <span className="gold-gradient min-w-7 rounded-full px-2 py-0.5 text-center text-[13px] font-bold text-midnight">{saved.length}</span>
           </button>
         </div>
 
@@ -281,7 +285,7 @@ export default function BusinessActivities() {
                 aria-pressed={on}
                 className={`whitespace-nowrap rounded-full px-4 py-2 text-[14px] font-bold transition ${on ? "bg-navy text-white" : "bg-tint text-navy hover:bg-line"}`}
               >
-                {c} <span className="opacity-60">{categoryCounts[c]}</span>
+                {c} <span className="opacity-80">{categoryCounts[c]}</span>
               </button>
             );
           })}
@@ -294,11 +298,11 @@ export default function BusinessActivities() {
         {/* table */}
         <div className="mt-4 overflow-hidden rounded-2xl border border-line">
           <div className={`hidden items-center gap-x-4 bg-navy px-4 py-3.5 lg:grid ${GRID}`}>
-            <Head k="type" label="Type" />
-            <Head k="group" label="Group" />
-            <Head k="sub" label="Code" />
-            <Head k="name" label="Activity name" />
-            <Head k="authority" label="Third party" />
+            {head("type", "Type")}
+            {head("group", "Group")}
+            {head("sub", "Code")}
+            {head("name", "Activity name")}
+            {head("authority", "Third party")}
             <span className="text-[13px] font-bold uppercase tracking-wider text-white">Fee</span>
             <span className="sr-only">Save</span>
           </div>
