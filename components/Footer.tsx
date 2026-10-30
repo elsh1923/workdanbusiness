@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
-import { COMPANY, CONTACT, LOGO, OFFICES } from "@/lib/config";
+import { COMPANY, CONTACT, LOGO_LIGHT, OFFICES } from "@/lib/config";
 import { startItems } from "@/lib/content";
 import RollText from "./RollText";
 
@@ -20,8 +20,8 @@ export default function Footer() {
     <footer className="bg-midnight text-white/70">
       <div className="mx-auto grid max-w-[1840px] gap-14 px-5 py-20 sm:px-9 md:grid-cols-2 xl:grid-cols-[1.2fr_1fr_1fr_1.2fr]">
         <div>
-          <div className="inline-block rounded-xl bg-white p-3">
-            <Image src={LOGO.src} alt={COMPANY.name} width={LOGO.width} height={LOGO.height} className="h-20 w-auto" />
+          <div className="inline-block">
+            <Image src={LOGO_LIGHT.src} alt={COMPANY.name} width={LOGO_LIGHT.width} height={LOGO_LIGHT.height} className="h-28 w-auto" />
           </div>
           <p className="mt-8 max-w-xs font-display text-2xl italic leading-snug text-white">Set up right. Stay compliant. Grow with confidence.</p>
         </div>

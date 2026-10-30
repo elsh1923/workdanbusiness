@@ -23,6 +23,8 @@ export const OFFICES = [
 ];
 
 export const LOGO = { src: "/logo-workdane.png", width: 536, height: 465 };
+// Navy wordmark turned white, for dark backgrounds such as the footer.
+export const LOGO_LIGHT = { src: "/logo-workdane-light.png", width: 536, height: 465 };
 
 export const whatsappLink = (text: string) =>
   `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(text)}`;
