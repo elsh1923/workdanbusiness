@@ -17,8 +17,8 @@ const heading = "mb-5 text-[13px] font-extrabold uppercase tracking-[0.3em] text
 
 export default function Footer() {
   return (
-    <footer className="bg-midnight text-white/70">
-      <div className="mx-auto grid max-w-[1840px] gap-14 px-5 py-20 sm:px-9 md:grid-cols-2 xl:grid-cols-[1.2fr_1fr_1fr_1.2fr]">
+    <footer className="bg-sky-deep text-white/90">
+      <div className="mx-auto grid max-w-[1840px] gap-14 px-6 py-20 sm:px-12 lg:px-16 md:grid-cols-2 xl:grid-cols-[1.2fr_1fr_1fr_1.2fr]">
         <div>
           <div className="inline-block">
             <Image src={LOGO_LIGHT.src} alt={COMPANY.name} width={LOGO_LIGHT.width} height={LOGO_LIGHT.height} className="h-28 w-auto" />
@@ -78,7 +78,7 @@ export default function Footer() {
               </li>
             ))}
           </ul>
-          <p className="mt-6 text-[13px] leading-relaxed text-white/45">
+          <p className="mt-6 text-[13px] leading-relaxed text-white/70">
             {CONTACT.legalName}
             <br />
             Business licence no. {CONTACT.licenceNo}
@@ -87,7 +87,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-[1840px] flex-wrap justify-between gap-4 px-5 pb-24 pt-6 text-[13px] text-white/45 sm:px-9 sm:pb-6 sm:pr-28">
+        <div className="mx-auto flex max-w-[1840px] flex-wrap justify-between gap-4 px-6 pb-24 pt-6 text-[13px] text-white/70 sm:px-12 lg:px-16 sm:pb-6 sm:pr-28">
           <span>© 2026 {COMPANY.name}. All rights reserved.</span>
           <span>Company setup and business services, UAE</span>
         </div>

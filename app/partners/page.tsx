@@ -15,7 +15,7 @@ export default function Partners() {
         intro="Reach founders, SMEs and corporate teams by becoming part of our network."
       />
 
-      <section id="channel-partner" className="scroll-mt-28 bg-white px-5 py-28 sm:px-9">
+      <section id="channel-partner" className="scroll-mt-28 bg-white px-6 py-28 sm:px-12 lg:px-16">
         <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-2 lg:gap-24">
           <div>
             <Eyebrow>Channel partner</Eyebrow>
@@ -37,7 +37,7 @@ export default function Partners() {
         </div>
       </section>
 
-      <section id="partner-portal" className="scroll-mt-28 border-t border-heading/15 bg-surface px-5 py-28 sm:px-9">
+      <section id="partner-portal" className="scroll-mt-28 border-t border-heading/15 bg-surface px-6 py-28 sm:px-12 lg:px-16">
         <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-2 lg:gap-24">
           <div>
             <Eyebrow>Channel partner portal</Eyebrow>
@@ -57,7 +57,7 @@ export default function Partners() {
         </div>
       </section>
 
-      <section id="corporate-partnerships" className="scroll-mt-28 border-t border-line bg-white px-5 py-28 sm:px-9">
+      <section id="corporate-partnerships" className="scroll-mt-28 border-t border-line bg-white px-6 py-28 sm:px-12 lg:px-16">
         <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-2 lg:gap-24">
           <div>
             <Eyebrow>Corporate partnerships</Eyebrow>

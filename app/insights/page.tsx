@@ -22,7 +22,7 @@ export default function Insights() {
         intro="Guides, news, events and answers to the questions we hear most."
       />
 
-      <section id="blogs" className="scroll-mt-28 bg-white px-5 py-28 sm:px-9">
+      <section id="blogs" className="scroll-mt-28 bg-white px-6 py-28 sm:px-12 lg:px-16">
         <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-2 lg:gap-24">
           <div>
             <Eyebrow>Blogs</Eyebrow>
@@ -35,7 +35,7 @@ export default function Insights() {
         </div>
       </section>
 
-      <section id="featured" className="scroll-mt-28 border-t border-heading/15 bg-surface px-5 py-28 sm:px-9">
+      <section id="featured" className="scroll-mt-28 border-t border-heading/15 bg-surface px-6 py-28 sm:px-12 lg:px-16">
         <div className="mx-auto max-w-[1840px]">
           <Eyebrow>Featured in</Eyebrow>
           <h2 className="font-display text-[34px] font-bold leading-[1.15] text-heading sm:text-[38px]">Press and client stories.</h2>
@@ -48,7 +48,7 @@ export default function Insights() {
         </div>
       </section>
 
-      <section id="activity-hub" className="scroll-mt-28 border-t border-line bg-white px-5 py-28 sm:px-9">
+      <section id="activity-hub" className="scroll-mt-28 border-t border-line bg-white px-6 py-28 sm:px-12 lg:px-16">
         <div className="mx-auto max-w-[1840px]">
           <Eyebrow>Activity hub</Eyebrow>
           <h2 className="font-display text-[34px] font-bold leading-[1.15] text-heading sm:text-[38px]">Events, workshops and networking.</h2>

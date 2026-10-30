@@ -37,7 +37,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="scroll-mt-24 border-t border-line bg-white px-5 py-28 sm:px-9">
+    <section id="contact" className="scroll-mt-24 border-t border-line bg-white px-6 py-28 sm:px-12 lg:px-16">
       <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-[1fr_1.1fr] lg:gap-24">
         <Reveal>
           <Eyebrow>Contact</Eyebrow>
@@ -167,7 +167,7 @@ export default function Contact() {
                 </div>
 
                 <label className="flex items-start gap-3 text-[13px] leading-relaxed text-body">
-                  <input required type="checkbox" className="mt-0.5 accent-[#0c2a55]" />
+                  <input required type="checkbox" className="mt-0.5 accent-[#1c52ad]" />
                   <span>I agree to be contacted by Workdane about my enquiry by email, phone or WhatsApp.</span>
                 </label>
 

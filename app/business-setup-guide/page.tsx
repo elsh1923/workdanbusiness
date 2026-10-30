@@ -15,7 +15,7 @@ export default function BusinessSetupGuide() {
         }
         intro="The six stages most businesses go through. Our consultants confirm the exact requirements for your activity."
       />
-      <section className="bg-surface px-5 py-28 sm:px-9">
+      <section className="bg-surface px-6 py-28 sm:px-12 lg:px-16">
         <ol className="mx-auto grid max-w-[1840px] border-t border-heading/15 md:grid-cols-2 md:gap-x-16">
           {setupSteps.map((s, i) => (
             <li key={s.title} className="grid grid-cols-[3rem_1fr] gap-4 border-b border-heading/15 py-9">

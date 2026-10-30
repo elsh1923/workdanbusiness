@@ -11,7 +11,7 @@ const reasons = [
 
 export default function Why() {
   return (
-    <section className="hero-bg grain relative isolate overflow-clip px-5 py-28 text-white sm:px-9">
+    <section className="hero-bg grain relative isolate overflow-clip px-6 py-28 text-white sm:px-12 lg:px-16">
       <div aria-hidden className="blueprint-grid pointer-events-none absolute inset-0 -z-10" />
       <div aria-hidden className="drift pointer-events-none absolute -right-24 top-10 -z-10 h-[380px] w-[380px] rounded-full bg-gold/15 blur-3xl" />
       <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-[5fr_7fr] lg:gap-24">
@@ -20,7 +20,7 @@ export default function Why() {
           <h2 className="font-display text-[34px] font-bold leading-[1.15] sm:text-[38px]">
             A calmer way to <em className="shimmer italic">start a business.</em>
           </h2>
-          <p className="mt-6 max-w-md text-[15px] leading-relaxed text-white/70">
+          <p className="mt-6 max-w-md text-[15px] leading-relaxed text-white/90">
             Setting up involves many authorities and many documents. We take care of the moving parts so you can focus on your customers.
           </p>
         </Reveal>
@@ -40,7 +40,7 @@ export default function Why() {
                     </span>
                   </div>
                   <h3 className="mt-6 font-display text-[21px] font-bold">{r.title}</h3>
-                  <p className="mt-3 text-[15px] leading-relaxed text-white/70">{r.text}</p>
+                  <p className="mt-3 text-[15px] leading-relaxed text-white/90">{r.text}</p>
                 </Reveal>
               </li>
             );

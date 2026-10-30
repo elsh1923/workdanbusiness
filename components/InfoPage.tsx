@@ -23,7 +23,7 @@ export default function InfoPage({
   return (
     <>
       <PageHero eyebrow={eyebrow} title={title} intro={intro} />
-      <section className="bg-surface px-5 py-28 sm:px-9">
+      <section className="bg-surface px-6 py-28 sm:px-12 lg:px-16">
         <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-2 lg:gap-24">
           <ol className="border-t border-heading/15">
             {points.map((p, i) => (

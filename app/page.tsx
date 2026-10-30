@@ -18,7 +18,7 @@ export default function Home() {
       <Facts />
       <Services />
 
-      <section id="license-categories" className="scroll-mt-24 border-t border-line bg-white px-5 py-28 sm:px-9">
+      <section id="license-categories" className="scroll-mt-24 border-t border-line bg-white px-6 py-28 sm:px-12 lg:px-16">
         <div className="mx-auto max-w-[1840px]">
           <Eyebrow>License categories</Eyebrow>
           <h2 className="font-display text-[34px] font-bold leading-[1.15] text-heading sm:text-[38px]">

@@ -15,7 +15,7 @@ const facts = [
 
 export default function Facts() {
   return (
-    <section className="relative z-10 -mt-28 px-5 pb-8 sm:px-9">
+    <section className="relative z-10 -mt-28 px-6 pb-8 sm:px-12 lg:px-16">
       <dl className="mx-auto grid max-w-[1840px] grid-cols-1 gap-px overflow-hidden rounded-2xl bg-line shadow-[0_30px_70px_-30px_rgba(11,37,69,0.45)] sm:grid-cols-2 lg:grid-cols-4">
         {facts.map((f) => (
           <div key={f.label} data-spotlight className="group spotlight flex items-center gap-5 bg-white p-6 sm:p-8">

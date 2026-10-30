@@ -19,7 +19,7 @@ export default function Services() {
         </div>
       </div>
 
-      <section id="services" className="scroll-mt-24 bg-surface px-5 py-28 sm:px-9">
+      <section id="services" className="scroll-mt-24 bg-surface px-6 py-28 sm:px-12 lg:px-16">
         <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-[5fr_7fr] lg:gap-24">
           <Reveal className="lg:sticky lg:top-32 lg:self-start">
             <Eyebrow>What we do</Eyebrow>

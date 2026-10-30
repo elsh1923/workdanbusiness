@@ -51,7 +51,7 @@ export default function BusinessActivities({ initialCategory = "All" }: { initia
   const viewingOn = viewing ? shortlist.includes(viewing.code) : false;
 
   return (
-    <section id="business-activities" className="scroll-mt-24 bg-white px-5 pb-28 pt-16 sm:px-9">
+    <section id="business-activities" className="scroll-mt-24 bg-white px-6 pb-28 pt-16 sm:px-12 lg:px-16">
       <div className="mx-auto max-w-[1840px]">
 
         <div className="flex flex-col gap-6 border-b border-heading/15 pb-6 lg:flex-row lg:items-center lg:justify-between">
@@ -210,7 +210,7 @@ export default function BusinessActivities({ initialCategory = "All" }: { initia
 
       {picked.length > 0 && (
         <div className="fixed inset-x-0 bottom-4 z-40 px-4">
-          <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl bg-midnight text-white shadow-2xl">
+          <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl bg-sky-deep text-white shadow-2xl">
             <button
               onClick={() => setShowList((s) => !s)}
               aria-expanded={showList}
@@ -219,7 +219,7 @@ export default function BusinessActivities({ initialCategory = "All" }: { initia
               <span className="text-[15px] font-bold">
                 Shortlist <span className="gold-text ml-2 text-base">{picked.length}</span>
               </span>
-              <span className="flex items-center gap-2 text-[15px] font-semibold text-white/70">
+              <span className="flex items-center gap-2 text-[15px] font-semibold text-white/90">
                 {showList ? "Hide" : "Review"}
                 <ArrowUpRight className={`h-4 w-4 transition ${showList ? "rotate-180" : ""}`} />
               </span>
@@ -234,7 +234,7 @@ export default function BusinessActivities({ initialCategory = "All" }: { initia
                         <span className="mr-3 font-mono text-[13px] text-gold-light">{a.code}</span>
                         {a.name}
                       </span>
-                      <button onClick={() => toggle(a.code)} aria-label={`Remove ${a.name}`} className="text-white/60 hover:text-white">
+                      <button onClick={() => toggle(a.code)} aria-label={`Remove ${a.name}`} className="text-white/80 hover:text-white">
                         <X className="h-4 w-4" />
                       </button>
                     </li>

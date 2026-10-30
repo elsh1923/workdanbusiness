@@ -48,7 +48,7 @@ function SetupFinder() {
 
   return (
     <div data-spotlight data-tilt className="spotlight glass rounded-3xl border border-white/10 border-t-2 border-t-gold p-6 shadow-[0_40px_80px_-40px_rgba(0,0,0,0.6)] sm:p-10">
-      <div className="flex items-center justify-between text-[13px] font-bold uppercase tracking-[0.25em] text-white/60">
+      <div className="flex items-center justify-between text-[13px] font-bold uppercase tracking-[0.25em] text-white/80">
         <span>Find your starting point</span>
         <span className="whitespace-nowrap">
           {Math.min(step + 1, questions.length)} / {questions.length}
@@ -78,7 +78,7 @@ function SetupFinder() {
             ))}
           </ul>
           {step > 0 && (
-            <button onClick={() => setAnswers(answers.slice(0, -1))} className="mt-6 text-[15px] font-semibold text-white/50 hover:text-white">
+            <button onClick={() => setAnswers(answers.slice(0, -1))} className="mt-6 text-[15px] font-semibold text-white/75 hover:text-white">
               ← Back
             </button>
           )}
@@ -87,7 +87,7 @@ function SetupFinder() {
         <div className="rise mt-8">
           <p className="text-[13px] font-bold uppercase tracking-[0.25em] text-gold-light">Suggested starting point</p>
           <p className="mt-3 font-display text-[26px] font-bold leading-tight">{needHeadline[need]}</p>
-          <ul className="mt-6 space-y-3 text-[15px] leading-relaxed text-white/75">
+          <ul className="mt-6 space-y-3 text-[15px] leading-relaxed text-white/90">
             <li className="flex gap-3">
               <Check className="mt-1 h-4 w-4 shrink-0 text-gold-light" />
               {placeCopy[place]}
@@ -97,12 +97,12 @@ function SetupFinder() {
               {ownerCopy[owners]}
             </li>
           </ul>
-          <p className="mt-6 text-[15px] text-white/55">These are general pointers. Our consultants confirm the right route for your activity.</p>
+          <p className="mt-6 text-[15px] text-white/80">These are general pointers. Our consultants confirm the right route for your activity.</p>
           <div className="mt-8 flex flex-wrap items-center gap-6">
             <a href="#contact" className="gold-gradient btn-shine rounded-full px-6 py-3 text-[15px] font-bold text-midnight">
               Discuss my setup
             </a>
-            <button onClick={() => setAnswers([])} className="flex items-center gap-2 text-[15px] font-semibold text-white/60 hover:text-white">
+            <button onClick={() => setAnswers([])} className="flex items-center gap-2 text-[15px] font-semibold text-white/80 hover:text-white">
               <RotateCcw className="h-3.5 w-3.5" />
               Start again
             </button>
@@ -130,7 +130,7 @@ export default function Hero() {
       </svg>
       <Skyline className="parallax-b pointer-events-none absolute bottom-0 left-[-4rem] -z-10 h-[220px] w-[calc(100%+8rem)]" />
 
-      <div className="mx-auto grid max-w-[1840px] gap-16 px-5 sm:px-9 lg:grid-cols-[1.1fr_1fr] lg:gap-20">
+      <div className="mx-auto grid max-w-[1840px] gap-16 px-6 sm:px-12 lg:px-16 lg:grid-cols-[1.1fr_1fr] lg:gap-20">
         <div>
           <div className="rise">
             <Eyebrow light>Company setup &amp; business services, UAE</Eyebrow>
@@ -139,7 +139,7 @@ export default function Hero() {
             Set up right. <em className="shimmer font-medium italic">Stay compliant.</em>{" "}
             <span className="text-white/90">Grow with confidence.</span>
           </h1>
-          <p className="rise mt-8 max-w-lg text-[18px] leading-relaxed text-white/70" style={{ animationDelay: "0.15s" }}>
+          <p className="rise mt-8 max-w-lg text-[18px] leading-relaxed text-white/90" style={{ animationDelay: "0.15s" }}>
             Company formation, licensing, visas, VAT and accounting, delivered by one team with one point of contact.
           </p>
           <div className="rise mt-10 flex flex-wrap items-center gap-x-8 gap-y-5" style={{ animationDelay: "0.25s" }}>
@@ -151,7 +151,7 @@ export default function Hero() {
               <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
             </a>
           </div>
-          <ul className="rise mt-12 flex flex-wrap gap-x-8 gap-y-3 text-[15px] font-semibold text-white/75" style={{ animationDelay: "0.35s" }}>
+          <ul className="rise mt-12 flex flex-wrap gap-x-8 gap-y-3 text-[15px] font-semibold text-white/90" style={{ animationDelay: "0.35s" }}>
             {assurances.map((t) => (
               <li key={t} className="flex items-center gap-2">
                 <span className="flex h-5 w-5 items-center justify-center rounded-full bg-gold/20 text-gold-light">

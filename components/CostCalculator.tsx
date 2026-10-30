@@ -26,7 +26,7 @@ export default function CostCalculator() {
   const total = lines.reduce((s, l) => s + l.amount, 0);
 
   return (
-    <section className="bg-surface px-5 pb-28 sm:px-9">
+    <section className="bg-surface px-6 pb-28 sm:px-12 lg:px-16">
       <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-[1.4fr_1fr] lg:gap-24">
         <div className="space-y-16">
           <div>

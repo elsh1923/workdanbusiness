@@ -15,7 +15,7 @@ export default function WorkdanePlus() {
         }
         intro="Banking, visas, medical screening, documentation and a dedicated account manager, all arranged through one team."
       />
-      <section className="bg-surface px-5 py-28 sm:px-9">
+      <section className="bg-surface px-6 py-28 sm:px-12 lg:px-16">
         <div className="mx-auto grid max-w-[1840px] gap-x-16 md:grid-cols-2">
           {plusServices.map((s) => {
             const Icon = s.icon;

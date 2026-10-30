@@ -32,7 +32,7 @@ export default function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="scroll-mt-24 bg-surface px-5 py-28 sm:px-9">
+    <section id="faq" className="scroll-mt-24 bg-surface px-6 py-28 sm:px-12 lg:px-16">
       <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-[1fr_1.6fr] lg:gap-24">
         <Reveal>
           <Eyebrow>Good to know</Eyebrow>

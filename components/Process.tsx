@@ -13,7 +13,7 @@ const steps = [
 
 export default function Process() {
   return (
-    <section id="process" className="scroll-mt-24 bg-white px-5 py-28 sm:px-9">
+    <section id="process" className="scroll-mt-24 bg-white px-6 py-28 sm:px-12 lg:px-16">
       <div className="mx-auto max-w-[1840px]">
         <Reveal>
           <Eyebrow>How it works</Eyebrow>

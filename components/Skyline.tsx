@@ -34,8 +34,8 @@ export default function Skyline({ className = "" }: { className?: string }) {
     <svg aria-hidden viewBox="0 0 1440 220" preserveAspectRatio="xMidYMax slice" className={className} fill="none">
       <defs>
         <linearGradient id="sky-fade" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0" stopColor="#1d4f97" />
-          <stop offset="1" stopColor="#06132a" />
+          <stop offset="0" stopColor="#14408d" />
+          <stop offset="1" stopColor="#0c2b66" />
         </linearGradient>
       </defs>
       <g fill="url(#sky-fade)" stroke="#ffc63d" strokeOpacity="0.4" strokeWidth="1">
