@@ -2,12 +2,12 @@
 
 import { useDeferredValue, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowDown, ArrowLeftRight, Briefcase, Building2, Check, ChevronDown, ClipboardList, FileDown, HeartPulse, IdCard, Landmark, LayoutGrid, Loader2, Lock, Minus, Newspaper, Package, Percent, PhoneCall, Plus, Receipt, ScanFace, Search, ShieldCheck, Stamp, Truck, Users, Wrench, X } from "lucide-react";
+import { ArrowDown, ArrowRight, ArrowLeftRight, Briefcase, Building2, Check, ChevronDown, ClipboardList, FileDown, HeartPulse, IdCard, Landmark, LayoutGrid, Loader2, Lock, Minus, Newspaper, Package, Percent, PhoneCall, Plus, Receipt, ScanFace, Search, ShieldCheck, Stamp, Truck, Users, Wrench, X } from "lucide-react";
 import Image from "next/image";
 import { activities, type Activity } from "@/lib/activity-data";
-import { calc, popularCodes } from "@/lib/calculator-config";
+import { calc, employeeVisaTotal, investorVisaTotal, popularCodes } from "@/lib/calculator-config";
 import { ACTIVITY_COUNT } from "@/lib/activities";
-import { INDICATIVE_NOTE, LOGO_LIGHT } from "@/lib/config";
+import { CONTACT, INDICATIVE_NOTE, LOGO_LIGHT, OFFICES } from "@/lib/config";
 import { countries, fullPhone } from "@/lib/countries";
 import { useFormSubmit } from "./useFormSubmit";
 
@@ -64,9 +64,9 @@ function Switch({ on, onClick, label }: { on: boolean; onClick: () => void; labe
 }
 
 const groupOf = (label: string) =>
-  /^(Licence|Multi-year|\d+ activities|\d+ additional)/.test(label)
+  /^(Licence|Trade licence|Office lease|Management fee|Multi-year|\d+ activities|\d+ additional)/.test(label)
     ? "Business licence"
-    : /^(Establishment|E-channel|Investor|Employee|Change of status)/.test(label)
+    : /^(Establishment|E-channel|Visa allocation|Investor|Employee|Emirates ID|Medical test|Change of status)/.test(label)
       ? "Visa fees"
       : "Value-added services";
 
@@ -177,7 +177,9 @@ export default function CostCalculator() {
 
   const lines: { label: string; amount: number; note?: string }[] = [];
   if (picked.length) {
-    lines.push({ label: `Licence, ${term.years} ${term.years === 1 ? "year" : "years"}`, amount: licenceFull });
+    lines.push({ label: `Trade licence, MOA and certificate of formation (${term.years} ${term.years === 1 ? "year" : "years"})`, amount: licenceFull });
+    lines.push({ label: "Office lease agreement", amount: calc.officeLease });
+    lines.push({ label: "Management fee", amount: calc.managementFee });
     if (term.discount) lines.push({ label: `Multi-year saving (${term.discount}%)`, amount: -licenceDiscount });
     if (extraActivities.length)
       lines.push({ label: `${extraActivities.length} activities beyond ${calc.includedGroups} groups`, amount: extraActivities.length * calc.extraGroupActivity });
@@ -186,8 +188,13 @@ export default function CostCalculator() {
       lines.push({ label: "Establishment card", amount: calc.visa.establishmentCard });
       lines.push({ label: "E-channel registration", amount: calc.visa.eChannel });
     }
-    if (needVisa && investor) lines.push({ label: `Investor or partner visa × ${investor}`, amount: investor * calc.visa.investor });
-    if (needVisa && employee) lines.push({ label: `Employee visa × ${employee}`, amount: employee * calc.visa.employee });
+    if (needVisa && visaCount) {
+      lines.push({ label: `Visa allocation × ${visaCount}`, amount: visaCount * calc.visa.allocation });
+      if (investor) lines.push({ label: `Investor/partner visa (2 years) × ${investor}`, amount: investor * calc.visa.investor });
+      if (employee) lines.push({ label: `Employee visa × ${employee}`, amount: employee * calc.visa.employee });
+      lines.push({ label: `Emirates ID × ${visaCount}`, amount: visaCount * calc.visa.emiratesId });
+      lines.push({ label: `Medical test × ${visaCount}`, amount: visaCount * calc.visa.medicalTest });
+    }
     if (needVisa && statusChange) lines.push({ label: `Change of status × ${statusChange}`, amount: statusChange * calc.visa.changeOfStatus });
     if (bank) lines.push({ label: "Bank account assistance", amount: calc.extras.bank });
     if (taxPackage) lines.push({ label: "Corporate tax startup package", amount: calc.extras.taxPackage });
@@ -245,10 +252,20 @@ export default function CostCalculator() {
   ];
   const progress = unlocked ? Math.min(step, 6) : 1;
   const [today, setToday] = useState("");
+  const [quoteRef, setQuoteRef] = useState("");
 
   const sectionCls = (n: number) =>
     `scroll-mt-28 rounded-3xl border bg-white p-7 shadow-[0_24px_60px_-40px_rgba(12,42,85,0.35)] transition sm:p-10 ${reach(n) ? "border-line" : "pointer-events-none select-none border-line opacity-50"}`;
   const nextBtn = "gold-gradient btn-shine rounded-full px-7 py-3.5 text-[15px] font-bold text-midnight transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60";
+
+  const sumOf = (pred: (label: string) => boolean) => lines.filter((l) => pred(l.label)).reduce((t, l) => t + l.amount, 0);
+  const summaryRows = [
+    { label: "Business licence", amount: sumOf((l) => groupOf(l) === "Business licence" && !/^(Office lease|Management fee)/.test(l)) },
+    { label: "Office lease agreement", amount: sumOf((l) => l.startsWith("Office lease")) },
+    { label: "Management fee", amount: sumOf((l) => l.startsWith("Management fee")) },
+    { label: "Visa fees", amount: sumOf((l) => groupOf(l) === "Visa fees") },
+    { label: "Value-added services", amount: sumOf((l) => groupOf(l) === "Value-added services") },
+  ].filter((r) => r.amount !== 0);
 
   const summary = (
     <aside
@@ -294,52 +311,32 @@ export default function CostCalculator() {
         </>
       ) : (
         <>
-          <p className="mt-4 font-display text-[34px] font-bold leading-none text-navy">{aed(total)}</p>
-          <p className="mt-1 text-[13px] text-body">Updates as you change your choices</p>
-          <ul className="mt-5 space-y-2.5 border-t border-line pt-5 text-[14px]">
-            {lines.map((l) => (
-              <li key={l.label} className="flex justify-between gap-3">
-                <span>{l.label}</span>
-                <span className={`shrink-0 font-bold ${l.amount < 0 ? "text-[#0f7d46]" : "text-heading"}`}>{l.amount < 0 ? `− ${aed(-l.amount)}` : aed(l.amount)}</span>
-              </li>
+          <dl className="mt-5 space-y-4 text-[16px]">
+            {summaryRows.map((r) => (
+              <div key={r.label} className="flex items-baseline justify-between gap-4">
+                <dt className="font-semibold text-body">{r.label}</dt>
+                <dd className="shrink-0 font-bold text-heading">{aed(r.amount)}</dd>
+              </div>
             ))}
-          </ul>
-          <div className="mt-5 flex justify-between border-t border-line pt-4 font-display text-[18px] font-bold text-heading">
-            <span>Estimated total</span>
-            <span>{aed(total)}</span>
+          </dl>
+          <hr className="my-5 border-line" />
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-[16px] font-bold text-heading">Estimated total</p>
+            <p className="font-display text-[28px] font-extrabold leading-none text-heading">{aed(total)}</p>
           </div>
+          <p className="mt-4 text-[14px] text-body">
+            Prefer to split your costs?{" "}
+            <Link href="/pay-as-you-go" className="font-bold text-navy underline decoration-gold decoration-2 underline-offset-4">
+              Pay-as-you-go
+            </Link>
+          </p>
           <button
             type="button"
             onClick={() => (step >= 6 ? go(6) : advance(Math.max(step, 6)))}
-            className="mt-5 w-full rounded-full bg-navy py-3.5 text-[15px] font-bold text-white transition hover:bg-slate-accent"
+            className="mt-5 flex w-full items-center justify-center gap-3 rounded-full bg-navy py-4 text-[16px] font-bold text-white transition hover:bg-slate-accent"
           >
-            See my full estimate
+            Review the full estimate <ArrowRight className="h-5 w-5" />
           </button>
-          {status === "sent" ? (
-            <p role="status" className="mt-3 rounded-xl bg-[#0f7d46]/10 p-3 text-[14px] font-bold leading-snug text-heading">
-              On its way. We will email you the full breakdown.
-            </p>
-          ) : (
-            <button
-              type="button"
-              onClick={emailQuote}
-              disabled={sending}
-              className="mt-3 flex w-full items-center justify-center gap-2 rounded-full border border-heading/25 py-3 text-[15px] font-bold text-heading transition hover:border-navy disabled:opacity-60"
-            >
-              {sending && <Loader2 className="h-4 w-4 animate-spin" />}
-              {sending ? "Sending..." : "Email me this quote"}
-            </button>
-          )}
-          {status === "error" && (
-            <p role="alert" className="mt-3 border-l-4 border-red-500 bg-red-50 p-3 text-[13px] leading-snug text-red-900">
-              {message}
-              {whatsapp && (
-                <a href={whatsapp} target="_blank" rel="noreferrer" className="mt-1 block font-bold underline">
-                  Send it on WhatsApp instead
-                </a>
-              )}
-            </p>
-          )}
         </>
       )}
       <p className="mt-5 text-[12px] leading-relaxed text-body">{INDICATIVE_NOTE}</p>
@@ -425,6 +422,7 @@ export default function CostCalculator() {
                   if (!detailsOk) return;
                   setUnlocked(true);
                   setToday(new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }));
+                  setQuoteRef(`WQ-${new Date().toISOString().slice(0, 10).replace(/-/g, "")}-${Math.floor(1000 + Math.random() * 9000)}`);
                   setStep((s) => Math.max(s, 2));
                   setTimeout(() => go(2), 60);
                 }}
@@ -698,11 +696,11 @@ export default function CostCalculator() {
               <p className="font-display text-[22px] font-bold text-heading">Licence validity</p>
               <p className="text-[14px] text-body">Enjoy long-term savings on annual renewal costs with a multi-year licence.</p>
             </div>
-            <fieldset className="mt-5">
+            <fieldset className="mt-5 min-w-0">
               <legend className="sr-only">Licence validity</legend>
-              <div className="flex gap-4 overflow-x-auto pb-4">
+              <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-4">
                 {calc.terms.map((t, i) => {
-                  const price = Math.round(annualLicence * t.years * (1 - t.discount / 100));
+                  const price = Math.round((annualLicence || minLicence) * t.years * (1 - t.discount / 100));
                   const on = termIndex === i;
                   return (
                     <button
@@ -710,7 +708,7 @@ export default function CostCalculator() {
                       type="button"
                       aria-pressed={on}
                       onClick={() => setTermIndex(i)}
-                      className={`w-[200px] shrink-0 rounded-2xl border p-5 text-left transition ${on ? "border-navy bg-navy/5 ring-2 ring-navy" : "border-navy/30 bg-white hover:border-navy"}`}
+                      className={`w-[200px] shrink-0 snap-start rounded-2xl border p-5 text-left transition ${on ? "border-navy bg-navy/5 ring-2 ring-navy" : "border-navy/30 bg-white hover:border-navy"}`}
                     >
                       <span className="flex items-center justify-between">
                         <span className={`flex h-6 w-6 items-center justify-center rounded-full border ${on ? "border-navy bg-navy text-white" : "border-navy/40"}`}>{on && <Check className="h-3.5 w-3.5" />}</span>
@@ -804,8 +802,8 @@ export default function CostCalculator() {
                 </div>
                 {(
                   [
-                    ["Investor / partner visa", investor, setInvestor, calc.visa.investor, "visas", IdCard, false],
-                    ["Employee visa", employee, setEmployee, calc.visa.employee, "employee visas", ScanFace, false],
+                    ["Investor / partner visa", investor, setInvestor, investorVisaTotal, "visas", IdCard, false],
+                    ["Employee visa", employee, setEmployee, employeeVisaTotal, "employee visas", ScanFace, false],
                     ["Change of status", statusChange, setStatusChange, calc.visa.changeOfStatus, "status changes", ArrowLeftRight, true],
                   ] as const
                 ).map(([name, value, set, price, unit, Icon, dashed]) => (
@@ -816,12 +814,13 @@ export default function CostCalculator() {
                     <div className="min-w-0 flex-1">
                       <p className="text-[16px] font-bold text-heading">{name}</p>
                       <p className="text-[13px] text-body">
-                        {aed(price)} each{name === "Change of status" ? ". Required if you are already in the UAE." : ""}
+                        {aed(price)} each{name === "Change of status" ? ". Required if you are already in the UAE." : ", including visa allocation, Emirates ID and medical test"}
                       </p>
                     </div>
                     <Stepper value={value} onChange={set} max={calc.visa.maxEach} name={unit} />
                   </div>
                 ))}
+                <p className="text-[13px] leading-relaxed text-body">Health insurance is not included.</p>
                 <p className="pt-2 text-[14px]">
                   Need your visa faster?{" "}
                   <Link href="/book-appointment" className="font-bold text-navy underline decoration-gold decoration-2 underline-offset-4">
@@ -858,7 +857,7 @@ export default function CostCalculator() {
 
             <ul className="mt-6 divide-y divide-line overflow-hidden rounded-2xl border border-line">
               {[
-                { icon: Landmark, title: "Business bank account opening assistance", badge: "Popular", tone: "bg-gold/20 text-bronze", text: "We help you open a corporate bank account.", price: calc.extras.bank, on: bank, toggle: () => setBank((v) => !v) },
+                { icon: Landmark, title: "Business bank account opening assistance", badge: "Popular", tone: "bg-gold/20 text-bronze", text: "Help opening a corporate bank account. Not included in the licence. Personal bank account assistance is free.", price: calc.extras.bank, on: bank, toggle: () => setBank((v) => !v) },
                 {
                   icon: Receipt,
                   title: "Corporate tax startup package",
@@ -1050,37 +1049,128 @@ export default function CostCalculator() {
         <div className="hidden lg:block">{summary}</div>
       </div>
       <div className="quote-sheet hidden print:block" aria-hidden>
-        <div className="flex items-center gap-4 bg-gradient-to-r from-[#022364] to-[#073eab] px-8 py-6 text-white">
-          <Image src={LOGO_LIGHT.src} alt="Workdane Management Consultancy" width={LOGO_LIGHT.width} height={LOGO_LIGHT.height} className="h-20 w-auto" />
+        {/* header band */}
+        <div style={{ background: "linear-gradient(110deg,#022364 0%,#063798 60%,#0b52d6 100%)" }} className="relative overflow-hidden px-10 pb-8 pt-8 text-white">
+          <div style={{ background: "radial-gradient(circle,rgba(255,198,61,.35),transparent 70%)" }} className="absolute -right-16 -top-20 h-64 w-64 rounded-full" />
+          <div className="relative flex items-center justify-between">
+            <Image src={LOGO_LIGHT.src} alt="Workdane Management Consultancy" width={LOGO_LIGHT.width} height={LOGO_LIGHT.height} className="h-24 w-auto" />
+            <div className="text-right">
+              <p className="text-[11px] font-bold uppercase tracking-[0.3em]" style={{ color: "#ffc63d" }}>Business setup</p>
+              <p className="text-[30px] font-bold leading-tight">Quotation</p>
+              <p className="mt-1 text-[12px] opacity-80">Ref {quoteRef || "WQ"} · {today}</p>
+            </div>
+          </div>
         </div>
-        <div className="px-8 py-6">
-          <p className="text-[12px] font-bold uppercase tracking-widest text-[#07399d]">Workdane Management Consultancy</p>
-          <p className="mt-1 text-[24px] font-bold">Business setup quote</p>
-          <div className="mt-4 grid grid-cols-2 gap-4 text-[13px]">
-            <div><p className="text-[11px] uppercase tracking-widest text-gray-500">Prepared for</p><p className="font-bold">{details.name}</p></div>
-            <div><p className="text-[11px] uppercase tracking-widest text-gray-500">Email</p><p className="font-bold">{details.email}</p></div>
-            <div><p className="text-[11px] uppercase tracking-widest text-gray-500">Phone</p><p className="font-bold">{fullPhone(details.dial, details.phone)}</p></div>
-            <div><p className="text-[11px] uppercase tracking-widest text-gray-500">Date</p><p className="font-bold">{today}</p></div>
+        <div style={{ height: 5, background: "linear-gradient(90deg,#ffc63d,#d99a0b)" }} />
+
+        <div className="px-10 pb-8 pt-7 text-[#0b1730]">
+          {/* parties */}
+          <div className="grid grid-cols-2 gap-6">
+            <div style={{ border: "1px solid #dbe3f3", background: "#f6f8fd" }} className="rounded-xl p-5">
+              <p className="text-[10px] font-bold uppercase tracking-[0.25em]" style={{ color: "#07399d" }}>Prepared for</p>
+              <p className="mt-2 text-[17px] font-bold">{details.name}</p>
+              <p className="mt-1 text-[12px]" style={{ color: "#4b5563" }}>{details.email}</p>
+              <p className="text-[12px]" style={{ color: "#4b5563" }}>{fullPhone(details.dial, details.phone)}</p>
+              {details.nationality && <p className="text-[12px]" style={{ color: "#4b5563" }}>{details.nationality}</p>}
+            </div>
+            <div style={{ border: "1px solid #dbe3f3" }} className="rounded-xl p-5">
+              <p className="text-[10px] font-bold uppercase tracking-[0.25em]" style={{ color: "#07399d" }}>Prepared by</p>
+              <p className="mt-2 text-[17px] font-bold">Workdane Management Consultancy</p>
+              <p className="mt-1 text-[12px]" style={{ color: "#4b5563" }}>{CONTACT.phone}</p>
+              <p className="text-[12px]" style={{ color: "#4b5563" }}>{CONTACT.email}</p>
+            </div>
           </div>
-          <hr className="my-5" />
-          <p className="text-[11px] font-bold uppercase tracking-widest text-[#07399d]">Your estimated business setup cost</p>
-          <p className="text-[40px] font-bold leading-tight text-[#07399d]">{aed(total)} <span className="text-[13px] font-normal text-gray-500">All selections included.</span></p>
-          <div className="mt-3 flex gap-3 text-[12px]">
-            <span className="rounded-lg border px-3 py-1.5">Activities <strong>{picked.length} selected</strong></span>
-            <span className="rounded-lg border px-3 py-1.5">Licence <strong>{term.years} {term.years === 1 ? "year" : "years"}</strong></span>
-            <span className="rounded-lg border px-3 py-1.5">Shareholders <strong>{shareholders}</strong></span>
-          </div>
-          <p className="mt-6 text-[16px] font-bold">Cost breakdown</p>
-          {breakdown.map((g) => (
-            <div key={g.name} className="mt-3 rounded-xl border px-4 py-3">
-              <div className="flex justify-between font-bold"><span>{g.name}</span><span>{aed(g.total)}</span></div>
-              {g.items.map((l) => (
-                <div key={l.label} className="mt-1 flex justify-between border-t pt-1 text-[13px]"><span>{l.label}</span><span>{l.amount < 0 ? `− ${aed(-l.amount)}` : aed(l.amount)}</span></div>
+
+          {/* headline total */}
+          <div style={{ background: "linear-gradient(110deg,#eef3ff,#fff7e0)", border: "1px solid #dbe3f3" }} className="mt-6 flex items-end justify-between rounded-2xl px-7 py-6">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.25em]" style={{ color: "#07399d" }}>Your estimated business setup cost</p>
+              <p className="mt-1 text-[40px] font-bold leading-none" style={{ color: "#07399d" }}>{aed(total)}</p>
+              <p className="mt-1 text-[11px]" style={{ color: "#6b7280" }}>All selections included</p>
+            </div>
+            <div className="flex gap-3 text-[11px]">
+              {[
+                ["Activities", `${picked.length}`],
+                ["Licence", `${term.years} ${term.years === 1 ? "year" : "years"}`],
+                ["Shareholders", `${shareholders}`],
+              ].map(([k, v]) => (
+                <div key={k} style={{ background: "#fff", border: "1px solid #dbe3f3" }} className="rounded-lg px-3 py-2 text-center">
+                  <p style={{ color: "#6b7280" }}>{k}</p>
+                  <p className="text-[15px] font-bold">{v}</p>
+                </div>
               ))}
             </div>
-          ))}
-          <div className="mt-4 flex justify-between rounded-xl bg-[#f1f4fb] px-4 py-3 text-[16px] font-bold"><span>Estimated total</span><span className="text-[#07399d]">{aed(total)}</span></div>
-          <p className="mt-4 text-[11px] leading-relaxed text-gray-500">The quoted amount is an estimate based on your selections. The final amount is confirmed by your business setup adviser before any payment is made. Government fees are subject to change without prior notice.</p>
+          </div>
+
+          {/* activities */}
+          <p className="mt-7 text-[11px] font-bold uppercase tracking-[0.25em]" style={{ color: "#07399d" }}>Your selected activities</p>
+          <div className="mt-2" style={{ borderTop: "2px solid #07399d" }}>
+            {picked.map((p) => (
+              <div key={p.id} className="flex gap-4 py-1.5 text-[12px]" style={{ borderBottom: "1px solid #e5e7eb" }}>
+                <span className="w-16 shrink-0 font-bold" style={{ color: "#8f5a00" }}>{p.sub}</span>
+                <span className="flex-1">{p.name}</span>
+                {p.authority && <span className="shrink-0 text-[10px] font-bold uppercase" style={{ color: "#8f5a00" }}>Approval needed</span>}
+              </div>
+            ))}
+          </div>
+
+          {/* breakdown */}
+          <p className="mt-7 text-[11px] font-bold uppercase tracking-[0.25em]" style={{ color: "#07399d" }}>Cost breakdown</p>
+          <div className="mt-2" style={{ borderTop: "2px solid #07399d" }}>
+            {breakdown.map((g) => (
+              <div key={g.name} className="break-inside-avoid">
+                <div className="flex justify-between px-3 py-2 text-[13px] font-bold" style={{ background: "#f1f4fb" }}>
+                  <span>{g.name}</span>
+                  <span>{aed(g.total)}</span>
+                </div>
+                {g.items.map((l) => (
+                  <div key={l.label} className="flex justify-between px-3 py-1.5 text-[12px]" style={{ borderBottom: "1px solid #e5e7eb" }}>
+                    <span>{l.label}</span>
+                    <span style={{ color: l.amount < 0 ? "#0f7d46" : undefined }}>{l.amount < 0 ? `− ${aed(-l.amount)}` : aed(l.amount)}</span>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+          <div style={{ background: "linear-gradient(110deg,#022364,#063798)" }} className="mt-4 flex items-center justify-between rounded-xl px-6 py-4 text-white">
+            <span className="text-[14px] font-bold">Estimated total</span>
+            <span className="text-[24px] font-bold">{aed(total)}</span>
+          </div>
+
+          {/* next steps */}
+          <div className="mt-7 grid grid-cols-3 gap-4 break-inside-avoid">
+            {[
+              ["1", "Review", "Check this estimate and tell us what to change."],
+              ["2", "Confirm", "An adviser confirms your activities and requirements, then sends a written quotation."],
+              ["3", "Start", "Approve the quotation and we begin your application."],
+            ].map(([n, t, d]) => (
+              <div key={n} style={{ border: "1px solid #dbe3f3" }} className="rounded-xl p-4">
+                <span className="flex h-7 w-7 items-center justify-center rounded-full text-[13px] font-bold text-white" style={{ background: "#07399d" }}>{n}</span>
+                <p className="mt-2 text-[13px] font-bold">{t}</p>
+                <p className="mt-1 text-[11px] leading-snug" style={{ color: "#4b5563" }}>{d}</p>
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-6 text-[10px] leading-relaxed" style={{ color: "#6b7280" }}>
+            {INDICATIVE_NOTE} The quoted amount is an estimate based on your selections. The final amount is confirmed by your business setup adviser before any payment is made. Government fees are subject to change without prior notice.
+          </p>
+        </div>
+
+        {/* footer */}
+        <div style={{ borderTop: "3px solid #ffc63d", background: "#022364" }} className="px-10 py-4 text-[10px] leading-relaxed text-white">
+          <div className="flex justify-between gap-6">
+            <div>
+              <p className="font-bold">{CONTACT.legalName}</p>
+              <p style={{ opacity: 0.8 }}>Business licence no. {CONTACT.licenceNo}</p>
+            </div>
+            {OFFICES.map((o) => (
+              <div key={o.name} style={{ opacity: 0.85 }}>
+                <p className="font-bold" style={{ color: "#ffc63d" }}>{o.name} office</p>
+                <p>{o.lines.slice(0, 2).join(", ")}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
