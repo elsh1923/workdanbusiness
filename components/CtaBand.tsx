@@ -17,14 +17,14 @@ export default function CtaBand() {
           </p>
         </div>
         <div className="flex flex-wrap gap-4">
-          <Link data-magnetic href="/#contact" className="rounded-full bg-midnight px-8 py-4 text-[16px] font-extrabold uppercase tracking-widest text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-navy">
+          <Link data-magnetic href="/#contact" className="rounded-full bg-midnight px-8 py-4 text-[16px] font-bold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-navy">
             Book a consultation
           </Link>
           <a
             href={whatsappLink("Hello Workdane, I'd like to discuss company setup.")}
             target="_blank"
             rel="noreferrer"
-            className="flex items-center gap-2 rounded-full border-2 border-midnight px-8 py-4 text-[16px] font-extrabold uppercase tracking-widest text-midnight transition hover:bg-midnight hover:text-white"
+            className="flex items-center gap-2 rounded-full border-2 border-midnight px-8 py-4 text-[16px] font-bold text-midnight transition hover:bg-midnight hover:text-white"
           >
             <MessageCircle className="h-4 w-4" />
             WhatsApp us

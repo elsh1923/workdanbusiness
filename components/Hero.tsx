@@ -50,7 +50,7 @@ function SetupFinder() {
     <div data-spotlight data-tilt className="spotlight glass rounded-3xl border border-white/10 border-t-2 border-t-gold p-6 shadow-[0_40px_80px_-40px_rgba(0,0,0,0.6)] sm:p-10">
       <div className="flex items-center justify-between text-[14px] font-bold uppercase tracking-[0.25em] text-white/60">
         <span>Find your starting point</span>
-        <span>
+        <span className="whitespace-nowrap">
           {Math.min(step + 1, questions.length)} / {questions.length}
         </span>
       </div>
@@ -78,7 +78,7 @@ function SetupFinder() {
             ))}
           </ul>
           {step > 0 && (
-            <button onClick={() => setAnswers(answers.slice(0, -1))} className="mt-6 text-[16px] font-bold uppercase tracking-widest text-white/50 hover:text-white">
+            <button onClick={() => setAnswers(answers.slice(0, -1))} className="mt-6 text-[16px] font-semibold text-white/50 hover:text-white">
               ← Back
             </button>
           )}
@@ -99,10 +99,10 @@ function SetupFinder() {
           </ul>
           <p className="mt-6 text-[16px] text-white/55">These are general pointers. Our consultants confirm the right route for your activity.</p>
           <div className="mt-8 flex flex-wrap items-center gap-6">
-            <a href="#contact" className="gold-gradient btn-shine rounded-full px-6 py-3 text-[16px] font-extrabold uppercase tracking-widest text-midnight">
+            <a href="#contact" className="gold-gradient btn-shine rounded-full px-6 py-3 text-[16px] font-bold text-midnight">
               Discuss my setup
             </a>
-            <button onClick={() => setAnswers([])} className="flex items-center gap-2 text-[16px] font-bold uppercase tracking-widest text-white/60 hover:text-white">
+            <button onClick={() => setAnswers([])} className="flex items-center gap-2 text-[16px] font-semibold text-white/60 hover:text-white">
               <RotateCcw className="h-3.5 w-3.5" />
               Start again
             </button>
@@ -143,10 +143,10 @@ export default function Hero() {
             Company formation, licensing, visas, VAT and accounting, delivered by one team with one point of contact.
           </p>
           <div className="rise mt-10 flex flex-wrap items-center gap-x-8 gap-y-5" style={{ animationDelay: "0.25s" }}>
-            <a data-magnetic href="#contact" className="gold-gradient btn-shine rounded-full px-7 py-3.5 text-[16px] font-extrabold uppercase tracking-widest text-midnight shadow-[0_12px_30px_-10px_rgba(217,154,11,0.6)] transition hover:-translate-y-1 hover:brightness-110">
+            <a data-magnetic href="#contact" className="gold-gradient btn-shine rounded-full px-7 py-3.5 text-[16px] font-bold text-midnight shadow-[0_12px_30px_-10px_rgba(217,154,11,0.6)] transition hover:-translate-y-1 hover:brightness-110">
               Book a consultation
             </a>
-            <a href="/business-activities" className="group flex items-center gap-2 text-[16px] font-extrabold uppercase tracking-widest text-white">
+            <a href="/business-activities" className="group flex items-center gap-2 text-[16px] font-bold text-white">
               Browse business activities
               <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
             </a>

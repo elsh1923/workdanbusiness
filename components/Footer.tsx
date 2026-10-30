@@ -87,7 +87,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-[1840px] flex-wrap justify-between gap-4 px-5 py-6 text-[14px] text-white/45 sm:px-9">
+        <div className="mx-auto flex max-w-[1840px] flex-wrap justify-between gap-4 px-5 pb-24 pt-6 text-[14px] text-white/45 sm:px-9 sm:pb-6 sm:pr-28">
           <span>© 2026 {COMPANY.name}. All rights reserved.</span>
           <span>Company setup and business services, UAE</span>
         </div>

@@ -51,7 +51,7 @@ export default function EnquiryForm({
       <div role="status" className="flex min-h-[320px] flex-col justify-center">
         <p className="font-display text-[40px] font-bold text-heading">{successTitle}</p>
         <p className="mt-4 max-w-md text-[16px] leading-relaxed">{successText}</p>
-        <button onClick={reset} className="mt-8 self-start text-[16px] font-bold uppercase tracking-widest text-navy underline decoration-gold decoration-2 underline-offset-8">
+        <button onClick={reset} className="mt-8 self-start text-[16px] font-semibold text-navy underline decoration-gold decoration-2 underline-offset-8">
           Send another request
         </button>
       </div>
@@ -108,7 +108,7 @@ export default function EnquiryForm({
           type="submit"
           disabled={sending}
           data-magnetic
-          className="gold-gradient btn-shine flex items-center gap-3 rounded-full px-8 py-4 text-[16px] font-extrabold uppercase tracking-widest text-midnight transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-70"
+          className="gold-gradient btn-shine flex items-center gap-3 rounded-full px-8 py-4 text-[16px] font-bold text-midnight transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-70"
         >
           {sending && <Loader2 className="h-4 w-4 animate-spin" />}
           {sending ? "Sending..." : submitLabel}

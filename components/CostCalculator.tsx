@@ -101,7 +101,7 @@ export default function CostCalculator() {
           <p className="mt-8 text-[14px] leading-relaxed text-body">{INDICATIVE_NOTE}</p>
           <a
             href="/#contact"
-            className="gold-gradient btn-shine mt-8 block rounded-full py-4 text-center text-[16px] font-extrabold uppercase tracking-widest text-midnight transition hover:brightness-105"
+            className="gold-gradient btn-shine mt-8 block rounded-full py-4 text-center text-[16px] font-bold text-midnight transition hover:brightness-105"
           >
             Get a written quote
           </a>

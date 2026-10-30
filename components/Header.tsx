@@ -28,9 +28,9 @@ export default function Header() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-white/95 backdrop-blur-md" onMouseLeave={() => setOpen(null)}>
-      <div className="mx-auto flex h-20 max-w-[1840px] items-center gap-5 px-5 sm:px-9">
+      <div className="mx-auto flex h-[68px] max-w-[1840px] items-center gap-5 px-5 sm:px-9">
         <Link href="/" aria-label={`${COMPANY.name} home`} className="shrink-0">
-          <Image src={LOGO.src} alt={COMPANY.name} width={LOGO.width} height={LOGO.height} priority className="h-16 w-auto" />
+          <Image src={LOGO.src} alt={COMPANY.name} width={LOGO.width} height={LOGO.height} priority className="h-[54px] w-auto" />
         </Link>
 
         <nav aria-label="Main" className="ml-auto hidden items-center 2xl:flex">
@@ -65,10 +65,10 @@ export default function Header() {
 
         <Link
           href="/cost-calculator"
-          className="group hidden items-center gap-3 rounded-full bg-navy py-1.5 pl-5 pr-1.5 text-[16px] font-bold text-white transition hover:bg-slate-accent 2xl:flex"
+          className="group hidden items-center gap-3 rounded-full bg-navy py-1 pl-5 pr-1 text-[16px] font-bold text-white transition hover:bg-slate-accent 2xl:flex"
         >
           Cost Calculator
-          <span className="gold-gradient flex h-9 w-9 items-center justify-center rounded-full text-midnight transition duration-700 group-hover:rotate-[360deg]">
+          <span className="gold-gradient flex h-8 w-8 items-center justify-center rounded-full text-midnight transition duration-700 group-hover:rotate-[360deg]">
             <Calculator className="h-4 w-4" />
           </span>
         </Link>
@@ -119,7 +119,7 @@ export default function Header() {
                 <p className="mt-3 font-display text-2xl font-bold leading-snug">{active.promo.title}</p>
                 <p className="mt-3 text-[16px] leading-relaxed text-white/70">{active.promo.text}</p>
               </div>
-              <span className="mt-8 flex items-center gap-2 text-[16px] font-extrabold uppercase tracking-widest text-gold-light">
+              <span className="mt-8 flex items-center gap-2 text-[16px] font-bold text-gold-light">
                 {active.promo.cta}
                 <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
               </span>
@@ -163,7 +163,7 @@ export default function Header() {
           <Link
             href="/cost-calculator"
             onClick={() => setMenu(false)}
-            className="gold-gradient btn-shine my-5 block rounded-full py-3.5 text-center text-[16px] font-extrabold uppercase tracking-widest text-midnight"
+            className="gold-gradient btn-shine my-5 block rounded-full py-3.5 text-center text-[16px] font-bold text-midnight"
           >
             Cost Calculator
           </Link>

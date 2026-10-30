@@ -87,7 +87,7 @@ export default function Contact() {
             href={whatsappLink("Hello Workdane, I'd like to discuss company setup.")}
             target="_blank"
             rel="noreferrer"
-            className="mt-10 inline-flex items-center gap-3 rounded-full bg-[#25D366] px-6 py-3.5 text-[16px] font-extrabold uppercase tracking-widest text-white"
+            className="mt-10 inline-flex items-center gap-3 rounded-full bg-[#0f7d46] px-6 py-3.5 text-[16px] font-bold text-white"
           >
             <MessageCircle className="h-4 w-4" />
             Chat on WhatsApp
@@ -101,7 +101,7 @@ export default function Contact() {
               <p className="mt-4 max-w-md text-[16px] leading-relaxed">
                 We have received your enquiry and will get back to you via {channel}. For anything urgent, message us on WhatsApp.
               </p>
-              <button onClick={reset} className="mt-8 self-start text-[16px] font-bold uppercase tracking-widest text-navy underline decoration-gold decoration-2 underline-offset-8">
+              <button onClick={reset} className="mt-8 self-start text-[16px] font-semibold text-navy underline decoration-gold decoration-2 underline-offset-8">
                 Send another enquiry
               </button>
             </div>
@@ -186,7 +186,7 @@ export default function Contact() {
                   type="submit"
                   disabled={sending}
                   data-magnetic
-                  className="gold-gradient btn-shine flex items-center gap-3 rounded-full px-8 py-4 text-[16px] font-extrabold uppercase tracking-widest text-midnight transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-70"
+                  className="gold-gradient btn-shine flex items-center gap-3 rounded-full px-8 py-4 text-[16px] font-bold text-midnight transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   {sending && <Loader2 className="h-4 w-4 animate-spin" />}
                   {sending ? "Sending..." : "Request a call back"}

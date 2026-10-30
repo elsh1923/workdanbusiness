@@ -4,8 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowUpRight, Check, MessageCircle, Plus, Search, X } from "lucide-react";
 import { activities, categories, type Activity } from "@/lib/activities";
 import { INDICATIVE_NOTE, whatsappLink } from "@/lib/config";
-import Eyebrow from "./Eyebrow";
-import { Reveal } from "./motion";
 
 type Sort = "name" | "low" | "high";
 
@@ -53,21 +51,10 @@ export default function BusinessActivities({ initialCategory = "All" }: { initia
   const viewingOn = viewing ? shortlist.includes(viewing.code) : false;
 
   return (
-    <section id="business-activities" className="scroll-mt-24 bg-white px-5 py-28 sm:px-9">
+    <section id="business-activities" className="scroll-mt-24 bg-white px-5 pb-28 pt-16 sm:px-9">
       <div className="mx-auto max-w-[1840px]">
-        <Reveal>
-          <Eyebrow>Business activities</Eyebrow>
-          <div className="flex flex-wrap items-end justify-between gap-8">
-            <h2 className="max-w-2xl font-display text-[40px] font-bold leading-[1.15] text-heading sm:text-[44px]">
-              Find the activity for your <em className="gold-text italic">licence.</em>
-            </h2>
-            <p className="max-w-sm text-[16px] leading-relaxed">
-              Search {activities.length} licensable activities. Shortlist the ones you are considering and send them to us in one message.
-            </p>
-          </div>
-        </Reveal>
 
-        <div className="mt-14 flex flex-col gap-6 border-b border-heading/15 pb-6 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-6 border-b border-heading/15 pb-6 lg:flex-row lg:items-center lg:justify-between">
           <label className="flex max-w-md flex-1 items-center gap-3 border-b-2 border-heading/20 pb-2 transition focus-within:border-gold">
             <Search className="h-4 w-4 shrink-0 text-body" />
             <input
@@ -201,7 +188,7 @@ export default function BusinessActivities({ initialCategory = "All" }: { initia
             <div className="grid gap-3 border-t border-line p-6 sm:grid-cols-2 sm:p-8">
               <button
                 onClick={() => toggle(viewing.code)}
-                className={`rounded-full px-6 py-3.5 text-[16px] font-extrabold uppercase tracking-widest transition ${
+                className={`rounded-full px-6 py-3.5 text-[16px] font-bold transition ${
                   viewingOn ? "border border-navy text-navy hover:bg-navy hover:text-white" : "gold-gradient btn-shine text-midnight"
                 }`}
               >
@@ -211,7 +198,7 @@ export default function BusinessActivities({ initialCategory = "All" }: { initia
                 href={whatsappLink(`Hello Workdane, I'd like to know more about ${viewing.code} - ${viewing.name}.`)}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-3.5 text-[16px] font-extrabold uppercase tracking-widest text-white"
+                className="flex items-center justify-center gap-2 rounded-full bg-[#0f7d46] px-6 py-3.5 text-[16px] font-bold text-white"
               >
                 <MessageCircle className="h-4 w-4" />
                 Ask on WhatsApp
@@ -229,10 +216,10 @@ export default function BusinessActivities({ initialCategory = "All" }: { initia
               aria-expanded={showList}
               className="flex w-full items-center justify-between px-6 py-4 text-left"
             >
-              <span className="text-[16px] font-extrabold uppercase tracking-[0.2em]">
+              <span className="text-[16px] font-bold">
                 Shortlist <span className="gold-text ml-2 text-base">{picked.length}</span>
               </span>
-              <span className="flex items-center gap-2 text-[16px] font-bold uppercase tracking-widest text-white/70">
+              <span className="flex items-center gap-2 text-[16px] font-semibold text-white/70">
                 {showList ? "Hide" : "Review"}
                 <ArrowUpRight className={`h-4 w-4 transition ${showList ? "rotate-180" : ""}`} />
               </span>
@@ -258,7 +245,7 @@ export default function BusinessActivities({ initialCategory = "All" }: { initia
                     href={whatsappLink(shortlistMessage)}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-[16px] font-extrabold uppercase tracking-widest text-white"
+                    className="flex items-center justify-center gap-2 rounded-full bg-[#0f7d46] px-5 py-3 text-[16px] font-bold text-white"
                   >
                     <MessageCircle className="h-4 w-4" />
                     Send on WhatsApp
@@ -266,7 +253,7 @@ export default function BusinessActivities({ initialCategory = "All" }: { initia
                   <a
                     href="#contact"
                     onClick={() => setShowList(false)}
-                    className="gold-gradient btn-shine flex items-center justify-center rounded-full px-5 py-3 text-[16px] font-extrabold uppercase tracking-widest text-midnight"
+                    className="gold-gradient btn-shine flex items-center justify-center rounded-full px-5 py-3 text-[16px] font-bold text-midnight"
                   >
                     Request a call back
                   </a>
