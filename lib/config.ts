@@ -22,7 +22,7 @@ export const OFFICES = [
   },
 ];
 
-export const LOGO = { src: "/logo.png", width: 905, height: 675 };
+export const LOGO = { src: "/logo-workdane.png", width: 536, height: 465 };
 
 export const whatsappLink = (text: string) =>
   `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(text)}`;

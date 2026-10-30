@@ -30,7 +30,7 @@ export default function Header() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-white/95 backdrop-blur-md" onMouseLeave={() => setOpen(null)}>
       <div className="mx-auto flex h-20 max-w-[1840px] items-center gap-5 px-5 sm:px-9">
         <Link href="/" aria-label={`${COMPANY.name} home`} className="shrink-0">
-          <Image src={LOGO.src} alt={COMPANY.name} width={LOGO.width} height={LOGO.height} priority className="h-14 w-auto" />
+          <Image src={LOGO.src} alt={COMPANY.name} width={LOGO.width} height={LOGO.height} priority className="h-16 w-auto" />
         </Link>
 
         <nav aria-label="Main" className="ml-auto hidden items-center 2xl:flex">
