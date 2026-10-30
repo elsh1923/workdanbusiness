@@ -21,7 +21,7 @@ export default function Home() {
       <section id="license-categories" className="scroll-mt-24 border-t border-line bg-white px-5 py-28 sm:px-9">
         <div className="mx-auto max-w-[1840px]">
           <Eyebrow>License categories</Eyebrow>
-          <h2 className="font-display text-[40px] font-bold leading-[1.15] text-heading sm:text-[44px]">
+          <h2 className="font-display text-[34px] font-bold leading-[1.15] text-heading sm:text-[38px]">
             Pick the category that fits. <em className="gold-text italic">We handle the rest.</em>
           </h2>
           <ul className="mt-12 grid border-t border-heading/15 md:grid-cols-2 md:gap-x-16 lg:grid-cols-3">
@@ -36,7 +36,7 @@ export default function Home() {
                     <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-navy/5 text-navy transition duration-500 group-hover:bg-navy group-hover:text-gold-light">
                       <Icon className="h-5 w-5" />
                     </span>
-                    <span className="flex-1 font-display text-xl font-bold text-heading transition group-hover:text-navy">{c.name}</span>
+                    <span className="flex-1 font-display text-[18px] font-bold text-heading transition group-hover:text-navy">{c.name}</span>
                     <ArrowRight className="h-5 w-5 shrink-0 text-gold transition group-hover:translate-x-1" />
                   </Link>
                 </li>

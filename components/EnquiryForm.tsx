@@ -49,9 +49,9 @@ export default function EnquiryForm({
   if (status === "sent") {
     return (
       <div role="status" className="flex min-h-[320px] flex-col justify-center">
-        <p className="font-display text-[40px] font-bold text-heading">{successTitle}</p>
-        <p className="mt-4 max-w-md text-[16px] leading-relaxed">{successText}</p>
-        <button onClick={reset} className="mt-8 self-start text-[16px] font-semibold text-navy underline decoration-gold decoration-2 underline-offset-8">
+        <p className="font-display text-[34px] font-bold text-heading">{successTitle}</p>
+        <p className="mt-4 max-w-md text-[15px] leading-relaxed">{successText}</p>
+        <button onClick={reset} className="mt-8 self-start text-[15px] font-semibold text-navy underline decoration-gold decoration-2 underline-offset-8">
           Send another request
         </button>
       </div>
@@ -91,10 +91,10 @@ export default function EnquiryForm({
           </label>
         ))}
 
-        {note && <p className="text-[14px] leading-relaxed text-body">{note}</p>}
+        {note && <p className="text-[13px] leading-relaxed text-body">{note}</p>}
 
         {status === "error" && (
-          <div role="alert" className="border-l-4 border-red-500 bg-red-50 p-4 text-[16px] leading-relaxed text-red-900">
+          <div role="alert" className="border-l-4 border-red-500 bg-red-50 p-4 text-[15px] leading-relaxed text-red-900">
             {message}
             {whatsapp && (
               <a href={whatsapp} target="_blank" rel="noreferrer" className="mt-2 block font-bold underline">
@@ -108,7 +108,7 @@ export default function EnquiryForm({
           type="submit"
           disabled={sending}
           data-magnetic
-          className="gold-gradient btn-shine flex items-center gap-3 rounded-full px-8 py-4 text-[16px] font-bold text-midnight transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-70"
+          className="gold-gradient btn-shine flex items-center gap-3 rounded-full px-8 py-4 text-[15px] font-bold text-midnight transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-70"
         >
           {sending && <Loader2 className="h-4 w-4 animate-spin" />}
           {sending ? "Sending..." : submitLabel}

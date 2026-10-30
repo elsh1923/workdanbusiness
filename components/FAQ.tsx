@@ -36,10 +36,10 @@ export default function FAQ() {
       <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-[1fr_1.6fr] lg:gap-24">
         <Reveal>
           <Eyebrow>Good to know</Eyebrow>
-          <h2 className="font-display text-[40px] font-bold leading-[1.15] text-heading sm:text-[44px]">
+          <h2 className="font-display text-[34px] font-bold leading-[1.15] text-heading sm:text-[38px]">
             Questions, <em className="gold-text italic">answered.</em>
           </h2>
-          <p className="mt-6 max-w-sm text-[16px] leading-relaxed">Cannot find your answer? Send us a message and we will reply.</p>
+          <p className="mt-6 max-w-sm text-[15px] leading-relaxed">Cannot find your answer? Send us a message and we will reply.</p>
         </Reveal>
 
         <div className="border-t border-heading/15">
@@ -50,7 +50,7 @@ export default function FAQ() {
                 aria-expanded={open === n}
                 className="flex w-full items-center justify-between gap-6 py-6 text-left"
               >
-                <span className="font-display text-xl font-bold text-heading sm:text-2xl">{q}</span>
+                <span className="font-display text-[18px] font-bold text-heading sm:text-[21px]">{q}</span>
                 <span
                   className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-heading/25 transition duration-300 ${
                     open === n ? "rotate-45 border-gold bg-gold text-midnight" : "text-heading"
@@ -60,7 +60,7 @@ export default function FAQ() {
                 </span>
               </button>
               <div className={`grid transition-[grid-template-rows] duration-500 ${open === n ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
-                <p className="overflow-hidden pr-16 text-[16px] leading-relaxed">
+                <p className="overflow-hidden pr-16 text-[15px] leading-relaxed">
                   <span className="block pb-6">{a}</span>
                 </p>
               </div>

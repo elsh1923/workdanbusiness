@@ -8,8 +8,8 @@ import { calculatorRates } from "@/lib/content";
 
 const MAX_VISAS = 10;
 const fmt = (n: number) => n.toLocaleString("en-US");
-const stepLabel = "mb-5 text-[14px] font-extrabold uppercase tracking-[0.25em] text-bronze";
-const choice = "flex w-full items-center justify-between gap-4 border-b border-heading/15 py-4 text-left text-[16px] transition";
+const stepLabel = "mb-5 text-[13px] font-extrabold uppercase tracking-[0.25em] text-bronze";
+const choice = "flex w-full items-center justify-between gap-4 border-b border-heading/15 py-4 text-left text-[15px] transition";
 
 export default function CostCalculator() {
   const [category, setCategory] = useState<Category>("General Trading");
@@ -58,7 +58,7 @@ export default function CostCalculator() {
               >
                 <Minus className="h-4 w-4" />
               </button>
-              <span aria-live="polite" className="w-12 text-center font-display text-[40px] font-bold text-heading">
+              <span aria-live="polite" className="w-12 text-center font-display text-[34px] font-bold text-heading">
                 {visas}
               </span>
               <button
@@ -89,8 +89,8 @@ export default function CostCalculator() {
 
         <aside className="border border-line border-t-2 border-t-gold bg-white p-8 shadow-[0_24px_60px_-35px_rgba(12,42,85,0.35)] sm:p-10 lg:sticky lg:top-32 lg:self-start">
           <p className={stepLabel}>Estimated total</p>
-          <p className="font-display text-[40px] font-bold text-navy">AED {fmt(total)}</p>
-          <ul className="mt-8 space-y-3 border-t border-line pt-6 text-[16px]">
+          <p className="font-display text-[34px] font-bold text-navy">AED {fmt(total)}</p>
+          <ul className="mt-8 space-y-3 border-t border-line pt-6 text-[15px]">
             {lines.map((l) => (
               <li key={l.label} className="flex justify-between gap-4">
                 <span>{l.label}</span>
@@ -98,10 +98,10 @@ export default function CostCalculator() {
               </li>
             ))}
           </ul>
-          <p className="mt-8 text-[14px] leading-relaxed text-body">{INDICATIVE_NOTE}</p>
+          <p className="mt-8 text-[13px] leading-relaxed text-body">{INDICATIVE_NOTE}</p>
           <a
             href="/#contact"
-            className="gold-gradient btn-shine mt-8 block rounded-full py-4 text-center text-[16px] font-bold text-midnight transition hover:brightness-105"
+            className="gold-gradient btn-shine mt-8 block rounded-full py-4 text-center text-[15px] font-bold text-midnight transition hover:brightness-105"
           >
             Get a written quote
           </a>

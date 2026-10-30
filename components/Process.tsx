@@ -17,7 +17,7 @@ export default function Process() {
       <div className="mx-auto max-w-[1840px]">
         <Reveal>
           <Eyebrow>How it works</Eyebrow>
-          <h2 className="max-w-3xl font-display text-[40px] font-bold leading-[1.15] text-heading sm:text-[44px]">
+          <h2 className="max-w-3xl font-display text-[34px] font-bold leading-[1.15] text-heading sm:text-[38px]">
             From first call to <em className="gold-text italic">fully running.</em>
           </h2>
         </Reveal>
@@ -37,11 +37,11 @@ export default function Process() {
                     <span className="gold-gradient relative flex h-14 w-14 items-center justify-center rounded-full text-midnight shadow-[0_14px_30px_-12px_rgba(217,154,11,0.8)] ring-8 ring-white transition duration-500 group-hover:-translate-y-2 group-hover:scale-125">
                       <Icon className="h-6 w-6" />
                     </span>
-                    <span className="mt-6 block text-[14px] font-bold uppercase tracking-[0.2em] text-bronze">
+                    <span className="mt-6 block text-[13px] font-bold uppercase tracking-[0.2em] text-bronze">
                       Step {String(i + 1).padStart(2, "0")}
                     </span>
-                    <h3 className="mt-2 font-display text-2xl font-bold text-heading">{s.title}</h3>
-                    <p className="mt-3 max-w-xs text-[16px] leading-relaxed">{s.text}</p>
+                    <h3 className="mt-2 font-display text-[21px] font-bold text-heading">{s.title}</h3>
+                    <p className="mt-3 max-w-xs text-[15px] leading-relaxed">{s.text}</p>
                   </Reveal>
                 </li>
               );

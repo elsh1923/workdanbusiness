@@ -13,7 +13,7 @@ const company = [
   { label: "Contact", href: "/contact" },
 ];
 
-const heading = "mb-5 text-[14px] font-extrabold uppercase tracking-[0.3em] text-gold-light";
+const heading = "mb-5 text-[13px] font-extrabold uppercase tracking-[0.3em] text-gold-light";
 
 export default function Footer() {
   return (
@@ -23,12 +23,12 @@ export default function Footer() {
           <div className="inline-block">
             <Image src={LOGO_LIGHT.src} alt={COMPANY.name} width={LOGO_LIGHT.width} height={LOGO_LIGHT.height} className="h-28 w-auto" />
           </div>
-          <p className="mt-8 max-w-xs font-display text-2xl italic leading-snug text-white">Set up right. Stay compliant. Grow with confidence.</p>
+          <p className="mt-8 max-w-xs font-display text-[21px] italic leading-snug text-white">Set up right. Stay compliant. Grow with confidence.</p>
         </div>
 
         <nav aria-label="Start your business">
           <h2 className={heading}>Start your business</h2>
-          <ul className="space-y-3 text-[16px]">
+          <ul className="space-y-3 text-[15px]">
             {startItems.map((n) => (
               <li key={n.label}>
                 <Link href={n.href} className="transition hover:text-white">
@@ -41,7 +41,7 @@ export default function Footer() {
 
         <nav aria-label="Company">
           <h2 className={heading}>Company</h2>
-          <ul className="space-y-3 text-[16px]">
+          <ul className="space-y-3 text-[15px]">
             {company.map((n) => (
               <li key={n.label}>
                 <Link href={n.href} className="transition hover:text-white">
@@ -54,7 +54,7 @@ export default function Footer() {
 
         <div>
           <h2 className={heading}>Contact</h2>
-          <ul className="space-y-4 text-[16px]">
+          <ul className="space-y-4 text-[15px]">
             <li className="flex gap-3">
               <Phone className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
               {CONTACT.phone}
@@ -67,18 +67,18 @@ export default function Footer() {
               </span>
             </li>
           </ul>
-          <ul className="mt-6 space-y-5 text-[16px]">
+          <ul className="mt-6 space-y-5 text-[15px]">
             {OFFICES.map((o) => (
               <li key={o.name} className="flex gap-3">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
                 <span>
-                  <span className="block text-[14px] font-bold uppercase tracking-widest text-gold-light">{o.name} office</span>
+                  <span className="block text-[13px] font-bold uppercase tracking-widest text-gold-light">{o.name} office</span>
                   {o.lines.join(", ")}
                 </span>
               </li>
             ))}
           </ul>
-          <p className="mt-6 text-[14px] leading-relaxed text-white/45">
+          <p className="mt-6 text-[13px] leading-relaxed text-white/45">
             {CONTACT.legalName}
             <br />
             Business licence no. {CONTACT.licenceNo}
@@ -87,7 +87,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-[1840px] flex-wrap justify-between gap-4 px-5 pb-24 pt-6 text-[14px] text-white/45 sm:px-9 sm:pb-6 sm:pr-28">
+        <div className="mx-auto flex max-w-[1840px] flex-wrap justify-between gap-4 px-5 pb-24 pt-6 text-[13px] text-white/45 sm:px-9 sm:pb-6 sm:pr-28">
           <span>© 2026 {COMPANY.name}. All rights reserved.</span>
           <span>Company setup and business services, UAE</span>
         </div>

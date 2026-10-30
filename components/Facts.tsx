@@ -23,10 +23,10 @@ export default function Facts() {
               <f.icon className="h-6 w-6" />
             </span>
             <div>
-              <dt className="font-display text-[40px] font-bold leading-none text-navy">
+              <dt className="font-display text-[34px] font-bold leading-none text-navy">
                 <CountUp to={f.value} />
               </dt>
-              <dd className="mt-2 text-[16px] font-semibold text-body">{f.label}</dd>
+              <dd className="mt-2 text-[15px] font-semibold text-body">{f.label}</dd>
             </div>
           </div>
         ))}

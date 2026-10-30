@@ -65,7 +65,7 @@ export default function BusinessActivities({ initialCategory = "All" }: { initia
               className="w-full bg-transparent text-[16px] text-heading outline-none placeholder:text-body/50"
             />
           </label>
-          <label className="flex items-center gap-3 text-[14px] font-extrabold uppercase tracking-[0.18em] text-navy">
+          <label className="flex items-center gap-3 text-[13px] font-extrabold uppercase tracking-[0.18em] text-navy">
             Sort
             <select
               value={sort}
@@ -88,7 +88,7 @@ export default function BusinessActivities({ initialCategory = "All" }: { initia
                 key={t}
                 onClick={() => setCategory(t)}
                 aria-pressed={on}
-                className={`whitespace-nowrap rounded-full px-4 py-2 text-[14px] font-bold transition ${
+                className={`whitespace-nowrap rounded-full px-4 py-2 text-[13px] font-bold transition ${
                   on ? "bg-navy text-white" : "bg-tint text-navy hover:bg-line"
                 }`}
               >
@@ -112,12 +112,12 @@ export default function BusinessActivities({ initialCategory = "All" }: { initia
                   }}
                   className="group grid cursor-pointer grid-cols-[1fr_auto] items-center gap-4 px-1 py-5 outline-none row-wipe sm:grid-cols-[7rem_1fr_13rem_9rem_3rem] sm:px-4"
                 >
-                  <span className="hidden font-mono text-[14px] tracking-wider text-bronze sm:block">{a.code}</span>
+                  <span className="hidden font-mono text-[13px] tracking-wider text-bronze sm:block">{a.code}</span>
                   <span className="min-w-0">
-                    <span className="block font-display text-xl font-bold text-heading transition-transform duration-300 group-hover:translate-x-3 sm:text-2xl">
+                    <span className="block font-display text-[18px] font-bold text-heading transition-transform duration-300 group-hover:translate-x-3 sm:text-[21px]">
                       {a.name}
                     </span>
-                    <span className="mt-1 block text-[14px] font-bold uppercase tracking-widest text-bronze sm:hidden">
+                    <span className="mt-1 block text-[13px] font-bold uppercase tracking-widest text-bronze sm:hidden">
                       {a.category} · AED {fmt(a.fee)}
                     </span>
                     {a.approval && (
@@ -126,8 +126,8 @@ export default function BusinessActivities({ initialCategory = "All" }: { initia
                       </span>
                     )}
                   </span>
-                  <span className="hidden text-[16px] text-body sm:block">{a.category}</span>
-                  <span className="hidden text-[16px] font-bold text-navy sm:block">AED {fmt(a.fee)}</span>
+                  <span className="hidden text-[15px] text-body sm:block">{a.category}</span>
+                  <span className="hidden text-[15px] font-bold text-navy sm:block">AED {fmt(a.fee)}</span>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -149,8 +149,8 @@ export default function BusinessActivities({ initialCategory = "All" }: { initia
           })}
         </ol>
 
-        {!list.length && <p className="py-16 text-center font-display text-2xl text-heading/50">No activities match. Try a different word.</p>}
-        <p className="mt-6 text-[14px] text-body/80">{INDICATIVE_NOTE}</p>
+        {!list.length && <p className="py-16 text-center font-display text-[21px] text-heading/50">No activities match. Try a different word.</p>}
+        <p className="mt-6 text-[13px] text-body/80">{INDICATIVE_NOTE}</p>
       </div>
 
       {viewing && (
@@ -163,32 +163,32 @@ export default function BusinessActivities({ initialCategory = "All" }: { initia
             className="rise flex h-full w-full max-w-lg flex-col bg-surface shadow-2xl"
           >
             <div className="flex items-center justify-between border-b border-line px-6 py-4">
-              <span className="font-mono text-[14px] tracking-wider text-bronze">{viewing.code}</span>
+              <span className="font-mono text-[13px] tracking-wider text-bronze">{viewing.code}</span>
               <button onClick={() => setViewing(null)} aria-label="Close" className="rounded-full p-2 text-heading hover:bg-line">
                 <X className="h-5 w-5" />
               </button>
             </div>
             <div className="flex-1 overflow-y-auto px-6 py-10 sm:px-10">
-              <p className="text-[14px] font-bold uppercase tracking-[0.25em] text-bronze">{viewing.category}</p>
-              <h3 className="mt-3 font-display text-[40px] font-bold leading-tight text-heading">{viewing.name}</h3>
-              <p className="mt-6 text-[16px] leading-relaxed">
+              <p className="text-[13px] font-bold uppercase tracking-[0.25em] text-bronze">{viewing.category}</p>
+              <h3 className="mt-3 font-display text-[34px] font-bold leading-tight text-heading">{viewing.name}</h3>
+              <p className="mt-6 text-[15px] leading-relaxed">
                 We confirm the licence requirements, approvals and documents for {viewing.name.toLowerCase()} before you apply.
               </p>
               {viewing.approval && (
-                <p className="mt-6 border-l-2 border-gold pl-4 text-[16px] leading-relaxed text-heading">
+                <p className="mt-6 border-l-2 border-gold pl-4 text-[15px] leading-relaxed text-heading">
                   <span className="font-bold">Extra approval:</span> {viewing.approval}
                 </p>
               )}
               <div className="mt-10 border-t border-line pt-6">
-                <p className="text-[14px] font-bold uppercase tracking-[0.25em] text-bronze">Indicative fee</p>
-                <p className="mt-2 font-display text-[40px] font-bold text-navy">AED {fmt(viewing.fee)}</p>
-                <p className="mt-2 text-[14px] text-body/80">{INDICATIVE_NOTE}</p>
+                <p className="text-[13px] font-bold uppercase tracking-[0.25em] text-bronze">Indicative fee</p>
+                <p className="mt-2 font-display text-[34px] font-bold text-navy">AED {fmt(viewing.fee)}</p>
+                <p className="mt-2 text-[13px] text-body/80">{INDICATIVE_NOTE}</p>
               </div>
             </div>
             <div className="grid gap-3 border-t border-line p-6 sm:grid-cols-2 sm:p-8">
               <button
                 onClick={() => toggle(viewing.code)}
-                className={`rounded-full px-6 py-3.5 text-[16px] font-bold transition ${
+                className={`rounded-full px-6 py-3.5 text-[15px] font-bold transition ${
                   viewingOn ? "border border-navy text-navy hover:bg-navy hover:text-white" : "gold-gradient btn-shine text-midnight"
                 }`}
               >
@@ -198,7 +198,7 @@ export default function BusinessActivities({ initialCategory = "All" }: { initia
                 href={whatsappLink(`Hello Workdane, I'd like to know more about ${viewing.code} - ${viewing.name}.`)}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center justify-center gap-2 rounded-full bg-[#0f7d46] px-6 py-3.5 text-[16px] font-bold text-white"
+                className="flex items-center justify-center gap-2 rounded-full bg-[#0f7d46] px-6 py-3.5 text-[15px] font-bold text-white"
               >
                 <MessageCircle className="h-4 w-4" />
                 Ask on WhatsApp
@@ -216,10 +216,10 @@ export default function BusinessActivities({ initialCategory = "All" }: { initia
               aria-expanded={showList}
               className="flex w-full items-center justify-between px-6 py-4 text-left"
             >
-              <span className="text-[16px] font-bold">
+              <span className="text-[15px] font-bold">
                 Shortlist <span className="gold-text ml-2 text-base">{picked.length}</span>
               </span>
-              <span className="flex items-center gap-2 text-[16px] font-semibold text-white/70">
+              <span className="flex items-center gap-2 text-[15px] font-semibold text-white/70">
                 {showList ? "Hide" : "Review"}
                 <ArrowUpRight className={`h-4 w-4 transition ${showList ? "rotate-180" : ""}`} />
               </span>
@@ -229,9 +229,9 @@ export default function BusinessActivities({ initialCategory = "All" }: { initia
               <div className="rise border-t border-white/10 px-6 py-5">
                 <ul className="max-h-56 space-y-3 overflow-y-auto">
                   {picked.map((a) => (
-                    <li key={a.code} className="flex items-center justify-between gap-4 text-[16px]">
+                    <li key={a.code} className="flex items-center justify-between gap-4 text-[15px]">
                       <span>
-                        <span className="mr-3 font-mono text-[14px] text-gold-light">{a.code}</span>
+                        <span className="mr-3 font-mono text-[13px] text-gold-light">{a.code}</span>
                         {a.name}
                       </span>
                       <button onClick={() => toggle(a.code)} aria-label={`Remove ${a.name}`} className="text-white/60 hover:text-white">
@@ -245,7 +245,7 @@ export default function BusinessActivities({ initialCategory = "All" }: { initia
                     href={whatsappLink(shortlistMessage)}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center justify-center gap-2 rounded-full bg-[#0f7d46] px-5 py-3 text-[16px] font-bold text-white"
+                    className="flex items-center justify-center gap-2 rounded-full bg-[#0f7d46] px-5 py-3 text-[15px] font-bold text-white"
                   >
                     <MessageCircle className="h-4 w-4" />
                     Send on WhatsApp
@@ -253,7 +253,7 @@ export default function BusinessActivities({ initialCategory = "All" }: { initia
                   <a
                     href="#contact"
                     onClick={() => setShowList(false)}
-                    className="gold-gradient btn-shine flex items-center justify-center rounded-full px-5 py-3 text-[16px] font-bold text-midnight"
+                    className="gold-gradient btn-shine flex items-center justify-center rounded-full px-5 py-3 text-[15px] font-bold text-midnight"
                   >
                     Request a call back
                   </a>

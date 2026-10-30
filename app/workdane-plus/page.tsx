@@ -24,9 +24,9 @@ export default function WorkdanePlus() {
                 <span className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-navy/5 text-navy">
                   <Icon className="h-5 w-5" />
                 </span>
-                <h2 className="font-display text-3xl font-bold text-heading">{s.title}</h2>
-                <p className="mt-4 max-w-md text-[16px] leading-relaxed">{s.text}</p>
-                <Link href="/#contact" className="group mt-6 inline-flex items-center gap-2 text-[16px] font-bold text-navy">
+                <h2 className="font-display text-[26px] font-bold text-heading">{s.title}</h2>
+                <p className="mt-4 max-w-md text-[15px] leading-relaxed">{s.text}</p>
+                <Link href="/#contact" className="group mt-6 inline-flex items-center gap-2 text-[15px] font-bold text-navy">
                   Ask about this service
                   <ArrowRight className="h-4 w-4 text-gold transition group-hover:translate-x-1" />
                 </Link>
@@ -34,7 +34,7 @@ export default function WorkdanePlus() {
             );
           })}
         </div>
-        <p className="mx-auto mt-12 max-w-[1840px] text-[14px] leading-relaxed text-body">
+        <p className="mx-auto mt-12 max-w-[1840px] text-[13px] leading-relaxed text-body">
           Availability and terms for each service are confirmed by our team for your business.
         </p>
       </section>

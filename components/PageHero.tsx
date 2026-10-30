@@ -19,7 +19,7 @@ export default function PageHero({
       <div aria-hidden className="drift pointer-events-none absolute -right-20 top-24 -z-10 h-[340px] w-[340px] rounded-full bg-gold/15 blur-3xl" />
       <Skyline className="parallax-b pointer-events-none absolute bottom-0 left-[-4rem] -z-10 h-[170px] w-[calc(100%+8rem)] opacity-70" />
       <div className="mx-auto max-w-[1840px]">
-        <nav aria-label="Breadcrumb" className="rise mb-10 flex items-center gap-2 text-[16px] text-white/60">
+        <nav aria-label="Breadcrumb" className="rise mb-10 flex items-center gap-2 text-[15px] text-white/60">
           <Link href="/" className="transition hover:text-white">
             Home
           </Link>
@@ -29,9 +29,9 @@ export default function PageHero({
         <div className="rise">
           <Eyebrow light>{eyebrow}</Eyebrow>
         </div>
-        <h1 className="rise max-w-4xl font-display text-[40px] font-bold leading-[1.2] sm:text-[56px]">{title}</h1>
+        <h1 className="rise max-w-4xl font-display text-[34px] font-bold leading-[1.2] sm:text-[48px]">{title}</h1>
         {intro && (
-          <p className="rise mt-8 max-w-2xl text-[20px] leading-relaxed text-white/70" style={{ animationDelay: "0.15s" }}>
+          <p className="rise mt-8 max-w-2xl text-[18px] leading-relaxed text-white/70" style={{ animationDelay: "0.15s" }}>
             {intro}
           </p>
         )}

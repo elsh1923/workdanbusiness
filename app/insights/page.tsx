@@ -26,8 +26,8 @@ export default function Insights() {
         <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-2 lg:gap-24">
           <div>
             <Eyebrow>Blogs</Eyebrow>
-            <h2 className="font-display text-[40px] font-bold leading-[1.15] text-heading sm:text-[44px]">Practical guides, written for founders.</h2>
-            <p className="mt-6 max-w-md text-[16px] leading-relaxed">
+            <h2 className="font-display text-[34px] font-bold leading-[1.15] text-heading sm:text-[38px]">Practical guides, written for founders.</h2>
+            <p className="mt-6 max-w-md text-[15px] leading-relaxed">
               Setup, visas, VAT and running a business in the UAE. Our first articles are being prepared. Leave your details and we will let you know when they are published.
             </p>
           </div>
@@ -38,11 +38,11 @@ export default function Insights() {
       <section id="featured" className="scroll-mt-28 border-t border-heading/15 bg-surface px-5 py-28 sm:px-9">
         <div className="mx-auto max-w-[1840px]">
           <Eyebrow>Featured in</Eyebrow>
-          <h2 className="font-display text-[40px] font-bold leading-[1.15] text-heading sm:text-[44px]">Press and client stories.</h2>
-          <p className="mt-6 max-w-xl text-[16px] leading-relaxed">
+          <h2 className="font-display text-[34px] font-bold leading-[1.15] text-heading sm:text-[38px]">Press and client stories.</h2>
+          <p className="mt-6 max-w-xl text-[15px] leading-relaxed">
             Press mentions and client success stories will appear here as they are published.
           </p>
-          <Link href="/#contact" className="mt-8 inline-block text-[16px] font-bold text-navy underline decoration-gold decoration-2 underline-offset-8">
+          <Link href="/#contact" className="mt-8 inline-block text-[15px] font-bold text-navy underline decoration-gold decoration-2 underline-offset-8">
             Share your story with us
           </Link>
         </div>
@@ -51,11 +51,11 @@ export default function Insights() {
       <section id="activity-hub" className="scroll-mt-28 border-t border-line bg-white px-5 py-28 sm:px-9">
         <div className="mx-auto max-w-[1840px]">
           <Eyebrow>Activity hub</Eyebrow>
-          <h2 className="font-display text-[40px] font-bold leading-[1.15] text-heading sm:text-[44px]">Events, workshops and networking.</h2>
-          <p className="mt-6 max-w-xl text-[16px] leading-relaxed">
+          <h2 className="font-display text-[34px] font-bold leading-[1.15] text-heading sm:text-[38px]">Events, workshops and networking.</h2>
+          <p className="mt-6 max-w-xl text-[15px] leading-relaxed">
             No sessions are scheduled yet. Ask us to invite you and we will send details as soon as there is something to attend.
           </p>
-          <Link href="/#contact" className="mt-8 inline-block text-[16px] font-bold text-navy underline decoration-gold decoration-2 underline-offset-8">
+          <Link href="/#contact" className="mt-8 inline-block text-[15px] font-bold text-navy underline decoration-gold decoration-2 underline-offset-8">
             Request an invitation
           </Link>
         </div>

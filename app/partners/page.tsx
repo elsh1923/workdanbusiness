@@ -19,8 +19,8 @@ export default function Partners() {
         <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-2 lg:gap-24">
           <div>
             <Eyebrow>Channel partner</Eyebrow>
-            <h2 className="font-display text-[40px] font-bold leading-[1.15] text-heading sm:text-[44px]">Become a channel partner.</h2>
-            <p className="mt-6 max-w-md text-[16px] leading-relaxed">
+            <h2 className="font-display text-[34px] font-bold leading-[1.15] text-heading sm:text-[38px]">Become a channel partner.</h2>
+            <p className="mt-6 max-w-md text-[15px] leading-relaxed">
               Refer clients to us, or submit their applications on their behalf. Partner incentives are agreed in writing when you join.
             </p>
           </div>
@@ -41,8 +41,8 @@ export default function Partners() {
         <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-2 lg:gap-24">
           <div>
             <Eyebrow>Channel partner portal</Eyebrow>
-            <h2 className="font-display text-[40px] font-bold leading-[1.15] text-heading sm:text-[44px]">Manage applications for your clients.</h2>
-            <p className="mt-6 max-w-md text-[16px] leading-relaxed">
+            <h2 className="font-display text-[34px] font-bold leading-[1.15] text-heading sm:text-[38px]">Manage applications for your clients.</h2>
+            <p className="mt-6 max-w-md text-[15px] leading-relaxed">
               Approved partners can submit new licences, amendments and visa requests on behalf of their clients. Request access and we will set up your account.
             </p>
           </div>
@@ -61,8 +61,8 @@ export default function Partners() {
         <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-2 lg:gap-24">
           <div>
             <Eyebrow>Corporate partnerships</Eyebrow>
-            <h2 className="font-display text-[40px] font-bold leading-[1.15] text-heading sm:text-[44px]">Set up services for your team.</h2>
-            <p className="mt-6 max-w-md text-[16px] leading-relaxed">
+            <h2 className="font-display text-[34px] font-bold leading-[1.15] text-heading sm:text-[38px]">Set up services for your team.</h2>
+            <p className="mt-6 max-w-md text-[15px] leading-relaxed">
               Companies and groups can arrange setup, visas and business services for their own teams or clients through a single agreement.
             </p>
           </div>

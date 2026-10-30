@@ -13,7 +13,7 @@ const channels = ["WhatsApp", "Email"];
 const field =
   "w-full border-b border-heading/25 bg-transparent py-3 text-[16px] text-heading outline-none transition placeholder:text-body/50 focus:border-gold disabled:opacity-60";
 const fieldLabel = "mb-1 block text-[12px] font-extrabold uppercase tracking-[0.2em] text-bronze";
-const contactLabel = "block text-[14px] font-bold uppercase tracking-widest text-bronze";
+const contactLabel = "block text-[13px] font-bold uppercase tracking-widest text-bronze";
 
 export default function Contact() {
   const [channel, setChannel] = useState("WhatsApp");
@@ -41,14 +41,14 @@ export default function Contact() {
       <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-[1fr_1.1fr] lg:gap-24">
         <Reveal>
           <Eyebrow>Contact</Eyebrow>
-          <h2 className="font-display text-[40px] font-bold leading-[1.15] text-heading sm:text-[44px]">
+          <h2 className="font-display text-[34px] font-bold leading-[1.15] text-heading sm:text-[38px]">
             Let&apos;s set up your business <em className="gold-text italic">properly.</em>
           </h2>
-          <p className="mt-6 max-w-md text-[16px] leading-relaxed">
+          <p className="mt-6 max-w-md text-[15px] leading-relaxed">
             Tell us what you are planning. We will reply with the right structure, the approvals involved and a written quotation.
           </p>
 
-          <ul className="mt-12 space-y-6 text-[16px]">
+          <ul className="mt-12 space-y-6 text-[15px]">
             <li className="flex gap-4">
               <Phone className="mt-1 h-5 w-5 shrink-0 text-gold" />
               <span>
@@ -87,7 +87,7 @@ export default function Contact() {
             href={whatsappLink("Hello Workdane, I'd like to discuss company setup.")}
             target="_blank"
             rel="noreferrer"
-            className="mt-10 inline-flex items-center gap-3 rounded-full bg-[#0f7d46] px-6 py-3.5 text-[16px] font-bold text-white"
+            className="mt-10 inline-flex items-center gap-3 rounded-full bg-[#0f7d46] px-6 py-3.5 text-[15px] font-bold text-white"
           >
             <MessageCircle className="h-4 w-4" />
             Chat on WhatsApp
@@ -97,11 +97,11 @@ export default function Contact() {
         <Reveal delay={120}>
           {status === "sent" ? (
             <div role="status" className="flex min-h-[460px] flex-col justify-center">
-              <p className="font-display text-[40px] font-bold text-heading">Thank you.</p>
-              <p className="mt-4 max-w-md text-[16px] leading-relaxed">
+              <p className="font-display text-[34px] font-bold text-heading">Thank you.</p>
+              <p className="mt-4 max-w-md text-[15px] leading-relaxed">
                 We have received your enquiry and will get back to you via {channel}. For anything urgent, message us on WhatsApp.
               </p>
-              <button onClick={reset} className="mt-8 self-start text-[16px] font-semibold text-navy underline decoration-gold decoration-2 underline-offset-8">
+              <button onClick={reset} className="mt-8 self-start text-[15px] font-semibold text-navy underline decoration-gold decoration-2 underline-offset-8">
                 Send another enquiry
               </button>
             </div>
@@ -156,7 +156,7 @@ export default function Contact() {
                         type="button"
                         aria-pressed={channel === c}
                         onClick={() => setChannel(c)}
-                        className={`rounded-full border px-4 py-2 text-[14px] font-bold transition ${
+                        className={`rounded-full border px-4 py-2 text-[13px] font-bold transition ${
                           channel === c ? "border-navy bg-navy text-white" : "border-heading/25 text-heading hover:border-navy"
                         }`}
                       >
@@ -166,13 +166,13 @@ export default function Contact() {
                   </div>
                 </div>
 
-                <label className="flex items-start gap-3 text-[14px] leading-relaxed text-body">
+                <label className="flex items-start gap-3 text-[13px] leading-relaxed text-body">
                   <input required type="checkbox" className="mt-0.5 accent-[#0c2a55]" />
                   <span>I agree to be contacted by Workdane about my enquiry by email, phone or WhatsApp.</span>
                 </label>
 
                 {status === "error" && (
-                  <div role="alert" className="border-l-4 border-red-500 bg-red-50 p-4 text-[16px] leading-relaxed text-red-900">
+                  <div role="alert" className="border-l-4 border-red-500 bg-red-50 p-4 text-[15px] leading-relaxed text-red-900">
                     {message}
                     {whatsapp && (
                       <a href={whatsapp} target="_blank" rel="noreferrer" className="mt-2 block font-bold underline">
@@ -186,7 +186,7 @@ export default function Contact() {
                   type="submit"
                   disabled={sending}
                   data-magnetic
-                  className="gold-gradient btn-shine flex items-center gap-3 rounded-full px-8 py-4 text-[16px] font-bold text-midnight transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-70"
+                  className="gold-gradient btn-shine flex items-center gap-3 rounded-full px-8 py-4 text-[15px] font-bold text-midnight transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   {sending && <Loader2 className="h-4 w-4 animate-spin" />}
                   {sending ? "Sending..." : "Request a call back"}

@@ -28,17 +28,17 @@ export default function InfoPage({
           <ol className="border-t border-heading/15">
             {points.map((p, i) => (
               <li key={p.title} className="grid grid-cols-[3rem_1fr] gap-4 border-b border-heading/15 py-8">
-                <span className="font-display text-2xl text-heading/25">0{i + 1}</span>
+                <span className="font-display text-[21px] text-heading/25">0{i + 1}</span>
                 <div>
-                  <h2 className="font-display text-2xl font-bold text-heading">{p.title}</h2>
-                  <p className="mt-3 text-[16px] leading-relaxed">{p.text}</p>
+                  <h2 className="font-display text-[21px] font-bold text-heading">{p.title}</h2>
+                  <p className="mt-3 text-[15px] leading-relaxed">{p.text}</p>
                 </div>
               </li>
             ))}
           </ol>
 
           <div className="border border-line border-t-2 border-t-gold bg-white p-8 shadow-[0_24px_60px_-35px_rgba(12,42,85,0.35)] sm:p-12">
-            <h2 className="font-display text-3xl font-bold text-heading">{formTitle}</h2>
+            <h2 className="font-display text-[26px] font-bold text-heading">{formTitle}</h2>
             <div className="mt-8">
               <EnquiryForm fields={fields} submitLabel={submitLabel} note={note} />
             </div>

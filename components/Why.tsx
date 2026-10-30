@@ -17,10 +17,10 @@ export default function Why() {
       <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-[5fr_7fr] lg:gap-24">
         <Reveal>
           <Eyebrow light>Why Workdane</Eyebrow>
-          <h2 className="font-display text-[40px] font-bold leading-[1.15] sm:text-[44px]">
+          <h2 className="font-display text-[34px] font-bold leading-[1.15] sm:text-[38px]">
             A calmer way to <em className="shimmer italic">start a business.</em>
           </h2>
-          <p className="mt-6 max-w-md text-[16px] leading-relaxed text-white/70">
+          <p className="mt-6 max-w-md text-[15px] leading-relaxed text-white/70">
             Setting up involves many authorities and many documents. We take care of the moving parts so you can focus on your customers.
           </p>
         </Reveal>
@@ -35,12 +35,12 @@ export default function Why() {
                     <span className="gold-gradient flex h-12 w-12 items-center justify-center rounded-xl text-midnight">
                       <Icon className="h-5 w-5" />
                     </span>
-                    <span className="font-display text-[40px] font-extrabold leading-none text-white/10">
+                    <span className="font-display text-[34px] font-extrabold leading-none text-white/10">
                       0{i + 1}
                     </span>
                   </div>
-                  <h3 className="mt-6 font-display text-2xl font-bold">{r.title}</h3>
-                  <p className="mt-3 text-[16px] leading-relaxed text-white/70">{r.text}</p>
+                  <h3 className="mt-6 font-display text-[21px] font-bold">{r.title}</h3>
+                  <p className="mt-3 text-[15px] leading-relaxed text-white/70">{r.text}</p>
                 </Reveal>
               </li>
             );

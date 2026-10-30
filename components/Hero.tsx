@@ -48,7 +48,7 @@ function SetupFinder() {
 
   return (
     <div data-spotlight data-tilt className="spotlight glass rounded-3xl border border-white/10 border-t-2 border-t-gold p-6 shadow-[0_40px_80px_-40px_rgba(0,0,0,0.6)] sm:p-10">
-      <div className="flex items-center justify-between text-[14px] font-bold uppercase tracking-[0.25em] text-white/60">
+      <div className="flex items-center justify-between text-[13px] font-bold uppercase tracking-[0.25em] text-white/60">
         <span>Find your starting point</span>
         <span className="whitespace-nowrap">
           {Math.min(step + 1, questions.length)} / {questions.length}
@@ -60,15 +60,15 @@ function SetupFinder() {
 
       {!done ? (
         <div key={step} className="rise mt-8">
-          <p className="font-display text-3xl font-bold leading-tight sm:text-[40px]">{questions[step].q}</p>
+          <p className="font-display text-[26px] font-bold leading-tight sm:text-[34px]">{questions[step].q}</p>
           <ul className="mt-8 space-y-3">
             {questions[step].options.map((o, i) => (
               <li key={o}>
                 <button
                   onClick={() => setAnswers([...answers, i])}
-                  className="group flex w-full items-center gap-5 rounded-xl border border-white/10 bg-white/[0.03] px-5 py-4 text-left text-[16px] transition hover:border-gold hover:bg-white/[0.08] hover:text-gold-light"
+                  className="group flex w-full items-center gap-5 rounded-xl border border-white/10 bg-white/[0.03] px-5 py-4 text-left text-[15px] transition hover:border-gold hover:bg-white/[0.08] hover:text-gold-light"
                 >
-                  <span className="gold-gradient flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[14px] font-extrabold text-midnight">
+                  <span className="gold-gradient flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[13px] font-extrabold text-midnight">
                     {"ABC"[i]}
                   </span>
                   <span className="flex-1">{o}</span>
@@ -78,16 +78,16 @@ function SetupFinder() {
             ))}
           </ul>
           {step > 0 && (
-            <button onClick={() => setAnswers(answers.slice(0, -1))} className="mt-6 text-[16px] font-semibold text-white/50 hover:text-white">
+            <button onClick={() => setAnswers(answers.slice(0, -1))} className="mt-6 text-[15px] font-semibold text-white/50 hover:text-white">
               ← Back
             </button>
           )}
         </div>
       ) : (
         <div className="rise mt-8">
-          <p className="text-[14px] font-bold uppercase tracking-[0.25em] text-gold-light">Suggested starting point</p>
-          <p className="mt-3 font-display text-3xl font-bold leading-tight">{needHeadline[need]}</p>
-          <ul className="mt-6 space-y-3 text-[16px] leading-relaxed text-white/75">
+          <p className="text-[13px] font-bold uppercase tracking-[0.25em] text-gold-light">Suggested starting point</p>
+          <p className="mt-3 font-display text-[26px] font-bold leading-tight">{needHeadline[need]}</p>
+          <ul className="mt-6 space-y-3 text-[15px] leading-relaxed text-white/75">
             <li className="flex gap-3">
               <Check className="mt-1 h-4 w-4 shrink-0 text-gold-light" />
               {placeCopy[place]}
@@ -97,12 +97,12 @@ function SetupFinder() {
               {ownerCopy[owners]}
             </li>
           </ul>
-          <p className="mt-6 text-[16px] text-white/55">These are general pointers. Our consultants confirm the right route for your activity.</p>
+          <p className="mt-6 text-[15px] text-white/55">These are general pointers. Our consultants confirm the right route for your activity.</p>
           <div className="mt-8 flex flex-wrap items-center gap-6">
-            <a href="#contact" className="gold-gradient btn-shine rounded-full px-6 py-3 text-[16px] font-bold text-midnight">
+            <a href="#contact" className="gold-gradient btn-shine rounded-full px-6 py-3 text-[15px] font-bold text-midnight">
               Discuss my setup
             </a>
-            <button onClick={() => setAnswers([])} className="flex items-center gap-2 text-[16px] font-semibold text-white/60 hover:text-white">
+            <button onClick={() => setAnswers([])} className="flex items-center gap-2 text-[15px] font-semibold text-white/60 hover:text-white">
               <RotateCcw className="h-3.5 w-3.5" />
               Start again
             </button>
@@ -135,23 +135,23 @@ export default function Hero() {
           <div className="rise">
             <Eyebrow light>Company setup &amp; business services, UAE</Eyebrow>
           </div>
-          <h1 className="rise font-display text-[40px] font-bold leading-[1.2] sm:text-[56px]">
+          <h1 className="rise font-display text-[34px] font-bold leading-[1.2] sm:text-[48px]">
             Set up right. <em className="shimmer font-medium italic">Stay compliant.</em>{" "}
             <span className="text-white/90">Grow with confidence.</span>
           </h1>
-          <p className="rise mt-8 max-w-lg text-[20px] leading-relaxed text-white/70" style={{ animationDelay: "0.15s" }}>
+          <p className="rise mt-8 max-w-lg text-[18px] leading-relaxed text-white/70" style={{ animationDelay: "0.15s" }}>
             Company formation, licensing, visas, VAT and accounting, delivered by one team with one point of contact.
           </p>
           <div className="rise mt-10 flex flex-wrap items-center gap-x-8 gap-y-5" style={{ animationDelay: "0.25s" }}>
-            <a data-magnetic href="#contact" className="gold-gradient btn-shine rounded-full px-7 py-3.5 text-[16px] font-bold text-midnight shadow-[0_12px_30px_-10px_rgba(217,154,11,0.6)] transition hover:-translate-y-1 hover:brightness-110">
+            <a data-magnetic href="#contact" className="gold-gradient btn-shine rounded-full px-7 py-3.5 text-[15px] font-bold text-midnight shadow-[0_12px_30px_-10px_rgba(217,154,11,0.6)] transition hover:-translate-y-1 hover:brightness-110">
               Book a consultation
             </a>
-            <a href="/business-activities" className="group flex items-center gap-2 text-[16px] font-bold text-white">
+            <a href="/business-activities" className="group flex items-center gap-2 text-[15px] font-bold text-white">
               Browse business activities
               <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
             </a>
           </div>
-          <ul className="rise mt-12 flex flex-wrap gap-x-8 gap-y-3 text-[16px] font-semibold text-white/75" style={{ animationDelay: "0.35s" }}>
+          <ul className="rise mt-12 flex flex-wrap gap-x-8 gap-y-3 text-[15px] font-semibold text-white/75" style={{ animationDelay: "0.35s" }}>
             {assurances.map((t) => (
               <li key={t} className="flex items-center gap-2">
                 <span className="flex h-5 w-5 items-center justify-center rounded-full bg-gold/20 text-gold-light">

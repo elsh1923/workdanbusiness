@@ -11,20 +11,20 @@ export default function CtaBand() {
 
       <div className="mx-auto flex max-w-[1840px] flex-wrap items-center justify-between gap-10">
         <div>
-          <h2 className="font-display text-[40px] font-bold leading-[1.15] text-midnight sm:text-[44px]">Ready to start your business?</h2>
-          <p className="mt-3 max-w-xl text-[20px] leading-relaxed text-midnight/75">
+          <h2 className="font-display text-[34px] font-bold leading-[1.15] text-midnight sm:text-[38px]">Ready to start your business?</h2>
+          <p className="mt-3 max-w-xl text-[18px] leading-relaxed text-midnight/75">
             Tell us your plan and we will reply with the right structure and a written quotation.
           </p>
         </div>
         <div className="flex flex-wrap gap-4">
-          <Link data-magnetic href="/#contact" className="rounded-full bg-midnight px-8 py-4 text-[16px] font-bold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-navy">
+          <Link data-magnetic href="/#contact" className="rounded-full bg-midnight px-8 py-4 text-[15px] font-bold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-navy">
             Book a consultation
           </Link>
           <a
             href={whatsappLink("Hello Workdane, I'd like to discuss company setup.")}
             target="_blank"
             rel="noreferrer"
-            className="flex items-center gap-2 rounded-full border-2 border-midnight px-8 py-4 text-[16px] font-bold text-midnight transition hover:bg-midnight hover:text-white"
+            className="flex items-center gap-2 rounded-full border-2 border-midnight px-8 py-4 text-[15px] font-bold text-midnight transition hover:bg-midnight hover:text-white"
           >
             <MessageCircle className="h-4 w-4" />
             WhatsApp us
