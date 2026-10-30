@@ -408,3 +408,10 @@ a[class*="rounded-full"]:active {
     animation: none;
   }
 }
+
+@media print {
+  header, footer, nav[aria-label="Breadcrumb"], .print\:hidden { display: none !important; }
+  body { background: #fff !important; }
+  section.hero-bg { display: none !important; }
+  [data-floating], .fixed { display: none !important; }
+}

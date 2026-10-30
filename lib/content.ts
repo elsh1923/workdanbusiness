@@ -91,7 +91,7 @@ export const insightItems: Item[] = [
   { label: "Blogs", href: "/blogs", desc: "Practical guides on setup, visas, VAT and running a business.", icon: Newspaper },
   { label: "Featured In", href: "/featured-in", desc: "Press mentions and client success stories.", icon: Award },
   { label: "Activity Hub", href: "/activity-hub", desc: "Events, workshops and networking sessions.", icon: CalendarDays },
-  { label: "FAQs", href: "/insights#faqs", desc: "Quick answers to common setup questions.", icon: CircleHelp },
+  { label: "FAQs", href: "/faqs", desc: "Quick answers to common setup questions.", icon: CircleHelp },
 ];
 
 export const partnerItems: Item[] = [
@@ -163,21 +163,6 @@ export const navGroups: NavGroup[] = [
     },
   },
 ];
-
-// TODO: replace every rate with the real fee schedule. These figures are placeholders.
-export const calculatorRates = {
-  base: {
-    "General Trading": 5750,
-    "Professional Services": 5250,
-    "IT Services": 6250,
-    "E-Commerce": 5750,
-    "Administrative Services": 5250,
-    "Marketing Services": 5750,
-  } satisfies Record<Category, number>,
-  visa: 1250,
-  bankIntro: 1000,
-  vatRegistration: 750,
-};
 
 export const setupSteps = [
   { title: "Choose your activity", text: "Pick the activities your business will perform. Each one has its own requirements, so choose carefully." },

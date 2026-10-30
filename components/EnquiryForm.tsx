@@ -1,6 +1,7 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
+import PhoneField from "./PhoneField";
 import { useFormSubmit } from "./useFormSubmit";
 
 export type Field = {
@@ -36,10 +37,11 @@ export default function EnquiryForm({
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const get = (k: string) => String(fd.get(k) ?? "").trim();
+    const valueOf = (f: Field) => (f.type === "tel" && get(f.name) ? `${get(`${f.name}Dial`)} ${get(f.name)}` : get(f.name));
     await submit(
       fields.map((f) => ({
         label: f.label,
-        value: get(f.name),
+        value: valueOf(f),
         type: f.type === "email" || f.type === "tel" ? f.type : undefined,
       })),
       get("website"),
@@ -76,17 +78,10 @@ export default function EnquiryForm({
               </select>
             ) : f.type === "textarea" ? (
               <textarea name={f.name} rows={3} maxLength={2000} required={f.required} className={`${fieldCls} resize-none`} />
+            ) : f.type === "tel" ? (
+              <PhoneField name={f.name} required={f.required} className={fieldCls} />
             ) : (
-              <input
-                name={f.name}
-                type={f.type ?? "text"}
-                required={f.required}
-                maxLength={200}
-                {...(f.type === "tel"
-                  ? { inputMode: "tel" as const, pattern: "[+()\\d\\s\\-]{7,20}", title: "Enter a valid phone number, for example +971 56 537 4748" }
-                  : {})}
-                className={fieldCls}
-              />
+              <input name={f.name} type={f.type ?? "text"} required={f.required} maxLength={200} className={fieldCls} />
             )}
           </label>
         ))}

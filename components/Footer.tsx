@@ -10,6 +10,8 @@ const company = [
   { label: "Insights", href: "/insights" },
   { label: "Partners", href: "/partners" },
   { label: "Resource Hub", href: "/resource-hub" },
+  { label: "FAQs", href: "/faqs" },
+  { label: "Book an Appointment", href: "/book-appointment" },
   { label: "Careers", href: "/careers" },
   { label: "Customer Feedback", href: "/customer-feedback" },
   { label: "Contact", href: "/contact" },
