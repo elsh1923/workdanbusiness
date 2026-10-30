@@ -8,7 +8,7 @@ import { Reveal } from "./motion";
 import { useFormSubmit } from "./useFormSubmit";
 
 const interests = ["Company formation", "Licensing & approvals", "Visas & PRO", "Accounting & VAT", "Not sure yet"];
-const channels = ["WhatsApp", "Phone call", "Email"];
+const channels = ["WhatsApp", "Email"];
 
 const field =
   "w-full border-b border-heading/25 bg-transparent py-3 text-[16px] text-heading outline-none transition placeholder:text-body/50 focus:border-gold disabled:opacity-60";
