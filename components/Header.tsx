@@ -29,7 +29,7 @@ export default function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-white/95 backdrop-blur-md" onMouseLeave={() => setOpen(null)}>
       <div className="mx-auto flex h-[68px] max-w-[1320px] items-center gap-5 px-6 sm:px-12 lg:px-16">
-        <Link href="/" aria-label={`${COMPANY.name} home`} className="shrink-0">
+        <Link href="/home" aria-label={`${COMPANY.name} home`} className="shrink-0">
           <Image src={LOGO.src} alt={COMPANY.name} width={LOGO.width} height={LOGO.height} priority className="h-[54px] w-auto" />
         </Link>
 

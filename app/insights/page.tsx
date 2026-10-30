@@ -42,7 +42,7 @@ export default function Insights() {
           <p className="mt-6 max-w-xl text-[15px] leading-relaxed">
             Press mentions and client success stories will appear here as they are published.
           </p>
-          <Link href="/#contact" className="mt-8 inline-block text-[15px] font-bold text-navy underline decoration-gold decoration-2 underline-offset-8">
+          <Link href="/home#contact" className="mt-8 inline-block text-[15px] font-bold text-navy underline decoration-gold decoration-2 underline-offset-8">
             Share your story with us
           </Link>
         </div>
@@ -55,7 +55,7 @@ export default function Insights() {
           <p className="mt-6 max-w-xl text-[15px] leading-relaxed">
             No sessions are scheduled yet. Ask us to invite you and we will send details as soon as there is something to attend.
           </p>
-          <Link href="/#contact" className="mt-8 inline-block text-[15px] font-bold text-navy underline decoration-gold decoration-2 underline-offset-8">
+          <Link href="/home#contact" className="mt-8 inline-block text-[15px] font-bold text-navy underline decoration-gold decoration-2 underline-offset-8">
             Request an invitation
           </Link>
         </div>

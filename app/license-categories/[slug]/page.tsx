@@ -42,7 +42,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         intro={c.intro}
       >
         <div className="flex flex-wrap gap-4">
-          <Link href="/#contact" className="gold-gradient btn-shine rounded-full px-7 py-3.5 text-[15px] font-bold text-midnight">
+          <Link href="/home#contact" className="gold-gradient btn-shine rounded-full px-7 py-3.5 text-[15px] font-bold text-midnight">
             Book a consultation
           </Link>
           <Link href={browse} className="rounded-full border-2 border-white/40 px-7 py-3.5 text-[15px] font-bold text-white transition hover:border-gold-light hover:bg-white/10">

@@ -31,7 +31,7 @@ export default function BusinessSetupGuide() {
           <Link href="/cost-calculator" className="group flex items-center gap-2 font-display text-[18px] font-bold text-heading hover:text-navy">
             Estimate your costs <ArrowRight className="h-5 w-5 text-gold transition group-hover:translate-x-1" />
           </Link>
-          <Link href="/#contact" className="group flex items-center gap-2 font-display text-[18px] font-bold text-heading hover:text-navy">
+          <Link href="/home#contact" className="group flex items-center gap-2 font-display text-[18px] font-bold text-heading hover:text-navy">
             Talk to a consultant <ArrowRight className="h-5 w-5 text-gold transition group-hover:translate-x-1" />
           </Link>
         </div>

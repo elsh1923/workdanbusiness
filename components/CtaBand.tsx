@@ -28,7 +28,7 @@ export default function CtaBand() {
         <div className="flex flex-wrap gap-4">
           <Link
             data-magnetic
-            href="/#contact"
+            href="/home#contact"
             className="gold-gradient btn-shine rounded-full px-8 py-4 text-[15px] font-bold text-midnight shadow-[0_12px_30px_-10px_rgba(217,154,11,0.6)] transition hover:-translate-y-0.5"
           >
             Book a consultation

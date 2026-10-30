@@ -30,7 +30,7 @@ export default async function PlusPage({ params }: { params: Promise<{ slug: str
   return (
     <>
       <PageHero eyebrow={s.title} title={<>{s.title}</>} intro={p.intro}>
-        <Link href="/#contact" className="gold-gradient btn-shine inline-block rounded-full px-7 py-3.5 text-[15px] font-bold text-midnight">
+        <Link href="/home#contact" className="gold-gradient btn-shine inline-block rounded-full px-7 py-3.5 text-[15px] font-bold text-midnight">
           Ask about this service
         </Link>
       </PageHero>

@@ -25,7 +25,7 @@ export default function PageHero({
       <Skyline className="parallax-b pointer-events-none absolute bottom-0 left-[-4rem] -z-10 h-[170px] w-[calc(100%+8rem)] opacity-70" />
       <div className="mx-auto max-w-[1320px]">
         <nav aria-label="Breadcrumb" className="rise mb-10 flex items-center gap-2 text-[15px] text-white/80">
-          <Link href="/" className="transition hover:text-white">
+          <Link href="/home" className="transition hover:text-white">
             Home
           </Link>
           <span aria-hidden>/</span>
