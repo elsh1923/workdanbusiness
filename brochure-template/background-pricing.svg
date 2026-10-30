@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgCanvas" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="65%" stop-color="#f8fafc" />
+      <stop offset="100%" stop-color="#f1f5f9" />
+    </linearGradient>
+
+    <linearGradient id="goldRibbon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffcf54" />
+      <stop offset="40%" stop-color="#d99a0b" />
+      <stop offset="100%" stop-color="#8f5a00" />
+    </linearGradient>
+
+    <linearGradient id="navyAccent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#07399d" />
+      <stop offset="100%" stop-color="#06132a" />
+    </linearGradient>
+
+    <linearGradient id="leftBarGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#07399d" />
+      <stop offset="50%" stop-color="#d99a0b" />
+      <stop offset="100%" stop-color="#06132a" />
+    </linearGradient>
+
+    <filter id="ribbonShadow" x="-10%" y="-10%" width="125%" height="125%">
+      <feDropShadow dx="-10" dy="15" stdDeviation="25" flood-color="#06132a" flood-opacity="0.18" />
+    </filter>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="1920" height="1080" fill="url(#bgCanvas)" />
+
+  <!-- Elegant Left Edge Accent Line -->
+  <rect x="0" y="0" width="10" height="1080" fill="url(#leftBarGrad)" />
+
+  <!-- Subtle Background Micro-Grid for high-end corporate feel -->
+  <g opacity="0.03" stroke="#06132a" stroke-width="1">
+    <line x1="160" y1="0" x2="160" y2="1080" />
+    <line x1="840" y1="0" x2="840" y2="1080" />
+    <line x1="0" y1="180" x2="1920" y2="180" />
+    <line x1="0" y1="920" x2="1920" y2="920" />
+  </g>
+
+  <!-- Dynamic Angular Ribbon Architecture (Right Side) -->
+  <!-- Top Diagonal Leg -->
+  <path d="M1280 -60 L1420 -60 L1950 480 L1810 480 Z" 
+        fill="url(#goldRibbon)" 
+        filter="url(#ribbonShadow)" />
+
+  <!-- Lower Connecting Fold -->
+  <path d="M1160 520 L1300 520 L1950 1140 L1810 1140 Z" 
+        fill="url(#goldRibbon)" 
+        filter="url(#ribbonShadow)" />
+
+  <!-- Deep Navy Structural Triangle Accent -->
+  <polygon points="1860,340 1960,440 1960,340" fill="url(#navyAccent)" opacity="0.85" />
+  <polygon points="1920,0 1920,120 1800,0" fill="url(#navyAccent)" opacity="0.08" />
+
+  <!-- Floating Golden Accent Rings / Precision Dots -->
+  <g fill="#d99a0b" opacity="0.25">
+    <circle cx="1240" cy="140" r="3" />
+    <circle cx="1270" cy="140" r="3" />
+    <circle cx="1300" cy="140" r="3" />
+    <circle cx="1240" cy="170" r="3" />
+    <circle cx="1270" cy="170" r="3" />
+    <circle cx="1300" cy="170" r="3" />
+  </g>
+</svg>

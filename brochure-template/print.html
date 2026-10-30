@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Workdane — Print / PDF Export</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================
+       PAGE SETUP – A4 Landscape for PDF export
+       ========================================== */
+    @page {
+      size: A4 landscape;
+      margin: 0;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --midnight:   #06132a;
+      --navy:       #07399d;
+      --gold:       #c28500;
+      --gold-light: #ffc63d;
+      --bronze:     #8f5a00;
+      --white:      #ffffff;
+      --tint:       #f8fafc;
+      --heading:    #0b1730;
+      --muted:      #64748b;
+      --line:       #e2e8f0;
+
+      /* Named gradients */
+      --gd-gold:  linear-gradient(135deg,#ffc63d 0%,#d99a0b 55%,#8f5a00 100%);
+      --gd-navy:  linear-gradient(135deg,#07399d 0%,#06132a 100%);
+      --gd-bar:   linear-gradient(180deg,#07399d 0%,#d99a0b 50%,#06132a 100%);
+
+      /* Typography scale */
+      --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-disp: 'Montserrat', system-ui, sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: #111827;
+      color: var(--heading);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* ==========================================
+       SLIDE SHELL  –  A4 landscape = 297 × 210 mm
+       ========================================== */
+    .slide {
+      position: relative;
+      width:  297mm;
+      height: 210mm;
+      overflow: hidden;
+      background: var(--white);
+      page-break-after: always;
+      break-after: page;
+    }
+
+    /* Screen preview – stack slides with margin */
+    @media screen {
+      body { display:flex; flex-direction:column; align-items:center; padding:30px 10px; gap:30px; }
+      .slide {
+        box-shadow: 0 20px 60px -15px rgba(0,0,0,0.55);
+        border-radius: 6px;
+      }
+    }
+
+    /* ==========================================
+       SHARED UTILITIES
+       ========================================== */
+    .gold-bar {
+      width: 52px; height: 4px;
+      background: var(--gd-gold);
+      border-radius: 2px;
+      margin: 14px 0 20px;
+    }
+
+    .eyebrow {
+      font-family: var(--font-disp);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .page-num {
+      position: absolute;
+      bottom: 14px;
+      right: 22px;
+      font-family: var(--font-disp);
+      font-size: 10px;
+      font-weight: 700;
+      color: rgba(100,116,139,.6);
+      z-index: 99;
+    }
+
+    /* ==========================================
+       SLIDE 1 – COVER
+       ========================================== */
+    .s-cover {
+      background: var(--white);
+    }
+
+    /* Left chevron accent (navy+gold) */
+    .s-cover .chevron-left {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 108mm;
+      z-index: 2;
+    }
+
+    /* The person / hero photo sits in left panel */
+    .s-cover .hero-photo {
+      position: absolute;
+      left: 16mm;
+      bottom: 0;
+      height: 94%;
+      width: auto;
+      z-index: 5;
+      filter: drop-shadow(12px 8px 20px rgba(6,19,42,.35));
+      object-fit: contain;
+      object-position: bottom;
+    }
+
+    /* Right content panel */
+    .s-cover .cover-right {
+      position: absolute;
+      right: 0; top: 0; bottom: 0;
+      left: 108mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 20mm 0 16mm;
+      z-index: 10;
+    }
+
+    .s-cover .cover-logo {
+      position: absolute;
+      top: 12mm;
+      right: 14mm;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 20;
+    }
+
+    .s-cover .cover-logo img {
+      height: 30px;
+      width: auto;
+    }
+
+    .s-cover .cover-logo-text {
+      border-left: 1.5px solid #cbd5e1;
+      padding-left: 10px;
+    }
+
+    .s-cover .cover-logo-name {
+      font-family: var(--font-disp);
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--midnight);
+      letter-spacing: -0.3px;
+    }
+
+    .s-cover .cover-logo-sub {
+      font-size: 7.5px;
+      font-weight: 700;
+      color: var(--navy);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .s-cover .h1 {
+      font-family: var(--font-disp);
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1.18;
+      color: var(--midnight);
+    }
+
+    .s-cover .h1 em {
+      font-style: italic;
+      color: var(--navy);
+    }
+
+    .s-cover .subheadline {
+      font-size: 13px;
+      font-weight: 700;
+      color: #334155;
+      line-height: 1.5;
+    }
+
+    .s-cover .subheadline span { color: var(--navy); }
+
+    /* ==========================================
+       SLIDE 2 – UAE LANDSCAPE FULL-BLEED
+       ========================================== */
+    .s-photo-spread {
+      background: #040e1d;
+    }
+
+    .s-photo-spread img.bg-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0.55;
+      z-index: 1;
+    }
+
+    .s-photo-spread .overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg,rgba(6,19,42,.65) 0%,rgba(6,19,42,.1) 40%,rgba(6,19,42,.88) 100%);
+      z-index: 2;
+    }
+
+    .s-photo-spread .content {
+      position: relative;
+      z-index: 5;
+      height: 100%;
+      padding: 16mm 22mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: var(--white);
+    }
+
+    .s-photo-spread .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,198,61,.18);
+      border: 1px solid var(--gold-light);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      width: fit-content;
+    }
+
+    .s-photo-spread .big-title {
+      font-family: var(--font-disp);
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.2;
+      max-width: 160mm;
+    }
+
+    .s-photo-spread .stats-row {
+      display: flex;
+      gap: 24mm;
+      border-top: 1px solid rgba(255,255,255,.2);
+      padding-top: 9mm;
+    }
+
+    .s-photo-spread .stat-num {
+      font-family: var(--font-disp);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--gold-light);
+    }
+
+    .s-photo-spread .stat-lbl {
+      font-size: 8px;
+      font-weight: 500;
+      color: rgba(255,255,255,.75);
+    }
+
+    /* ==========================================
+       SLIDE 3 – WHY WORKDANE (split left+right)
+       ========================================== */
+    .s-why {
+      display: grid;
+      grid-template-columns: 106mm 1fr;
+    }
+
+    .s-why .left-panel {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .s-why .left-panel img.bg-img {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: top center;
+    }
+
+    .s-why .left-panel .img-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg,rgba(6,19,42,.1) 0%,rgba(6,19,42,.75) 100%);
+    }
+
+    .s-why .left-panel .badge {
+      position: relative;
+      z-index: 5;
+      background: rgba(6,19,42,.88);
+      border: 1px solid rgba(255,198,61,.4);
+      padding: 10px 14px;
+      margin: 0 0 10mm 10mm;
+      border-radius: 10px;
+      color: var(--white);
+    }
+
+    .s-why .left-panel .badge-num {
+      font-family: var(--font-disp);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--gold-light);
+    }
+
+    .s-why .left-panel .badge-lbl {
+      font-size: 8px;
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+
+    .s-why .right-panel {
+      padding: 14mm 15mm 12mm 14mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .s-why .right-panel .section-title {
+      font-family: var(--font-disp);
+      font-size: 21px;
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+
+    .s-why .right-panel .body-text {
+      font-size: 9px;
+      line-height: 1.7;
+      color: #475569;
+    }
+
+    .s-why .right-panel .rating-wrap {
+      border-top: 1.5px solid var(--line);
+      padding-top: 8px;
+      margin-top: 6px;
+    }
+
+    .s-why .right-panel .rating-title {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--heading);
+      margin-bottom: 3px;
+    }
+
+    .s-why .right-panel .stars {
+      color: #f59e0b;
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .s-why .right-panel .stars-sub {
+      font-size: 8px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ==========================================
+       SLIDE 4 – USPs  (icon grid)
+       ========================================== */
+    .s-usps {
+      padding: 12mm 14mm;
+      display: grid;
+      grid-template-columns: 90mm 1fr;
+      gap: 10mm;
+      background: var(--white);
+    }
+
+    .s-usps .left-col {}
+
+    .s-usps .big-word {
+      font-family: var(--font-disp);
+      font-size: 52px;
+      font-weight: 900;
+      line-height: 0.9;
+      color: var(--navy);
+      text-transform: uppercase;
+      letter-spacing: -2px;
+    }
+
+    .s-usps .big-word .accent { color: var(--gold); }
+
+    .s-usps .highlight-box {
+      margin-top: 10mm;
+      background: var(--gd-navy);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: var(--white);
+      border: 1px solid rgba(255,198,61,.3);
+    }
+
+    .s-usps .highlight-box .hb-icon {
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    .s-usps .highlight-box .hb-text {
+      font-size: 9.5px;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    .s-usps .usp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 14px;
+      align-content: center;
+    }
+
+    .s-usps .usp-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .s-usps .usp-icon {
+      flex-shrink: 0;
+      width: 26px; height: 26px;
+      background: #f1f5f9;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .s-usps .usp-text {
+      font-size: 9px;
+      font-weight: 600;
+      color: #1e293b;
+      line-height: 1.4;
+      padding-top: 4px;
+    }
+
+    /* ==========================================
+       SLIDE 5  – PARTNER BENEFITS  (chevron bg)
+       ========================================== */
+    .s-partner {
+      display: grid;
+      grid-template-columns: 1fr 110mm;
+      background: var(--white);
+    }
+
+    .s-partner .left-content {
+      padding: 14mm 12mm 14mm 14mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .s-partner .big-title {
+      font-family: var(--font-disp);
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1.2;
+      margin-bottom: 8mm;
+    }
+
+    .s-partner .benefit-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8mm;
+    }
+
+    .s-partner .benefit-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .s-partner .b-icon {
+      font-size: 16px;
+      color: var(--gold);
+      flex-shrink: 0;
+      line-height: 1;
+      margin-top: 2px;
+    }
+
+    .s-partner .b-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 2px;
+    }
+
+    .s-partner .b-text {
+      font-size: 9px;
+      color: #475569;
+      line-height: 1.55;
+    }
+
+    .s-partner .right-panel {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .s-partner .right-panel img.bg-img {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: top center;
+    }
+
+    .s-partner .right-panel .img-ov {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg,rgba(255,255,255,0.3) 0%,rgba(6,19,42,.08) 100%);
+    }
+
+    /* ==========================================
+       SLIDE 6 – PRICE LIST (with right SVG art)
+       ========================================== */
+    .s-price {
+      padding: 11mm 14mm 9mm;
+      display: grid;
+      grid-template-columns: 165mm 1fr;
+      gap: 6mm;
+      background: var(--white);
+    }
+
+    .s-price .price-left {}
+
+    .s-price .price-cat-title {
+      font-family: var(--font-disp);
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .s-price .price-cat-desc {
+      font-size: 8.5px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 4mm;
+    }
+
+    .s-price table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .s-price tr.featured td {
+      background: #f1f5f9;
+      border-radius: 8px;
+      padding: 7px 10px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .s-price tr td {
+      padding: 5px 2px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 8.5px;
+      vertical-align: middle;
+    }
+
+    .s-price tr td .dot {
+      display: inline-block;
+      width: 5px; height: 5px;
+      background: var(--gold);
+      border-radius: 50%;
+      margin-right: 7px;
+      vertical-align: middle;
+    }
+
+    .s-price tr td .item-name {
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .s-price tr td .item-price {
+      font-family: var(--font-disp);
+      font-size: 11px;
+      font-weight: 800;
+      color: #0f172a;
+      text-align: right;
+    }
+
+    .s-price tr.featured td .item-price {
+      font-size: 16px;
+      color: var(--navy);
+    }
+
+    .s-price .price-footer {
+      margin-top: 4mm;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .s-price .pill {
+      display: inline-block;
+      background: var(--navy);
+      color: var(--white);
+      padding: 7px 18px;
+      border-radius: 20px;
+      font-family: var(--font-disp);
+      font-size: 8px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      text-decoration: none;
+    }
+
+    .s-price .price-note {
+      font-size: 7.5px;
+      color: #94a3b8;
+    }
+
+    .s-price .right-art {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .s-price .right-art img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* ==========================================
+       SLIDE 9 – DOCUMENTS ISSUED
+       ========================================== */
+    .s-docs {
+      padding: 12mm 14mm;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12mm;
+      background: var(--white);
+    }
+
+    .s-docs .docs-title {
+      font-family: var(--font-disp);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1.25;
+      margin-bottom: 6mm;
+    }
+
+    .s-docs .doc-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 12px;
+      background: #f8fafc;
+      border-left: 3px solid var(--gold);
+      border-radius: 7px;
+      margin-bottom: 6px;
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .s-docs .doc-icon { font-size: 14px; }
+
+    .s-docs .img-col {
+      display: flex;
+      flex-direction: column;
+      gap: 8mm;
+    }
+
+    .s-docs .img-col img.doc-photo {
+      height: 50mm;
+      width: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(6,19,42,.12);
+    }
+
+    .s-docs .terms-card {
+      background: var(--gd-navy);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: var(--white);
+      border: 1px solid rgba(255,198,61,.25);
+    }
+
+    .s-docs .tc-title {
+      font-family: var(--font-disp);
+      font-size: 9px;
+      font-weight: 800;
+      color: var(--gold-light);
+      margin-bottom: 5px;
+    }
+
+    .s-docs .tc-body {
+      font-size: 7.5px;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+
+    /* ==========================================
+       SLIDE 10 – FACILITIES GRID
+       ========================================== */
+    .s-fac {
+      padding: 10mm 14mm;
+      background: var(--white);
+    }
+
+    .s-fac .fac-header {
+      margin-bottom: 5mm;
+    }
+
+    .s-fac .fac-title {
+      font-family: var(--font-disp);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .s-fac .fac-desc {
+      font-size: 8.5px;
+      color: var(--muted);
+    }
+
+    .s-fac .fac-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .s-fac .fac-card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .s-fac .fac-card img {
+      width: 100%;
+      height: 34mm;
+      object-fit: cover;
+    }
+
+    .s-fac .fac-card-body {
+      padding: 8px 10px;
+    }
+
+    .s-fac .fac-card-name {
+      font-family: var(--font-disp);
+      font-size: 9px;
+      font-weight: 800;
+      color: var(--heading);
+      margin-bottom: 3px;
+    }
+
+    .s-fac .fac-card-text {
+      font-size: 7.5px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    /* ==========================================
+       SLIDE 11 – BACK COVER / CONTACT
+       ========================================== */
+    .s-contact {
+      background: var(--midnight);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .s-contact .bg-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      z-index: 1;
+    }
+
+    .s-contact .fg {
+      position: relative;
+      z-index: 5;
+      height: 100%;
+      padding: 16mm 20mm;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .s-contact .brand-block {}
+
+    .s-contact .contact-logo-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8mm;
+    }
+
+    .s-contact .contact-logo-row img {
+      height: 36px;
+    }
+
+    .s-contact .brand-name-block {
+      border-left: 2px solid rgba(255,198,61,.5);
+      padding-left: 10px;
+    }
+
+    .s-contact .brand-name {
+      font-family: var(--font-disp);
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--white);
+    }
+
+    .s-contact .brand-sub {
+      font-size: 7.5px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gold-light);
+    }
+
+    .s-contact .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--gd-gold);
+      color: var(--midnight);
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-family: var(--font-disp);
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      text-decoration: none;
+      border: 1px solid #ffe8a3;
+    }
+
+    .s-contact .contact-card {
+      background: rgba(6,19,42,.88);
+      border: 1px solid rgba(255,198,61,.3);
+      border-radius: 14px;
+      padding: 14px 20px;
+      color: var(--white);
+      width: 115mm;
+      backdrop-filter: blur(12px);
+    }
+
+    .s-contact .cr {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 8.5px;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+    }
+
+    .s-contact .cr strong { color: var(--white); }
+
+    .s-contact .cr.featured {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--gold-light);
+      border-top: 1px solid rgba(255,255,255,.12);
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      padding: 6px 0;
+      margin: 6px 0;
+    }
+
+    .s-contact .addr-block {
+      font-size: 7.5px;
+      color: #94a3b8;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       SLIDE 1 – COVER
+       ============================================================ -->
+  <section class="slide s-cover">
+
+    <!-- Left Chevron SVG -->
+    <img src="background-why.svg" class="chevron-left" alt="">
+
+    <!-- Hero Person Photo -->
+    <img src="../public/support-agent.png" class="hero-photo" alt="Workdane Business Consultant">
+
+    <!-- Top-right logo -->
+    <div class="cover-logo">
+      <img src="../public/logo-workdane.png" alt="Workdane Logo">
+      <div class="cover-logo-text">
+        <div class="cover-logo-name">WORKDANE</div>
+        <div class="cover-logo-sub">Management Consultancy</div>
+      </div>
+    </div>
+
+    <!-- Main Cover text — RIGHT panel -->
+    <div class="cover-right">
+      <span class="eyebrow">Corporate Brochure 2026</span>
+      <h1 class="h1">
+        Do you deal<br>
+        in <em>Business<br>
+        Setup</em> Services?
+      </h1>
+      <div class="gold-bar"></div>
+      <p class="subheadline">
+        Maximise your earnings as an accredited<br>
+        <span>Workdane Business Partner.</span>
+      </p>
+    </div>
+
+    <div class="page-num">01</div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 2 – UAE LANDSCAPE SPREAD
+       ============================================================ -->
+  <section class="slide s-photo-spread">
+    <img class="bg-photo" src="../public/activities-hero.webp" alt="UAE Skyline">
+    <div class="overlay"></div>
+
+    <div class="content">
+      <div>
+        <span class="tag">&#9670; United Arab Emirates</span>
+      </div>
+      <h2 class="big-title">
+        The World's Leading Destination<br>
+        for Enterprise, Investment &amp; Global Trade.
+      </h2>
+      <div class="stats-row">
+        <div>
+          <div class="stat-num">100%</div>
+          <div class="stat-lbl">Foreign Ownership</div>
+        </div>
+        <div>
+          <div class="stat-num">24h</div>
+          <div class="stat-lbl">Digital License Issuance</div>
+        </div>
+        <div>
+          <div class="stat-num">0%</div>
+          <div class="stat-lbl">Personal Income Tax</div>
+        </div>
+        <div>
+          <div class="stat-num">50+</div>
+          <div class="stat-lbl">Jurisdictions Served</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-num" style="color:rgba(255,255,255,.5)">02</div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 3 – WHY WORKDANE (split photo left + copy right)
+       ============================================================ -->
+  <section class="slide s-why">
+    <div class="left-panel">
+      <img class="bg-img" src="../public/team-meeting.png" alt="Workdane Team">
+      <div class="img-overlay"></div>
+      <div class="badge">
+        <div class="badge-num">2,000+</div>
+        <div class="badge-lbl">Permitted Business Activities</div>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div>
+        <span class="eyebrow">Why Workdane Business?</span>
+        <h2 class="section-title">
+          Join the UAE's fastest<br>digital business setup<br>platform!
+        </h2>
+        <div class="gold-bar"></div>
+        <p class="body-text">
+          <strong>Workdane Management Consultancy</strong> is the smarter, simpler, and faster choice for entrepreneurs, foreign investors, and international corporations setting up in the UAE.<br><br>
+          With 2,000+ business activities and cutting-edge facilities across Dubai and Sharjah, we are the ideal business setup partner. Our thriving ecosystem and dedicated support initiatives empower our clients to launch and grow with complete peace of mind.
+        </p>
+      </div>
+
+      <div class="rating-wrap">
+        <div class="rating-title">One of the highest rated setup firms in the UAE</div>
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="stars-sub">Rated 4.9 stars by verified clients &#8226; Dubai &amp; Sharjah Offices</div>
+      </div>
+    </div>
+
+    <div class="page-num">03</div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 4 – USPs  "WHERE ELSE?"
+       ============================================================ -->
+  <section class="slide s-usps">
+
+    <div class="left-col">
+      <div class="big-word">WHERE<br><span class="accent">ELSE?</span></div>
+      <div style="font-size:8.5px; font-weight:700; color:var(--muted); margin-top:5px;">The Workdane Advantage</div>
+
+      <div class="highlight-box" style="margin-top:8mm;">
+        <div class="hb-icon">&#9889;</div>
+        <div class="hb-text">
+          We issue trade licenses <strong>instantly</strong> and guarantee corporate bank account assistance in <strong>3 working days</strong>.
+        </div>
+        <div style="font-size:7px; color:rgba(255,255,255,.5); margin-top:6px;">*Terms &amp; Conditions Apply</div>
+      </div>
+    </div>
+
+    <div class="usp-grid">
+      <div class="usp-item"><div class="usp-icon">&#128179;</div><div class="usp-text">Pay-as-you-go model with flexible payment milestones</div></div>
+      <div class="usp-item"><div class="usp-icon">&#128196;</div><div class="usp-text">Combine up to 5 business activities under 1 licence</div></div>
+      <div class="usp-item"><div class="usp-icon">&#127963;</div><div class="usp-text">Corporate banking assistance with Tier-1 UAE banks</div></div>
+      <div class="usp-item"><div class="usp-icon">&#127462;&#127466;</div><div class="usp-text">DED, MoFA &amp; Municipality recognised</div></div>
+      <div class="usp-item"><div class="usp-icon">&#9200;</div><div class="usp-text">UAE residency visa in 5 working days</div></div>
+      <div class="usp-item"><div class="usp-icon">&#128737;</div><div class="usp-text">No third-party approvals for standard activities</div></div>
+      <div class="usp-item"><div class="usp-icon">&#128101;</div><div class="usp-text">Up to 7 shareholders on one licence</div></div>
+      <div class="usp-item"><div class="usp-icon">&#128202;</div><div class="usp-text">No audit report fees on renewal</div></div>
+      <div class="usp-item"><div class="usp-icon">&#127758;</div><div class="usp-text">Unlimited visa allocation options</div></div>
+      <div class="usp-item"><div class="usp-icon">&#128176;</div><div class="usp-text">Save on visa renewal every alternate year</div></div>
+      <div class="usp-item"><div class="usp-icon">&#129309;</div><div class="usp-text">Dual offices – Dubai Deira &amp; Sharjah SPC FZ</div></div>
+      <div class="usp-item"><div class="usp-icon">&#128274;</div><div class="usp-text">Guaranteed same renewal price every year</div></div>
+    </div>
+
+    <div class="page-num">04</div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 5 – PARTNER BENEFITS "WHAT'S IN IT FOR YOU?"
+       ============================================================ -->
+  <section class="slide s-partner">
+
+    <div class="left-content">
+      <span class="eyebrow">Partner Programme</span>
+      <h2 class="big-title">What's in it<br>for you?</h2>
+      <div class="gold-bar"></div>
+
+      <ul class="benefit-list">
+        <li class="benefit-item">
+          <span class="b-icon">&#10022;</span>
+          <div>
+            <div class="b-title">Attractive Commissions</div>
+            <div class="b-text">Industry-leading referral payouts and recurring commission structures for our channel partners. Earn AED on every qualified client you introduce.</div>
+          </div>
+        </li>
+        <li class="benefit-item">
+          <span class="b-icon">&#10022;</span>
+          <div>
+            <div class="b-title">Dedicated Account Manager</div>
+            <div class="b-text">A single senior consultant follows your client's file end-to-end. One point of contact, 24/7 executive support via WhatsApp.</div>
+          </div>
+        </li>
+        <li class="benefit-item">
+          <span class="b-icon">&#10022;</span>
+          <div>
+            <div class="b-title">Workdane Partner Academy</div>
+            <div class="b-text">Hands-on training, regulatory updates, and free client-consultation certification. Access our Partner Portal for real-time file tracking.</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="right-panel">
+      <img class="bg-img" src="../public/dubai-team.png" alt="Workdane Dubai Team">
+      <div class="img-ov"></div>
+    </div>
+
+    <div class="page-num">05</div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 6 – PRICE LIST: E-Commerce & Digital
+       ============================================================ -->
+  <section class="slide s-price">
+    <div class="price-left">
+      <span class="eyebrow">Price List — 2026</span>
+      <h2 class="price-cat-title">E-Commerce &amp; Digital</h2>
+      <div class="gold-bar"></div>
+      <p class="price-cat-desc">
+        Activities include: Online portals, digital marketplaces, online sale of consumer goods, software licensing, streaming &amp; digital media.
+      </p>
+
+      <table>
+        <tbody>
+          <tr class="featured">
+            <td><span class="dot"></span><span class="item-name"><strong>Business License (Valid 1 Year)</strong></span></td>
+            <td style="text-align:right;"><span class="item-price">AED 4,999</span></td>
+          </tr>
+          <tr><td><span class="dot"></span><span class="item-name">Visa Allocation (1–50)</span></td><td style="text-align:right;"><span class="item-price">AED 1,600 <span style="font-size:7px;color:#94a3b8;">/ alloc</span></span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">Visa Allocation (51–100)</span></td><td style="text-align:right;"><span class="item-price">AED 900 <span style="font-size:7px;color:#94a3b8;">/ alloc</span></span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">Visa Allocation (101+)</span></td><td style="text-align:right;"><span class="item-price">AED 800 <span style="font-size:7px;color:#94a3b8;">/ alloc</span></span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">E-Channel Immigration Registration</span></td><td style="text-align:right;"><span class="item-price">AED 2,280</span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">Establishment Card</span></td><td style="text-align:right;"><span class="item-price">AED 640</span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">Investor / Partner Visa (2 Years) ×1</span></td><td style="text-align:right;"><span class="item-price">AED 2,530</span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">Employee Employment Visa</span></td><td style="text-align:right;"><span class="item-price">AED 3,700</span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">Change of Status ×1</span></td><td style="text-align:right;"><span class="item-price">AED 700</span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">VIP Medical &amp; Emirates ID ×1</span></td><td style="text-align:right;"><span class="item-price">AED 365</span></td></tr>
+        </tbody>
+      </table>
+
+      <div class="price-footer">
+        <span class="pill">View All Activities &#8594;</span>
+        <span class="price-note">Visa prices include Emirates ID biometric processing. Indicative fees.</span>
+      </div>
+    </div>
+
+    <div class="right-art">
+      <img src="background-pricing.svg" alt="">
+    </div>
+
+    <div class="page-num">06</div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 7 – PRICE LIST: General Trading & Commercial
+       ============================================================ -->
+  <section class="slide s-price">
+    <div class="price-left">
+      <span class="eyebrow">Price List — 2026</span>
+      <h2 class="price-cat-title">General Trading &amp; Commercial</h2>
+      <div class="gold-bar"></div>
+      <p class="price-cat-desc">
+        Activities include: General wholesale/retail trading, import/export, supply chain distribution, logistics brokerage and commercial agency.
+      </p>
+
+      <table>
+        <tbody>
+          <tr class="featured">
+            <td><span class="dot"></span><span class="item-name"><strong>Business License (Valid 1 Year)</strong></span></td>
+            <td style="text-align:right;"><span class="item-price">AED 5,750</span></td>
+          </tr>
+          <tr><td><span class="dot"></span><span class="item-name">Visa Allocation (1–50)</span></td><td style="text-align:right;"><span class="item-price">AED 1,600 <span style="font-size:7px;color:#94a3b8;">/ alloc</span></span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">Visa Allocation (51–100)</span></td><td style="text-align:right;"><span class="item-price">AED 900 <span style="font-size:7px;color:#94a3b8;">/ alloc</span></span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">Visa Allocation (101+)</span></td><td style="text-align:right;"><span class="item-price">AED 800 <span style="font-size:7px;color:#94a3b8;">/ alloc</span></span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">E-Channel Immigration Registration</span></td><td style="text-align:right;"><span class="item-price">AED 2,280</span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">Establishment Card</span></td><td style="text-align:right;"><span class="item-price">AED 640</span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">Investor / Partner Visa (2 Years) ×1</span></td><td style="text-align:right;"><span class="item-price">AED 2,530</span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">Employee Employment Visa</span></td><td style="text-align:right;"><span class="item-price">AED 3,700</span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">Change of Status ×1</span></td><td style="text-align:right;"><span class="item-price">AED 700</span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">VIP Medical &amp; Emirates ID ×1</span></td><td style="text-align:right;"><span class="item-price">AED 365</span></td></tr>
+        </tbody>
+      </table>
+
+      <div class="price-footer">
+        <span class="pill">View Trading Activities &#8594;</span>
+        <span class="price-note">Customs Code &amp; Port Saeed clearance assistance included.</span>
+      </div>
+    </div>
+
+    <div class="right-art">
+      <img src="background-pricing.svg" alt="">
+    </div>
+
+    <div class="page-num">07</div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 8 – PRICE LIST: Professional & IT Services
+       ============================================================ -->
+  <section class="slide s-price">
+    <div class="price-left">
+      <span class="eyebrow">Price List — 2026</span>
+      <h2 class="price-cat-title">Professional &amp; IT Services</h2>
+      <div class="gold-bar"></div>
+      <p class="price-cat-desc">
+        Activities include: Management consultancy, IT architecture, software engineering, digital marketing, PR, legal advisory, financial &amp; HR consultancies.
+      </p>
+
+      <table>
+        <tbody>
+          <tr class="featured">
+            <td><span class="dot"></span><span class="item-name"><strong>Business License (Valid 1 Year)</strong></span></td>
+            <td style="text-align:right;"><span class="item-price">AED 6,875</span></td>
+          </tr>
+          <tr><td><span class="dot"></span><span class="item-name">Visa Allocation (1–50)</span></td><td style="text-align:right;"><span class="item-price">AED 1,600 <span style="font-size:7px;color:#94a3b8;">/ alloc</span></span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">Visa Allocation (51–100)</span></td><td style="text-align:right;"><span class="item-price">AED 900 <span style="font-size:7px;color:#94a3b8;">/ alloc</span></span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">Visa Allocation (101+)</span></td><td style="text-align:right;"><span class="item-price">AED 800 <span style="font-size:7px;color:#94a3b8;">/ alloc</span></span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">E-Channel Immigration Registration</span></td><td style="text-align:right;"><span class="item-price">AED 2,280</span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">Establishment Card</span></td><td style="text-align:right;"><span class="item-price">AED 640</span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">Investor / Partner Visa (2 Years) ×1</span></td><td style="text-align:right;"><span class="item-price">AED 2,530</span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">Employee Employment Visa</span></td><td style="text-align:right;"><span class="item-price">AED 3,700</span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">Change of Status ×1</span></td><td style="text-align:right;"><span class="item-price">AED 700</span></td></tr>
+          <tr><td><span class="dot"></span><span class="item-name">VIP Medical &amp; Emirates ID ×1</span></td><td style="text-align:right;"><span class="item-price">AED 365</span></td></tr>
+        </tbody>
+      </table>
+
+      <div class="price-footer">
+        <span class="pill">View All Activities &#8594;</span>
+        <span class="price-note">100% foreign ownership permitted. No local sponsor required.</span>
+      </div>
+    </div>
+
+    <div class="right-art">
+      <img src="background-pricing.svg" alt="">
+    </div>
+
+    <div class="page-num">08</div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 9 – DOCUMENTS ISSUED TO CLIENTS
+       ============================================================ -->
+  <section class="slide s-docs">
+    <div>
+      <span class="eyebrow">Setup Deliverables</span>
+      <h2 class="docs-title">
+        Documents issued to clients<br>
+        when they start their<br>
+        business with Workdane:
+      </h2>
+      <div class="doc-item"><span class="doc-icon">&#128220;</span>Official Business Trade Licence</div>
+      <div class="doc-item"><span class="doc-icon">&#127963;</span>Certificate of Formation</div>
+      <div class="doc-item"><span class="doc-icon">&#128188;</span>Share Certificate (100% Ownership)</div>
+      <div class="doc-item"><span class="doc-icon">&#127968;</span>Lease / Coworking Tenancy (Ejari)</div>
+      <div class="doc-item"><span class="doc-icon">&#128203;</span>Memorandum of Association (MOA)</div>
+      <div style="font-size:7.5px; color:var(--muted); margin-top:8px;">
+        *All documents verified and ready for corporate banking &amp; municipal approvals.
+      </div>
+    </div>
+
+    <div class="img-col">
+      <img class="doc-photo" src="../public/handshake.png" alt="Client Handshake">
+      <div class="terms-card">
+        <div class="tc-title">Terms &amp; Compliance Guidelines</div>
+        <div class="tc-body">
+          &#8226; Original identity documents must be submitted electronically or verified within two months of licence issuance.<br>
+          &#8226; Only certified digital copies are required from companies registered with international online registers.<br>
+          &#8226; Dedicated compliance review guarantees seamless account setup with UAE Central Bank regulated institutions.
+        </div>
+      </div>
+    </div>
+
+    <div class="page-num">09</div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 10 – FACILITIES & WORKSPACES
+       ============================================================ -->
+  <section class="slide s-fac">
+    <div class="fac-header">
+      <span class="eyebrow">Facilities</span>
+      <h2 class="fac-title">Facilities &amp; Workspaces</h2>
+      <p class="fac-desc">Flexible office solutions across prime Dubai &amp; Sharjah locations — designed for maximum scalability.</p>
+    </div>
+
+    <div class="fac-grid">
+      <div class="fac-card">
+        <img src="../public/office-presentation.webp" alt="Coworking">
+        <div class="fac-card-body">
+          <div class="fac-card-name">Coworking Space</div>
+          <div class="fac-card-text">Hot desks, meeting lounges &amp; networking spaces for agile founders with high-speed connectivity.</div>
+        </div>
+      </div>
+      <div class="fac-card">
+        <img src="../public/process-plan.png" alt="Private Office">
+        <div class="fac-card-body">
+          <div class="fac-card-name">Dedicated Private Office</div>
+          <div class="fac-card-text">Fully furnished offices in Dubai Deira &amp; Sharjah SPC FZ with 24/7 keycard access.</div>
+        </div>
+      </div>
+      <div class="fac-card">
+        <img src="../public/dubai-team.png" alt="Shell & Core">
+        <div class="fac-card-body">
+          <div class="fac-card-name">Shell &amp; Core Offices</div>
+          <div class="fac-card-text">Customisable floor plates for enterprise teams building bespoke executive suites.</div>
+        </div>
+      </div>
+      <div class="fac-card">
+        <img src="../public/support-agent.png" alt="Virtual Office">
+        <div class="fac-card-body">
+          <div class="fac-card-name">Virtual Receptionist</div>
+          <div class="fac-card-text">Registered business address, local landline &amp; professional call handling included.</div>
+        </div>
+      </div>
+      <div class="fac-card">
+        <img src="../public/activities-hero.webp" alt="Commercial">
+        <div class="fac-card-body">
+          <div class="fac-card-name">Commercial &amp; Retail</div>
+          <div class="fac-card-text">High-footfall streetfront &amp; concourse units in vibrant trade districts.</div>
+        </div>
+      </div>
+      <div class="fac-card">
+        <img src="../public/team-meeting.png" alt="Warehousing">
+        <div class="fac-card-body">
+          <div class="fac-card-name">Warehousing &amp; Logistics</div>
+          <div class="fac-card-text">Customs-bonded storage with direct access to Sharjah &amp; Dubai airports and seaports.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-num">10</div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 11 – BACK COVER / CONTACT
+       ============================================================ -->
+  <section class="slide s-contact">
+    <img class="bg-svg" src="background-contact.svg" alt="">
+
+    <div class="fg">
+      <div class="brand-block">
+        <div class="contact-logo-row">
+          <img src="../public/logo-workdane-light.png" alt="Workdane Logo">
+          <div class="brand-name-block">
+            <div class="brand-name">WORKDANE</div>
+            <div class="brand-sub">Management Consultancy</div>
+          </div>
+        </div>
+        <a class="cta-btn" href="https://wa.me/971565374748" target="_blank">
+          Let's Connect &#8594;
+        </a>
+      </div>
+
+      <div class="contact-card">
+        <div class="cr"><span>&#128336;</span><span>Mon – Sat &nbsp;<strong>8:00 AM – 8:00 PM</strong></span></div>
+        <div class="cr"><span>&#9993;</span><span>workdaneuae@gmail.com</span></div>
+        <div class="cr featured"><span>&#128222;</span><span>+971 56 537 4748</span></div>
+        <div class="addr-block">
+          <strong style="color:#94a3b8;">Dubai:</strong> Al Khaimah Building, 3rd Floor, Office 34, Port Saeed, Deira, Dubai, UAE<br>
+          <strong style="color:#94a3b8;">Sharjah:</strong> Ground Floor, Business Centre, Sharjah Publishing City FZ, Sharjah, UAE<br>
+          <strong style="color:#94a3b8;">Web:</strong> workdanbusiness.vercel.app
+        </div>
+      </div>
+    </div>
+
+    <div class="page-num" style="color:rgba(255,255,255,.4);">11</div>
+  </section>
+
+</body>
+</html>

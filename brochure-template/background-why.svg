@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%">
+  <defs>
+    <linearGradient id="whtCanvas" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="55%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#eef2f8"/>
+    </linearGradient>
+    <linearGradient id="whtNavy" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06132a"/>
+      <stop offset="100%" stop-color="#0b2452"/>
+    </linearGradient>
+    <linearGradient id="whtGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffc63d"/>
+      <stop offset="50%" stop-color="#d99a0b"/>
+      <stop offset="100%" stop-color="#8f5a00"/>
+    </linearGradient>
+    <linearGradient id="whtGoldLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffe8a3"/>
+      <stop offset="100%" stop-color="#ffc63d"/>
+    </linearGradient>
+    <filter id="whtShadow">
+      <feDropShadow dx="-6" dy="14" stdDeviation="18" flood-color="#06132a" flood-opacity="0.2"/>
+    </filter>
+    <!-- Circle radial glow on left behind chevron -->
+    <radialGradient id="leftGlow" cx="30%" cy="50%" r="40%">
+      <stop offset="0%" stop-color="#07399d" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1920" height="1080" fill="url(#whtCanvas)"/>
+  <!-- Ambient radial glow behind chevron -->
+  <ellipse cx="340" cy="540" rx="500" ry="480" fill="url(#leftGlow)"/>
+
+  <!-- Hairline grid for corporate depth -->
+  <g opacity="0.035" stroke="#07399d" stroke-width="1">
+    <line x1="0" y1="270" x2="1920" y2="270"/>
+    <line x1="0" y1="540" x2="1920" y2="540"/>
+    <line x1="0" y1="810" x2="1920" y2="810"/>
+    <line x1="640" y1="0" x2="640" y2="1080"/>
+    <line x1="1280" y1="0" x2="1280" y2="1080"/>
+  </g>
+
+  <!-- ===== LEFT CHEVRON STACK ===== -->
+  <!-- Outer navy chevron -->
+  <path d="M-100,-100 L420,-100 L720,540 L420,1180 L-100,1180 L200,540 Z"
+        fill="url(#whtNavy)" filter="url(#whtShadow)"/>
+  <!-- Mid royal blue face -->
+  <path d="M-60,60 L340,60 L610,540 L340,1020 L-60,1020 L210,540 Z"
+        fill="#07399d" opacity="0.85"/>
+  <!-- Gold accent chevron ribbon -->
+  <path d="M120,-100 L265,-100 L565,540 L265,1180 L120,1180 L420,540 Z"
+        fill="url(#whtGold)"/>
+  <!-- Gold light hairline -->
+  <path d="M260,-100 L285,-100 L583,540 L285,1180 L260,1180 L558,540 Z"
+        fill="url(#whtGoldLight)" opacity="0.9"/>
+
+  <!-- Small decorative dot cluster top-right -->
+  <g fill="#07399d" opacity="0.1">
+    <circle cx="1760" cy="80" r="5"/>
+    <circle cx="1796" cy="80" r="5"/>
+    <circle cx="1832" cy="80" r="5"/>
+    <circle cx="1868" cy="80" r="5"/>
+    <circle cx="1760" cy="116" r="5"/>
+    <circle cx="1796" cy="116" r="5"/>
+    <circle cx="1832" cy="116" r="5"/>
+    <circle cx="1868" cy="116" r="5"/>
+  </g>
+
+  <!-- Bottom-right decorative arc lines -->
+  <g fill="none" stroke="#07399d" stroke-width="1.5" opacity="0.06">
+    <path d="M1400,900 Q1660,800 1920,900"/>
+    <path d="M1400,950 Q1660,850 1920,950"/>
+    <path d="M1400,1000 Q1660,900 1920,1000"/>
+  </g>
+</svg>

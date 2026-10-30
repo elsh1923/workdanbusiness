@@ -2,7 +2,7 @@
 
 import { useDeferredValue, useMemo, useState } from "react";
 import Link from "next/link";
-import { Check, Loader2, Minus, Plus, Printer, Search, X } from "lucide-react";
+import { ArrowDown, Check, Loader2, Lock, Minus, Plus, Printer, Search, X } from "lucide-react";
 import { activities, type Activity } from "@/lib/activity-data";
 import { calc, popularCodes } from "@/lib/calculator-config";
 import { INDICATIVE_NOTE } from "@/lib/config";
@@ -175,21 +175,163 @@ export default function CostCalculator() {
     );
   };
 
-  const locked = !unlocked;
-  const sectionCls = `border-t border-heading/15 py-12 ${locked ? "pointer-events-none select-none opacity-40" : ""}`;
+  const minLicence = Math.min(...Object.values(calc.licence));
+  const [step, setStep] = useState(1);
+  const reach = (n: number) => unlocked && n <= step;
+  const go = (n: number) => document.getElementById(`calc-step-${n}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const advance = (n: number) => {
+    setStep((s) => Math.max(s, n));
+    setTimeout(() => go(n), 60);
+  };
+
+  const railSteps = [
+    { n: 1, label: "Details", hint: "Required to continue" },
+    { n: 2, label: "Activities", hint: unlocked ? "Choose your activities" : "Locked until your details are saved" },
+    { n: 3, label: "Structure", hint: picked.length ? "Shareholders and licence length" : "Locked until you choose a business activity" },
+    { n: 4, label: "Visas", hint: picked.length ? "Your visa requirements" : "Locked until you choose a business activity" },
+    { n: 5, label: "Extras", hint: picked.length ? "Value-added services" : "Locked until you choose a business activity" },
+    { n: 6, label: "Final quote", hint: picked.length ? "Your full estimate" : "Locked until you choose a business activity" },
+  ];
+  const progress = unlocked ? Math.min(step, 6) : 1;
+  const [today, setToday] = useState("");
+
+  const sectionCls = (n: number) =>
+    `scroll-mt-28 rounded-3xl border bg-white p-7 shadow-[0_24px_60px_-40px_rgba(12,42,85,0.35)] transition sm:p-10 ${reach(n) ? "border-line" : "pointer-events-none select-none border-line opacity-50"}`;
+  const nextBtn = "gold-gradient btn-shine rounded-full px-7 py-3.5 text-[15px] font-bold text-midnight transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60";
+
+  const summary = (
+    <aside
+      className="h-fit rounded-3xl border border-line bg-white p-7 shadow-[0_24px_60px_-35px_rgba(12,42,85,0.4)] lg:sticky lg:top-28 print:static print:shadow-none"
+    >
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-[12px] font-extrabold uppercase tracking-[0.2em] text-bronze">Your estimated cost</p>
+        <span className={`rounded-full px-3 py-1 text-[12px] font-bold ${unlocked ? "bg-[#0f7d46]/10 text-[#0f7d46]" : "bg-navy/10 text-navy"}`}>{unlocked ? "Live" : "Locked"}</span>
+      </div>
+
+      {!unlocked ? (
+        <>
+          <dl className="mt-5 space-y-3 text-[15px]">
+            <div className="flex justify-between"><dt>Business licence</dt><dd className="font-bold text-heading">From {aed(minLicence)}</dd></div>
+            <div className="flex justify-between"><dt>Visa fees</dt><dd className="select-none text-body blur-sm">AED 0,000</dd></div>
+            <div className="flex justify-between"><dt>Value-added services</dt><dd className="select-none text-body blur-sm">AED 0,000</dd></div>
+          </dl>
+          <div className="mt-5 flex justify-between border-t border-line pt-4 font-display text-[18px] font-bold text-heading">
+            <span>Estimated total</span>
+            <span className="select-none blur-sm">AED 00,000</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => go(1)}
+            className="mt-6 flex w-full items-center justify-between gap-3 rounded-2xl bg-navy/5 px-4 py-3.5 text-left text-[14px] font-bold text-navy transition hover:bg-navy/10"
+          >
+            Share your details to unlock the full quote!
+            <ArrowDown className="h-4 w-4 shrink-0" />
+          </button>
+        </>
+      ) : picked.length === 0 ? (
+        <>
+          <p className="mt-5 font-display text-[22px] font-bold leading-snug text-heading">Let’s calculate your business setup cost</p>
+          <p className="mt-3 text-[14px] leading-relaxed">Free to use. No payment. No obligation.</p>
+          <div className="mt-5 flex justify-between border-t border-line pt-4 text-[15px]">
+            <span>Licence from</span>
+            <span className="font-bold text-heading">{aed(minLicence)}</span>
+          </div>
+          <p className="mt-2 text-[13px] text-body">Nothing selected yet</p>
+          <button type="button" onClick={() => go(2)} className="mt-5 w-full rounded-full border border-heading/25 py-3 text-[15px] font-bold text-heading transition hover:border-navy">
+            Choose an activity
+          </button>
+        </>
+      ) : (
+        <>
+          <p className="mt-4 font-display text-[34px] font-bold leading-none text-navy">{aed(total)}</p>
+          <p className="mt-1 text-[13px] text-body">Updates as you change your choices</p>
+          <ul className="mt-5 space-y-2.5 border-t border-line pt-5 text-[14px]">
+            {lines.map((l) => (
+              <li key={l.label} className="flex justify-between gap-3">
+                <span>{l.label}</span>
+                <span className={`shrink-0 font-bold ${l.amount < 0 ? "text-[#0f7d46]" : "text-heading"}`}>{l.amount < 0 ? `− ${aed(-l.amount)}` : aed(l.amount)}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-5 flex justify-between border-t border-line pt-4 font-display text-[18px] font-bold text-heading">
+            <span>Estimated total</span>
+            <span>{aed(total)}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => (step >= 6 ? go(6) : advance(Math.max(step, 6)))}
+            className="mt-5 w-full rounded-full bg-navy py-3.5 text-[15px] font-bold text-white transition hover:bg-slate-accent"
+          >
+            See my full estimate
+          </button>
+        </>
+      )}
+      <p className="mt-5 text-[12px] leading-relaxed text-body">{INDICATIVE_NOTE}</p>
+    </aside>
+  );
 
   return (
-    <section className="bg-surface px-6 pb-28 sm:px-12 lg:px-16">
-      <div className="mx-auto grid max-w-[1320px] gap-16 lg:grid-cols-[1.5fr_1fr] lg:gap-20">
-        <div>
+    <section id="calculator" className="scroll-mt-24 bg-tint px-6 py-16 sm:px-12 lg:px-16">
+      <div className="mx-auto grid max-w-[1320px] gap-8 lg:grid-cols-[230px_minmax(0,1fr)_320px]">
+        {/* progress rail */}
+        <aside className="hidden lg:block">
+          <div className="sticky top-28 rounded-3xl border border-line bg-white p-6">
+            <div className="flex items-center justify-between">
+              <p className="text-[12px] font-extrabold uppercase tracking-[0.2em] text-bronze">Progress</p>
+              <p className="text-[13px] font-bold text-heading">{progress}/6</p>
+            </div>
+            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-line">
+              <div className="h-full rounded-full bg-navy transition-all duration-500" style={{ width: `${(progress / 6) * 100}%` }} />
+            </div>
+            <ol className="mt-6 space-y-2">
+              {railSteps.map((r) => {
+                const open = reach(r.n) || (r.n === 1);
+                const done = unlocked && step > r.n && (r.n < 3 || picked.length > 0);
+                const current = (unlocked ? step : 1) === r.n;
+                return (
+                  <li key={r.n}>
+                    <button
+                      type="button"
+                      disabled={!open}
+                      onClick={() => go(r.n)}
+                      className={`flex w-full items-start gap-3 rounded-2xl border px-3 py-3 text-left transition ${current ? "border-navy bg-navy/5" : "border-transparent"} ${open ? "hover:bg-navy/5" : "cursor-not-allowed opacity-60"}`}
+                    >
+                      <span className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[13px] font-bold ${done ? "bg-[#0f7d46] text-white" : current ? "bg-navy text-white" : "bg-line text-body"}`}>
+                        {done ? <Check className="h-4 w-4" /> : open ? r.n : <Lock className="h-3.5 w-3.5" />}
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block text-[15px] font-bold text-heading">{r.label}</span>
+                        <span className="block text-[12px] leading-snug text-body">{r.hint}</span>
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ol>
+            <div className="mt-6 border-t border-line pt-5 text-[13px] leading-relaxed">
+              <p className="font-bold text-heading">Need help?</p>
+              <p className="mt-1">A business setup adviser can verify all details before you make a payment.</p>
+              <Link href="/book-appointment" className="mt-2 inline-block font-bold text-navy">
+                Talk to an adviser →
+              </Link>
+            </div>
+          </div>
+        </aside>
+
+        {/* steps */}
+        <div className="min-w-0 space-y-6">
+          <p className="text-[13px] font-bold text-heading lg:hidden">
+            Step {progress} of 6
+          </p>
+
           {/* 01 details */}
-          <div className="pb-12">
-            <p className={stepNo}>Step 01</p>
-            <h2 className={stepTitle}>First, a few quick details</h2>
-            <p className="mt-3 max-w-xl text-[15px] leading-relaxed">Tell us who you are so we can send you the estimate. Nothing is sent until you ask for the quote.</p>
+          <div id="calc-step-1" className={`${sectionCls(1)} !pointer-events-auto !opacity-100`}>
+            <p className={stepNo}>01</p>
+            <h2 className={stepTitle}>First, a few quick details!</h2>
+            <p className="mt-3 max-w-xl text-[15px] leading-relaxed">Let’s get started by sharing some basic information about yourself. Nothing is sent until you ask for the quote.</p>
             {unlocked ? (
-              <div className="mt-8 flex flex-wrap items-center gap-4 rounded-2xl border border-line bg-white p-5 text-[15px]">
-                <Check className="h-5 w-5 text-gold" />
+              <div className="mt-8 flex flex-wrap items-center gap-4 rounded-2xl border border-line bg-tint p-5 text-[15px]">
+                <Check className="h-5 w-5 text-[#0f7d46]" />
                 <span className="font-bold text-heading">{details.name}</span>
                 <span>{details.email}</span>
                 <span>
@@ -204,7 +346,11 @@ export default function CostCalculator() {
                 className="mt-8 grid gap-7 sm:grid-cols-2"
                 onSubmit={(e) => {
                   e.preventDefault();
-                  if (detailsOk) setUnlocked(true);
+                  if (!detailsOk) return;
+                  setUnlocked(true);
+                  setToday(new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }));
+                  setStep((s) => Math.max(s, 2));
+                  setTimeout(() => go(2), 60);
                 }}
               >
                 <label className="block">
@@ -241,7 +387,7 @@ export default function CostCalculator() {
                 <label className="block">
                   <span className={label}>Nationality (optional)</span>
                   <select value={details.nationality} onChange={(e) => setDetails({ ...details, nationality: e.target.value })} className={`${field} bg-white`}>
-                    <option value="">Select</option>
+                    <option value="">Select your nationality</option>
                     {countries.map((c) => (
                       <option key={c.name}>{c.name}</option>
                     ))}
@@ -253,13 +399,9 @@ export default function CostCalculator() {
                 </label>
                 <label className="flex items-start gap-3 text-[14px] leading-relaxed sm:col-span-2">
                   <input type="checkbox" required checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-1 h-4 w-4 accent-[#07399d]" />
-                  I agree to receive my quote by email, phone or WhatsApp. An adviser may contact me to follow up.
+                  I consent to receiving my quote by email, phone or WhatsApp. An adviser may contact me to follow up on my enquiry.
                 </label>
-                <button
-                  type="submit"
-                  disabled={!detailsOk}
-                  className="gold-gradient btn-shine rounded-full px-8 py-4 text-[15px] font-bold text-midnight transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60 sm:col-span-2 sm:justify-self-start"
-                >
+                <button type="submit" disabled={!detailsOk} className={`${nextBtn} sm:col-span-2 sm:justify-self-start`}>
                   Unlock my estimate
                 </button>
               </form>
@@ -267,8 +409,8 @@ export default function CostCalculator() {
           </div>
 
           {/* 02 activities */}
-          <div className={sectionCls}>
-            <p className={stepNo}>Step 02</p>
+          <div id="calc-step-2" className={sectionCls(2)} aria-disabled={!reach(2)}>
+            <p className={stepNo}>02</p>
             <h2 className={stepTitle}>Choose your business activities</h2>
             <p className="mt-3 max-w-xl text-[15px] leading-relaxed">
               Your {calc.includedGroups} largest activity groups are included in the licence. Activities from any further group are charged separately and shown as their own line.
@@ -340,32 +482,36 @@ export default function CostCalculator() {
                 )}
               </div>
             )}
+            {step <= 2 && (
+              <button type="button" disabled={!picked.length} onClick={() => advance(3)} className={`${nextBtn} mt-8`}>
+                {picked.length ? "Next: Company details ↓" : "Pick an activity first ↓"}
+              </button>
+            )}
           </div>
 
           {/* 03 structure */}
-          <div className={sectionCls}>
-            <p className={stepNo}>Step 03</p>
+          <div id="calc-step-3" className={sectionCls(3)}>
+            <p className={stepNo}>03</p>
             <h2 className={stepTitle}>Company details</h2>
-            <div className="mt-8 grid gap-10 sm:grid-cols-2">
-              <div>
-                <p className={label}>Number of shareholders</p>
-                <Stepper value={shareholders} onChange={setShareholders} min={1} max={calc.maxShareholders} name="shareholders" />
-                <p className="mt-3 text-[13px] leading-relaxed text-body">
-                  Up to {calc.includedShareholders} are included. Each additional shareholder is {aed(calc.extraShareholder)}.
-                </p>
-              </div>
+            <p className="mt-3 max-w-xl text-[15px] leading-relaxed">Choose the structure that fits your goals.</p>
+            <div className="mt-8">
+              <p className={label}>Number of shareholders</p>
+              <Stepper value={shareholders} onChange={setShareholders} min={1} max={calc.maxShareholders} name="shareholders" />
+              <p className="mt-3 text-[13px] leading-relaxed text-body">
+                Up to {calc.includedShareholders} shareholders are included. Each additional shareholder is {aed(calc.extraShareholder)}.
+              </p>
             </div>
             <fieldset className="mt-10">
               <legend className={label}>Licence validity</legend>
-              <p className="mb-4 max-w-xl text-[14px] leading-relaxed text-body">A longer licence lowers the cost of each year.</p>
-              <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
+              <p className="mb-4 max-w-xl text-[14px] leading-relaxed text-body">Enjoy long-term savings with a multi-year licence.</p>
+              <div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-5">
                 {calc.terms.map((t, i) => (
                   <button
                     key={t.years}
                     type="button"
                     aria-pressed={termIndex === i}
                     onClick={() => setTermIndex(i)}
-                    className={`rounded-2xl border p-4 text-left transition ${termIndex === i ? "border-gold bg-gold/5" : "border-line bg-white hover:border-heading/30"}`}
+                    className={`rounded-2xl border p-4 text-left transition ${termIndex === i ? "border-navy bg-navy/5" : "border-line bg-white hover:border-heading/30"}`}
                   >
                     <span className="block font-display text-[19px] font-bold text-heading">
                       {t.years} {t.years === 1 ? "year" : "years"}
@@ -375,13 +521,21 @@ export default function CostCalculator() {
                 ))}
               </div>
             </fieldset>
+            <p className="mt-6 text-[13px] leading-relaxed text-body">Looking for a different length? An adviser can price any term between 1 and 10 years.</p>
+            {step <= 3 && (
+              <button type="button" onClick={() => advance(4)} className={`${nextBtn} mt-8`}>
+                Next: Visas ↓
+              </button>
+            )}
           </div>
 
           {/* 04 visas */}
-          <div className={sectionCls}>
-            <p className={stepNo}>Step 04</p>
-            <h2 className={stepTitle}>Your visa requirements</h2>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
+          <div id="calc-step-4" className={sectionCls(4)}>
+            <p className={stepNo}>04</p>
+            <h2 className={stepTitle}>Share your visa requirements</h2>
+            <p className="mt-3 max-w-xl text-[15px] leading-relaxed">Choose how many visas you need for yourself, your team and your dependants.</p>
+            <p className={`${label} mt-8`}>Do you need a residence visa?</p>
+            <div className="grid gap-4 sm:grid-cols-2">
               <Toggle on={needVisa} onClick={() => setNeedVisa(true)} hint="Visa fees apply per visa." price="">
                 Yes, I need visas
               </Toggle>
@@ -404,7 +558,9 @@ export default function CostCalculator() {
                   <div key={name} className="flex flex-wrap items-center justify-between gap-4 border-b border-heading/15 pb-6">
                     <div>
                       <p className="text-[16px] font-bold text-heading">{name}</p>
-                      <p className="text-[13px] text-body">{aed(price)} each{name === "Change of status" ? ". Required if you are already in the UAE." : ""}</p>
+                      <p className="text-[13px] text-body">
+                        {aed(price)} each{name === "Change of status" ? ". Required if you are already in the UAE." : ""}
+                      </p>
                     </div>
                     <Stepper value={value} onChange={set} max={calc.visa.maxEach} name={unit} />
                   </div>
@@ -418,13 +574,18 @@ export default function CostCalculator() {
                 </p>
               </div>
             )}
+            {step <= 4 && (
+              <button type="button" onClick={() => advance(5)} className={`${nextBtn} mt-8`}>
+                {needVisa ? "Next: Extras ↓" : "No visas · Next: Extras ↓"}
+              </button>
+            )}
           </div>
 
           {/* 05 extras */}
-          <div className={sectionCls}>
-            <p className={stepNo}>Step 05</p>
+          <div id="calc-step-5" className={sectionCls(5)}>
+            <p className={stepNo}>05</p>
             <h2 className={stepTitle}>Value-added services</h2>
-            <p className="mt-3 max-w-xl text-[15px] leading-relaxed">Optional services to help you launch faster. Add only what you need.</p>
+            <p className="mt-3 max-w-xl text-[15px] leading-relaxed">Optional concierge services to help you launch faster. Add only what you need.</p>
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
               <Toggle on={bank} onClick={() => setBank((v) => !v)} hint="Help opening a corporate bank account." price={aed(calc.extras.bank)}>
                 Bank account assistance
@@ -455,26 +616,31 @@ export default function CostCalculator() {
                 <Stepper value={dependents} onChange={setDependents} max={10} name="dependent visas" />
               </div>
             </div>
+            <p className="mt-4 text-[13px] leading-relaxed text-body">We recommend the services that keep your company compliant and running smoothly.</p>
+            {step <= 5 && (
+              <button type="button" onClick={() => advance(6)} className={`${nextBtn} mt-8`}>
+                See my total estimate ↓
+              </button>
+            )}
           </div>
-        </div>
 
-        {/* 06 live estimate */}
-        <aside
-          id="estimate"
-          className="h-fit border border-line border-t-2 border-t-gold bg-white p-8 shadow-[0_24px_60px_-35px_rgba(12,42,85,0.35)] sm:p-10 lg:sticky lg:top-32 lg:self-start print:static print:shadow-none"
-        >
-          <p className={stepNo}>Your estimate</p>
-          {picked.length === 0 ? (
-            <>
-              <p className="font-display text-[24px] font-bold leading-snug text-heading">Let’s calculate your business setup cost</p>
-              <p className="mt-4 text-[15px] leading-relaxed">Choose a business activity first. Your licence fee is based on the activity, and everything else is added on top.</p>
-              <p className="mt-6 font-display text-[34px] font-bold text-navy">{aed(0)}</p>
-            </>
-          ) : (
-            <>
-              <p className="font-display text-[34px] font-bold text-navy">{aed(total)}</p>
-              <p className="mt-1 text-[13px] text-body">Updates as you change your choices</p>
-              <ul className="mt-6 space-y-3 border-t border-line pt-6 text-[15px]">
+          {/* 06 final quote */}
+          <div id="calc-step-6" className={sectionCls(6)}>
+            <p className={stepNo}>06</p>
+            <h2 className={stepTitle}>Your total estimate</h2>
+            <div className="mt-8 rounded-2xl border border-line bg-tint p-6 sm:p-8">
+              <p className="text-[12px] font-extrabold uppercase tracking-[0.2em] text-bronze">Workdane Management Consultancy</p>
+              <p className="mt-1 font-display text-[22px] font-bold text-heading">Business setup quote</p>
+              <dl className="mt-5 grid gap-x-8 gap-y-3 text-[14px] sm:grid-cols-2">
+                <div><dt className="text-body">Prepared for</dt><dd className="font-bold text-heading">{details.name || "—"}</dd></div>
+                <div><dt className="text-body">Date</dt><dd className="font-bold text-heading">{today}</dd></div>
+                <div><dt className="text-body">Email</dt><dd className="break-all font-bold text-heading">{details.email || "—"}</dd></div>
+                <div><dt className="text-body">Phone</dt><dd className="font-bold text-heading">{details.phone ? `${details.dial} ${details.phone}` : "—"}</dd></div>
+              </dl>
+              <p className="mt-6 text-[13px] font-bold uppercase tracking-widest text-bronze">Your estimated business setup cost</p>
+              <p className="font-display text-[40px] font-bold leading-tight text-navy">{aed(total)}</p>
+              <p className="text-[13px] text-body">All selections included.</p>
+              <ul className="mt-5 space-y-2.5 border-t border-line pt-5 text-[15px]">
                 {lines.map((l) => (
                   <li key={l.label} className="flex justify-between gap-4">
                     <span>{l.label}</span>
@@ -482,60 +648,64 @@ export default function CostCalculator() {
                   </li>
                 ))}
               </ul>
-              <div className="mt-6 flex justify-between border-t border-line pt-5 font-display text-[19px] font-bold text-heading">
+              <div className="mt-5 flex justify-between border-t border-line pt-4 font-display text-[19px] font-bold text-heading">
                 <span>Estimated total</span>
                 <span>{aed(total)}</span>
               </div>
-            </>
-          )}
-
-          <p className="mt-6 text-[13px] leading-relaxed text-body">{INDICATIVE_NOTE} A business setup adviser confirms every detail before you pay anything.</p>
-
-          {status === "sent" ? (
-            <div role="status" className="mt-6 rounded-xl bg-[#0f7d46]/10 p-4 text-[15px] leading-relaxed text-heading">
-              <p className="font-bold">Request received.</p>
-              We have your selections and will email you the full breakdown. An adviser will follow up shortly.
+              <p className="mt-5 text-[13px] leading-relaxed text-body">
+                The quoted amount is an estimate based on your selections. The final amount is confirmed by your business setup adviser before any payment is made. Government fees are subject to change without notice.
+              </p>
             </div>
-          ) : (
-            <div className="mt-6 space-y-3 print:hidden">
-              <button
-                type="button"
-                onClick={emailQuote}
-                disabled={!unlocked || picked.length === 0 || sending}
-                className="gold-gradient btn-shine flex w-full items-center justify-center gap-2 rounded-full py-4 text-[15px] font-bold text-midnight transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {sending && <Loader2 className="h-4 w-4 animate-spin" />}
-                {sending ? "Sending..." : "Email me this quote"}
-              </button>
-              <button
-                type="button"
-                onClick={() => window.print()}
-                disabled={picked.length === 0}
-                className="flex w-full items-center justify-center gap-2 rounded-full border border-heading/25 py-3.5 text-[15px] font-bold text-heading transition hover:border-navy disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <Printer className="h-4 w-4" />
-                Save as PDF
-              </button>
-              {!unlocked && <p className="text-[13px] text-body">Add your details in step 01 to unlock the estimate.</p>}
-              {status === "error" && (
-                <div role="alert" className="border-l-4 border-red-500 bg-red-50 p-3 text-[14px] text-red-900">
-                  {message}
-                  {whatsapp && (
-                    <a href={whatsapp} target="_blank" rel="noreferrer" className="mt-1 block font-bold underline">
-                      Send it on WhatsApp instead
-                    </a>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-          <p className="mt-6 text-[14px]">
-            Prefer to spread the cost?{" "}
-            <Link href="/pay-as-you-go" className="font-bold text-navy underline decoration-gold decoration-2 underline-offset-4">
-              See pay-as-you-go
-            </Link>
-          </p>
-        </aside>
+
+            {status === "sent" ? (
+              <div role="status" className="mt-6 rounded-xl bg-[#0f7d46]/10 p-4 text-[15px] leading-relaxed text-heading">
+                <p className="font-bold">On its way.</p>
+                We have your selections and will email you the full breakdown. An adviser will follow up shortly.
+              </div>
+            ) : (
+              <div className="mt-6 flex flex-wrap items-center gap-3 print:hidden">
+                <button
+                  type="button"
+                  onClick={emailQuote}
+                  disabled={!unlocked || picked.length === 0 || sending}
+                  className={`${nextBtn} flex items-center gap-2`}
+                >
+                  {sending && <Loader2 className="h-4 w-4 animate-spin" />}
+                  {sending ? "Sending..." : "Email me this quote"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => window.print()}
+                  disabled={picked.length === 0}
+                  className="flex items-center gap-2 rounded-full border border-heading/25 px-6 py-3.5 text-[15px] font-bold text-heading transition hover:border-navy disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <Printer className="h-4 w-4" />
+                  Save as PDF
+                </button>
+                <p className="w-full text-[14px] sm:w-auto sm:ml-2">
+                  Prefer to split your costs?{" "}
+                  <Link href="/pay-as-you-go" className="font-bold text-navy underline decoration-gold decoration-2 underline-offset-4">
+                    Explore pay-as-you-go
+                  </Link>
+                </p>
+              </div>
+            )}
+            {status === "error" && (
+              <div role="alert" className="mt-4 border-l-4 border-red-500 bg-red-50 p-3 text-[14px] text-red-900">
+                {message}
+                {whatsapp && (
+                  <a href={whatsapp} target="_blank" rel="noreferrer" className="mt-1 block font-bold underline">
+                    Send it on WhatsApp instead
+                  </a>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="lg:hidden">{summary}</div>
+        </div>
+
+        <div className="hidden lg:block">{summary}</div>
       </div>
     </section>
   );

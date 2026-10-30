@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import CostCalculator from "@/components/CostCalculator";
 import Eyebrow from "@/components/Eyebrow";
-import PageHero from "@/components/PageHero";
+import CalcHero from "@/components/CalcHero";
 
 export const metadata: Metadata = {
   title: "Cost Calculator | Workdane Management Consultancy",
@@ -25,18 +25,8 @@ const next = [
 export default function CostCalculatorPage() {
   return (
     <>
-      <PageHero
-        eyebrow="Cost calculator"
-        title={
-          <>
-            Estimate your setup <em className="gold-text italic">costs.</em>
-          </>
-        }
-        intro="Choose your activities, licence length, visas and extras and watch your estimate update. Free to use, with no obligation."
-      />
-      <div className="pt-16">
-        <CostCalculator />
-      </div>
+      <CalcHero />
+      <CostCalculator />
 
       <section className="border-t border-line bg-white px-6 py-24 sm:px-12 lg:px-16">
         <div className="mx-auto max-w-[1320px]">

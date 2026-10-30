@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workdan Business - Corporate Brochure Template</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    /* =====================================================================
+       DESIGN SYSTEM TOKENS - WORKDAN BUSINESS
+       ===================================================================== */
+    :root {
+      --midnight: #06132a;
+      --navy: #07399d;
+      --slate-accent: #022363;
+      --gold: #c28500;
+      --gold-light: #ffc63d;
+      --gold-gradient: linear-gradient(135deg, #ffc63d 0%, #d99a0b 50%, #8f5a00 100%);
+      --navy-gradient: linear-gradient(135deg, #07399d 0%, #06132a 100%);
+      --surface: #ffffff;
+      --tint: #f8fafc;
+      --card-bg: #ffffff;
+      --heading: #0b1730;
+      --body: #4b5563;
+      --line: #e2e8f0;
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --shadow-sm: 0 4px 6px -1px rgba(6, 19, 42, 0.05);
+      --shadow-md: 0 12px 24px -4px rgba(6, 19, 42, 0.08);
+      --shadow-lg: 0 24px 48px -12px rgba(6, 19, 42, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #1e293b;
+      color: var(--body);
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 10px;
+      min-height: 100vh;
+    }
+
+    /* Top Control Bar */
+    .top-controls {
+      width: 100%;
+      max-width: 1400px;
+      background: rgba(6, 19, 42, 0.95);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 198, 61, 0.3);
+      border-radius: 16px;
+      padding: 16px 24px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      color: #ffffff;
+    }
+
+    .top-controls .brand-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .top-controls .brand-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.5px;
+      color: #ffffff;
+    }
+
+    .top-controls .brand-badge {
+      background: var(--gold-gradient);
+      color: var(--midnight);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: none;
+    }
+
+    .btn-gold {
+      background: var(--gold-gradient);
+      color: var(--midnight);
+      box-shadow: 0 4px 12px rgba(217, 154, 11, 0.3);
+    }
+    .btn-gold:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(217, 154, 11, 0.45);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* Brochure Deck Container */
+    .brochure-container {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      width: 100%;
+      max-width: 1280px;
+    }
+
+    /* Individual Slide / Page in 16:9 Landscape (Base 1280 x 720 scaled, or 1920x1080 native) */
+    .slide-page {
+      position: relative;
+      width: 1280px;
+      height: 720px;
+      background: var(--surface);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5);
+      page-break-after: always;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Slide Header / Badge / Page Number */
+    .page-indicator {
+      position: absolute;
+      bottom: 24px;
+      right: 32px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #94a3b8;
+      z-index: 20;
+    }
+
+    /* =====================================================================
+       SLIDE 1: COVER PAGE
+       ===================================================================== */
+    .slide-cover {
+      background: #ffffff;
+      position: relative;
+    }
+
+    .slide-cover .bg-svg-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .slide-cover .cover-photo-wrapper {
+      position: absolute;
+      left: 140px;
+      bottom: 0;
+      height: 94%;
+      width: 480px;
+      z-index: 5;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .slide-cover .cover-photo {
+      height: 100%;
+      width: 100%;
+      object-fit: contain;
+      object-position: bottom;
+      filter: drop-shadow(15px 15px 30px rgba(6, 19, 42, 0.35));
+    }
+
+    .slide-cover .cover-header-logo {
+      position: absolute;
+      top: 48px;
+      right: 64px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      z-index: 10;
+    }
+
+    .slide-cover .logo-img {
+      height: 48px;
+      width: auto;
+    }
+
+    .slide-cover .logo-text-group {
+      border-left: 2px solid #cbd5e1;
+      padding-left: 14px;
+    }
+
+    .slide-cover .logo-name {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 17px;
+      color: var(--midnight);
+      letter-spacing: -0.5px;
+    }
+
+    .slide-cover .logo-sub {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--navy);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .slide-cover .cover-content {
+      position: absolute;
+      top: 240px;
+      right: 64px;
+      width: 540px;
+      z-index: 10;
+    }
+
+    .slide-cover .headline-main {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 42px;
+      font-weight: 800;
+      line-height: 1.15;
+      color: var(--midnight);
+      margin-bottom: 24px;
+    }
+
+    .slide-cover .headline-main em {
+      font-style: italic;
+      color: var(--navy);
+    }
+
+    .slide-cover .divider-gold {
+      width: 70px;
+      height: 4px;
+      background: var(--gold-gradient);
+      border-radius: 2px;
+      margin-bottom: 24px;
+    }
+
+    .slide-cover .sub-hook {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.45;
+      color: #334155;
+    }
+
+    .slide-cover .sub-hook span {
+      color: var(--navy);
+    }
+
+    /* =====================================================================
+       SLIDE 2: PANORAMIC UAE SKYLINE SPREAD
+       ===================================================================== */
+    .slide-skyline {
+      position: relative;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .slide-skyline .skyline-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(6,19,42,0.7) 0%, rgba(6,19,42,0.1) 40%, rgba(6,19,42,0.85) 100%);
+      z-index: 2;
+    }
+
+    .slide-skyline .skyline-content {
+      position: relative;
+      z-index: 5;
+      height: 100%;
+      padding: 60px 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: #ffffff;
+    }
+
+    .slide-skyline .skyline-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 198, 61, 0.2);
+      border: 1px solid var(--gold-light);
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--gold-light);
+    }
+
+    .slide-skyline .skyline-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 48px;
+      font-weight: 800;
+      line-height: 1.15;
+      max-width: 800px;
+    }
+
+    .slide-skyline .skyline-footer-stats {
+      display: flex;
+      gap: 40px;
+      border-top: 1px solid rgba(255,255,255,0.25);
+      padding-top: 24px;
+    }
+
+    .slide-skyline .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide-skyline .stat-num {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--gold-light);
+    }
+
+    .slide-skyline .stat-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.8);
+    }
+
+    /* =====================================================================
+       SLIDE 3: TABLE OF CONTENTS
+       ===================================================================== */
+    .slide-toc {
+      padding: 80px 100px;
+      position: relative;
+      background: #ffffff;
+    }
+
+    .slide-toc .toc-left-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 14px;
+      background: linear-gradient(180deg, var(--navy) 0%, var(--gold) 50%, var(--midnight) 100%);
+    }
+
+    .slide-toc .toc-heading {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 38px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 50px;
+      letter-spacing: -0.5px;
+    }
+
+    .slide-toc .toc-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      max-width: 650px;
+    }
+
+    .slide-toc .toc-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px dashed #e2e8f0;
+      padding-bottom: 14px;
+      font-size: 20px;
+      font-weight: 600;
+      color: #1e293b;
+      transition: color 0.2s;
+    }
+
+    .slide-toc .toc-item .toc-page-num {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    /* =====================================================================
+       SLIDE 4: WHY WORKDAN BUSINESS / COMPANY OVERVIEW
+       ===================================================================== */
+    .slide-split-content {
+      padding: 60px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      position: relative;
+    }
+
+    .slide-split-content .col-image {
+      position: relative;
+      height: 480px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px -10px rgba(6,19,42,0.25);
+    }
+
+    .slide-split-content .col-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .slide-split-content .col-image .image-badge {
+      position: absolute;
+      bottom: 24px;
+      left: 24px;
+      background: rgba(6, 19, 42, 0.9);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 198, 61, 0.4);
+      padding: 12px 20px;
+      border-radius: 12px;
+      color: #ffffff;
+    }
+
+    .slide-split-content .image-badge-num {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--gold-light);
+    }
+
+    .slide-split-content .image-badge-text {
+      font-size: 12px;
+      font-weight: 500;
+      color: #cbd5e1;
+    }
+
+    .slide-split-content .title-accent {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1.2;
+      color: var(--navy);
+      margin-bottom: 24px;
+    }
+
+    .slide-split-content .body-lead {
+      font-size: 16px;
+      line-height: 1.65;
+      color: #475569;
+      margin-bottom: 20px;
+    }
+
+    .slide-split-content .rating-box {
+      margin-top: 30px;
+      border-top: 2px solid #f1f5f9;
+      padding-top: 20px;
+    }
+
+    .slide-split-content .rating-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--heading);
+      margin-bottom: 6px;
+    }
+
+    .slide-split-content .stars {
+      color: #f59e0b;
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+
+    .slide-split-content .stars-sub {
+      font-size: 13px;
+      font-weight: 600;
+      color: #64748b;
+    }
+
+    /* =====================================================================
+       SLIDE 5: WHERE ELSE? / KEY ADVANTAGES & USPS
+       ===================================================================== */
+    .slide-usps {
+      padding: 60px 70px;
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 50px;
+      background: #ffffff;
+      position: relative;
+    }
+
+    .slide-usps .hero-badge-col {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .slide-usps .brand-slogan {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 44px;
+      font-weight: 900;
+      line-height: 0.95;
+      color: var(--navy);
+      text-transform: uppercase;
+      letter-spacing: -1px;
+    }
+
+    .slide-usps .brand-slogan span {
+      display: block;
+      color: var(--gold);
+    }
+
+    .slide-usps .highlight-card {
+      background: var(--navy-gradient);
+      border-radius: 18px;
+      padding: 28px 24px;
+      color: #ffffff;
+      box-shadow: 0 15px 30px -8px rgba(7, 57, 157, 0.35);
+      border: 1px solid rgba(255, 198, 61, 0.3);
+    }
+
+    .slide-usps .highlight-card .h-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+
+    .slide-usps .highlight-card .h-text {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .slide-usps .usp-list-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 36px;
+      row-gap: 20px;
+      align-content: center;
+    }
+
+    .slide-usps .usp-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 10px 0;
+    }
+
+    .slide-usps .usp-icon {
+      width: 38px;
+      height: 38px;
+      background: #f1f5f9;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--navy);
+      flex-shrink: 0;
+      border: 1px solid #e2e8f0;
+    }
+
+    .slide-usps .usp-text {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1e293b;
+      line-height: 1.35;
+    }
+
+    /* =====================================================================
+       SLIDES 7, 8, 9: PRICE LIST PACKAGES
+       ===================================================================== */
+    .slide-pricing {
+      padding: 50px 70px;
+      position: relative;
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    .slide-pricing .pricing-header {
+      margin-bottom: 24px;
+      max-width: 680px;
+    }
+
+    .slide-pricing .category-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 34px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+
+    .slide-pricing .category-desc {
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.4;
+    }
+
+    .slide-pricing .pricing-table {
+      width: 640px;
+      border-collapse: collapse;
+      margin-top: 14px;
+    }
+
+    .slide-pricing .pricing-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 9px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 14px;
+    }
+
+    .slide-pricing .pricing-row.highlight {
+      background: #f8fafc;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      margin: 8px 0;
+    }
+
+    .slide-pricing .pricing-row .item-name {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .slide-pricing .pricing-row .item-bullet {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    .slide-pricing .pricing-row .item-price {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .slide-pricing .pricing-row .item-price.featured {
+      font-size: 24px;
+      color: var(--navy);
+    }
+
+    .slide-pricing .pricing-footer {
+      margin-top: 24px;
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .slide-pricing .pill-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--navy);
+      color: #ffffff;
+      padding: 14px 28px;
+      border-radius: 30px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-decoration: none;
+      box-shadow: 0 8px 20px rgba(7, 57, 157, 0.3);
+      transition: background 0.2s;
+    }
+
+    .slide-pricing .pill-cta:hover {
+      background: var(--midnight);
+    }
+
+    .slide-pricing .note-text {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    /* Right Side Dynamic Geometric Ribbon Graphic */
+    .slide-pricing .ribbon-art-container {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 500px;
+      pointer-events: none;
+    }
+
+    /* =====================================================================
+       SLIDE 10: DOCUMENTS ISSUED & REQUIREMENTS
+       ===================================================================== */
+    .slide-docs {
+      padding: 60px 80px;
+      position: relative;
+      background: #ffffff;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+    }
+
+    .slide-docs .docs-left-col {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .slide-docs .docs-heading {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 34px;
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1.2;
+    }
+
+    .slide-docs .docs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .slide-docs .doc-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 18px;
+      background: #f8fafc;
+      border-radius: 12px;
+      border-left: 4px solid var(--gold);
+      font-size: 16px;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .slide-docs .doc-icon {
+      color: var(--navy);
+      font-size: 20px;
+    }
+
+    .slide-docs .terms-banner {
+      background: linear-gradient(135deg, #07399d 0%, #06132a 100%);
+      border-radius: 16px;
+      padding: 24px 28px;
+      color: #ffffff;
+      border: 1px solid rgba(255, 198, 61, 0.3);
+      box-shadow: 0 10px 25px rgba(6, 19, 42, 0.2);
+    }
+
+    .slide-docs .terms-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: var(--gold-light);
+    }
+
+    .slide-docs .terms-body {
+      font-size: 13px;
+      line-height: 1.55;
+      color: #cbd5e1;
+    }
+
+    /* =====================================================================
+       SLIDE 11: FACILITIES & WORKSPACES
+       ===================================================================== */
+    .slide-facilities {
+      padding: 50px 70px;
+      background: #ffffff;
+    }
+
+    .slide-facilities .fac-header {
+      margin-bottom: 30px;
+    }
+
+    .slide-facilities .fac-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .slide-facilities .fac-desc {
+      font-size: 15px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    .slide-facilities .fac-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .slide-facilities .fac-card {
+      background: #f8fafc;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide-facilities .fac-img {
+      height: 130px;
+      width: 100%;
+      object-fit: cover;
+    }
+
+    .slide-facilities .fac-content {
+      padding: 16px;
+      flex: 1;
+    }
+
+    .slide-facilities .fac-card-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--heading);
+      margin-bottom: 6px;
+    }
+
+    .slide-facilities .fac-card-text {
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.45;
+    }
+
+    /* =====================================================================
+       SLIDE 12: BACK COVER / CONTACT & LET'S CONNECT
+       ===================================================================== */
+    .slide-contact {
+      position: relative;
+      background: #06132a;
+      overflow: hidden;
+    }
+
+    .slide-contact .contact-svg-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .slide-contact .contact-overlay-content {
+      position: relative;
+      z-index: 10;
+      height: 100%;
+      padding: 70px 90px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .slide-contact .brand-cta-block {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .slide-contact .btn-connect {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--gold-gradient);
+      color: var(--midnight);
+      padding: 18px 40px;
+      border-radius: 50px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      text-decoration: none;
+      box-shadow: 0 10px 30px rgba(217, 154, 11, 0.4);
+      border: 1px solid #ffe8a3;
+    }
+
+    .slide-contact .contact-card {
+      background: rgba(6, 19, 42, 0.88);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 198, 61, 0.35);
+      border-radius: 20px;
+      padding: 32px 40px;
+      color: #ffffff;
+      width: 520px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    }
+
+    .slide-contact .contact-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+      font-size: 14px;
+      color: #cbd5e1;
+    }
+
+    .slide-contact .contact-row strong {
+      color: #ffffff;
+    }
+
+    .slide-contact .contact-row.featured {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--gold-light);
+      border-top: 1px solid rgba(255,255,255,0.15);
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      padding: 12px 0;
+      margin: 14px 0;
+    }
+
+    .slide-contact .office-address {
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+
+    /* Print & PDF Export Rules */
+    @media print {
+      body {
+        background: none;
+        padding: 0;
+        margin: 0;
+      }
+      .top-controls {
+        display: none !important;
+      }
+      .brochure-container {
+        gap: 0;
+        max-width: 100%;
+      }
+      .slide-page {
+        width: 100vw;
+        height: 100vh;
+        box-shadow: none;
+        border-radius: 0;
+        page-break-after: always;
+        break-after: page;
+      }
+      @page {
+        size: landscape;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Control Bar -->
+  <header class="top-controls">
+    <div class="brand-info">
+      <div>
+        <div class="brand-title">Workdan Business Setup — Master Corporate Brochure</div>
+        <div style="font-size: 12px; color: #94a3b8;">High-Resolution Landscape Template (16:9 / A4 Printable)</div>
+      </div>
+      <span class="brand-badge">Brand System v2.0</span>
+    </div>
+    <div class="action-buttons">
+      <button class="btn btn-outline" onclick="window.print()">🖨️ Print / Save to PDF</button>
+      <a href="background-cover.svg" target="_blank" class="btn btn-outline">⬇️ Cover SVG</a>
+      <a href="background-pricing.svg" target="_blank" class="btn btn-outline">⬇️ Pricing SVG</a>
+      <a href="https://workdanbusiness.vercel.app/" target="_blank" class="btn btn-gold">🌐 Live Website</a>
+    </div>
+  </header>
+
+  <main class="brochure-container">
+
+    <!-- =================================================================
+         SLIDE 1: COVER PAGE
+         ================================================================= -->
+    <article class="slide-page slide-cover" id="slide-1">
+      <!-- Background SVG Layers with Brand Chevron -->
+      <img src="background-cover.svg" class="bg-svg-layer" alt="Background Texture">
+
+      <!-- Executive Visual (Left cut) -->
+      <div class="cover-photo-wrapper">
+        <img src="../public/support-agent.png" class="cover-photo" alt="Workdan Business Consultant">
+      </div>
+
+      <!-- Top Right Corporate Header -->
+      <div class="cover-header-logo">
+        <img src="../public/logo-workdane.png" class="logo-img" alt="Workdan Business Logo">
+        <div class="logo-text-group">
+          <div class="logo-name">WORKDANE</div>
+          <div class="logo-sub">Management Consultancy</div>
+        </div>
+      </div>
+
+      <!-- Main Cover Typography -->
+      <div class="cover-content">
+        <h1 class="headline-main">
+          Do you deal<br>
+          in <em>Business<br>
+          Setup</em> Services?
+        </h1>
+        <div class="divider-gold"></div>
+        <p class="sub-hook">
+          Maximise your earnings as an accredited<br>
+          <span>Workdan Business Partner.</span>
+        </p>
+      </div>
+
+      <div class="page-indicator">01</div>
+    </article>
+
+
+    <!-- =================================================================
+         SLIDE 2: UAE LANDSCAPE / GATEWAY TO OPPORTUNITY
+         ================================================================= -->
+    <article class="slide-page slide-skyline" id="slide-2" style="background-image: url('../public/activities-hero.webp');">
+      <div class="skyline-overlay"></div>
+      
+      <div class="skyline-content">
+        <div>
+          <span class="skyline-tag">United Arab Emirates</span>
+        </div>
+        <div>
+          <h2 class="skyline-title">
+            The World’s Leading Destination for Enterprise, Investment & Global Trade.
+          </h2>
+        </div>
+        <div class="skyline-footer-stats">
+          <div class="stat-item">
+            <span class="stat-num">100%</span>
+            <span class="stat-label">Foreign Ownership in UAE</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">24h</span>
+            <span class="stat-label">Digital License Issuance</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">0%</span>
+            <span class="stat-label">Personal Income Tax</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">50+</span>
+            <span class="stat-label">Free Zones & Mainland jurisdictions</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-indicator" style="color: rgba(255,255,255,0.7);">02</div>
+    </article>
+
+
+    <!-- =================================================================
+         SLIDE 3: TABLE OF CONTENTS
+         ================================================================= -->
+    <article class="slide-page slide-toc" id="slide-3">
+      <div class="toc-left-bar"></div>
+
+      <h2 class="toc-heading">Table of Contents</h2>
+
+      <div class="toc-grid">
+        <div class="toc-item">
+          <span>Why Workdan Business?</span>
+          <span class="toc-page-num">04</span>
+        </div>
+        <div class="toc-item">
+          <span>Our Unique Selling Propositions (USPs)</span>
+          <span class="toc-page-num">05</span>
+        </div>
+        <div class="toc-item">
+          <span>Why Partner with Us?</span>
+          <span class="toc-page-num">06</span>
+        </div>
+        <div class="toc-item">
+          <span>Price List & Packages</span>
+          <span class="toc-page-num">07</span>
+        </div>
+        <div class="toc-item">
+          <span>Documents Issued to Clients</span>
+          <span class="toc-page-num">10</span>
+        </div>
+        <div class="toc-item">
+          <span>Facilities & Workspaces</span>
+          <span class="toc-page-num">11</span>
+        </div>
+      </div>
+
+      <div class="page-indicator">03</div>
+    </article>
+
+
+    <!-- =================================================================
+         SLIDE 4: WHY WORKDAN BUSINESS
+         ================================================================= -->
+    <article class="slide-page slide-split-content" id="slide-4">
+      <div class="col-image">
+        <img src="../public/team-meeting.png" alt="Workdan Business Team">
+        <div class="image-badge">
+          <div class="image-badge-num">2,000+</div>
+          <div class="image-badge-text">Permitted Business Activities</div>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="title-accent">Join the UAE’s fastest digital business setup platform!</h2>
+        <p class="body-lead">
+          <strong>Workdane Management Consultancy</strong> is the smarter, simpler, and faster choice for entrepreneurs, foreign investors, and international corporations in the UAE.
+        </p>
+        <p class="body-lead">
+          With 2,000+ business activities and cutting-edge facilities across Dubai and Sharjah, we are the ideal business setup partner.
+        </p>
+        <p class="body-lead">
+          Our thriving ecosystem and dedicated support initiatives empower our clients to launch and grow with complete peace of mind.
+        </p>
+
+        <div class="rating-box">
+          <div class="rating-title">We are one of the highest rated setup firms</div>
+          <div class="stars">★★★★★</div>
+          <div class="stars-sub">Rated 4.9 stars by verified UAE clients</div>
+        </div>
+      </div>
+
+      <div class="page-indicator">04</div>
+    </article>
+
+
+    <!-- =================================================================
+         SLIDE 5: WHERE ELSE? / THE WORKDAN ADVANTAGE
+         ================================================================= -->
+    <article class="slide-page slide-usps" id="slide-5">
+      <div class="hero-badge-col">
+        <div>
+          <div class="brand-slogan">
+            WHERE<br>
+            <span>ELSE?</span>
+          </div>
+          <div style="font-size: 13px; font-weight: 700; color: #64748b; margin-top: 6px;">The Workdan Advantage</div>
+        </div>
+
+        <div class="highlight-card">
+          <div class="h-icon">⚡</div>
+          <div class="h-text">
+            We issue trade licenses instantly and guarantee corporate bank account assistance in 3 working days.
+          </div>
+        </div>
+
+        <div style="font-size: 11px; color: #94a3b8;">*Terms & Conditions Apply</div>
+      </div>
+
+      <div class="usp-list-grid">
+        <div class="usp-item">
+          <div class="usp-icon">💳</div>
+          <div class="usp-text">Pay-as-you-go model with flexible payment milestones</div>
+        </div>
+        <div class="usp-item">
+          <div class="usp-icon">📑</div>
+          <div class="usp-text">Combine up to 5 business activities under 1 license</div>
+        </div>
+        <div class="usp-item">
+          <div class="usp-icon">🏛️</div>
+          <div class="usp-text">Corporate banking assistance with Tier-1 UAE banks</div>
+        </div>
+        <div class="usp-item">
+          <div class="usp-icon">🇦🇪</div>
+          <div class="usp-text">Official recognition by MoFA, DED and Municipalities</div>
+        </div>
+        <div class="usp-item">
+          <div class="usp-icon">⏱️</div>
+          <div class="usp-text">Fast-track UAE residency visa in 5 working days</div>
+        </div>
+        <div class="usp-item">
+          <div class="usp-icon">🛡️</div>
+          <div class="usp-text">No third-party approvals required for standard activities</div>
+        </div>
+        <div class="usp-item">
+          <div class="usp-icon">👥</div>
+          <div class="usp-text">Up to 7 shareholders registered under one license</div>
+        </div>
+        <div class="usp-item">
+          <div class="usp-icon">📊</div>
+          <div class="usp-text">No audit report or hidden amendment fees on renewal</div>
+        </div>
+        <div class="usp-item">
+          <div class="usp-icon">🌐</div>
+          <div class="usp-text">Unlimited visa allocation options for growing teams</div>
+        </div>
+        <div class="usp-item">
+          <div class="usp-icon">💰</div>
+          <div class="usp-text">Save money on visa renewal in alternate years</div>
+        </div>
+        <div class="usp-item">
+          <div class="usp-icon">🤝</div>
+          <div class="usp-text">Dual offices in Dubai (Deira) & Sharjah (SPC FZ)</div>
+        </div>
+        <div class="usp-item">
+          <div class="usp-icon">🔒</div>
+          <div class="usp-text">Guaranteed same renewal price guarantee</div>
+        </div>
+      </div>
+
+      <div class="page-indicator">05</div>
+    </article>
+
+
+    <!-- =================================================================
+         SLIDE 6: WHAT'S IN IT FOR YOU? (PARTNER BENEFITS)
+         ================================================================= -->
+    <article class="slide-page slide-split-content" id="slide-6">
+      <div style="padding-right: 20px;">
+        <h2 class="title-accent" style="font-size: 42px;">What’s in it<br>for you?</h2>
+        <div class="divider-gold" style="width: 60px; height: 4px; background: var(--gold-gradient); margin-bottom: 30px;"></div>
+
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 24px;">
+          <li style="display: flex; gap: 16px; align-items: flex-start;">
+            <span style="font-size: 24px; color: var(--gold);">✦</span>
+            <div>
+              <strong style="font-size: 20px; color: var(--navy); display: block; margin-bottom: 4px;">Attractive Commissions</strong>
+              <span style="font-size: 15px; color: #475569;">Industry-leading referral payouts and recurring commission structures for our channel partners.</span>
+            </div>
+          </li>
+          <li style="display: flex; gap: 16px; align-items: flex-start;">
+            <span style="font-size: 24px; color: var(--gold);">✦</span>
+            <div>
+              <strong style="font-size: 20px; color: var(--navy); display: block; margin-bottom: 4px;">Dedicated Account Manager</strong>
+              <span style="font-size: 15px; color: #475569;">A single senior consultant follows your client's file end-to-end, with 24/7 dedicated executive support.</span>
+            </div>
+          </li>
+          <li style="display: flex; gap: 16px; align-items: flex-start;">
+            <span style="font-size: 24px; color: var(--gold);">✦</span>
+            <div>
+              <strong style="font-size: 20px; color: var(--navy); display: block; margin-bottom: 4px;">Workdan Partner Academy</strong>
+              <span style="font-size: 15px; color: #475569;">Hands-on training, regulatory updates, and client consultation certification by Workdan Academy.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="col-image" style="height: 520px;">
+        <img src="../public/dubai-team.png" alt="Workdan Consultant">
+      </div>
+
+      <div class="page-indicator">06</div>
+    </article>
+
+
+    <!-- =================================================================
+         SLIDE 7: PRICE LIST - E-COMMERCE & DIGITAL
+         ================================================================= -->
+    <article class="slide-page slide-pricing" id="slide-7">
+      <div class="ribbon-art-container">
+        <img src="background-pricing.svg" style="width: 100%; height: 100%; object-fit: cover;" alt="Background Art">
+      </div>
+
+      <div class="pricing-header">
+        <h2 class="category-title">E-Commerce & Digital</h2>
+        <p class="category-desc">
+          Activities include: Online portals, digital marketplaces, online sale of consumer goods, software licensing, streaming, digital media and publishing.
+        </p>
+      </div>
+
+      <table class="pricing-table">
+        <tbody>
+          <tr class="pricing-row highlight">
+            <td class="item-name">
+              <span class="item-bullet"></span>
+              <strong>Business License (Valid for 1 Year)</strong>
+            </td>
+            <td class="item-price featured">AED 4,999</td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>Visa Allocation (1 to 50 Allocations)</td>
+            <td class="item-price">AED 1,600 <span style="font-size: 11px; color:#94a3b8;">/ alloc</span></td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>Visa Allocation (51 to 100 Allocations)</td>
+            <td class="item-price">AED 900 <span style="font-size: 11px; color:#94a3b8;">/ alloc</span></td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>Visa Allocation (101 and above)</td>
+            <td class="item-price">AED 800 <span style="font-size: 11px; color:#94a3b8;">/ alloc</span></td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>E-Channel Immigration Registration</td>
+            <td class="item-price">AED 2,280</td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>Establishment Card</td>
+            <td class="item-price">AED 640</td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>Investor / Partner Visa (2 Years) × 1</td>
+            <td class="item-price">AED 2,530</td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>Employee Employment Visa</td>
+            <td class="item-price">AED 3,700</td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>Change of Status × 1</td>
+            <td class="item-price">AED 700</td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>VIP Medical Screening & Emirates ID × 1</td>
+            <td class="item-price">AED 365</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="pricing-footer">
+        <a href="https://workdanbusiness.vercel.app/business-activities" target="_blank" class="pill-cta">
+          View E-Commerce Activities →
+        </a>
+        <span class="note-text">(Visa prices include Emirates ID biometric processing)</span>
+      </div>
+
+      <div class="page-indicator">07</div>
+    </article>
+
+
+    <!-- =================================================================
+         SLIDE 8: PRICE LIST - GENERAL TRADING & COMMERCIAL
+         ================================================================= -->
+    <article class="slide-page slide-pricing" id="slide-8">
+      <div class="ribbon-art-container">
+        <img src="background-pricing.svg" style="width: 100%; height: 100%; object-fit: cover;" alt="Background Art">
+      </div>
+
+      <div class="pricing-header">
+        <h2 class="category-title">General Trading & Commercial</h2>
+        <p class="category-desc">
+          Activities include: General wholesale/retail trading, import/export, supply chain distribution, logistics brokerage, commercial agency, consumer goods.
+        </p>
+      </div>
+
+      <table class="pricing-table">
+        <tbody>
+          <tr class="pricing-row highlight">
+            <td class="item-name">
+              <span class="item-bullet"></span>
+              <strong>Business License (Valid for 1 Year)</strong>
+            </td>
+            <td class="item-price featured">AED 5,750</td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>Visa Allocation (1 to 50 Allocations)</td>
+            <td class="item-price">AED 1,600 <span style="font-size: 11px; color:#94a3b8;">/ alloc</span></td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>Visa Allocation (51 to 100 Allocations)</td>
+            <td class="item-price">AED 900 <span style="font-size: 11px; color:#94a3b8;">/ alloc</span></td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>Visa Allocation (101 and above)</td>
+            <td class="item-price">AED 800 <span style="font-size: 11px; color:#94a3b8;">/ alloc</span></td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>E-Channel Immigration Registration</td>
+            <td class="item-price">AED 2,280</td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>Establishment Card</td>
+            <td class="item-price">AED 640</td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>Investor / Partner Visa (2 Years) × 1</td>
+            <td class="item-price">AED 2,530</td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>Employee Employment Visa</td>
+            <td class="item-price">AED 3,700</td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>Change of Status × 1</td>
+            <td class="item-price">AED 700</td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>VIP Medical Screening & Emirates ID × 1</td>
+            <td class="item-price">AED 365</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="pricing-footer">
+        <a href="https://workdanbusiness.vercel.app/business-activities" target="_blank" class="pill-cta">
+          View Trading Activities →
+        </a>
+        <span class="note-text">(Customs Code and Port Saeed warehouse clearance assistance included)</span>
+      </div>
+
+      <div class="page-indicator">08</div>
+    </article>
+
+
+    <!-- =================================================================
+         SLIDE 9: PRICE LIST - PROFESSIONAL & IT SERVICES
+         ================================================================= -->
+    <article class="slide-page slide-pricing" id="slide-9">
+      <div class="ribbon-art-container">
+        <img src="background-pricing.svg" style="width: 100%; height: 100%; object-fit: cover;" alt="Background Art">
+      </div>
+
+      <div class="pricing-header">
+        <h2 class="category-title">Professional & IT Services</h2>
+        <p class="category-desc">
+          Activities include: Management consultancy, IT architecture, software engineering, digital marketing, PR, legal advisory, financial & HR consultancies.
+        </p>
+      </div>
+
+      <table class="pricing-table">
+        <tbody>
+          <tr class="pricing-row highlight">
+            <td class="item-name">
+              <span class="item-bullet"></span>
+              <strong>Business License (Valid for 1 Year)</strong>
+            </td>
+            <td class="item-price featured">AED 6,875</td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>Visa Allocation (1 to 50 Allocations)</td>
+            <td class="item-price">AED 1,600 <span style="font-size: 11px; color:#94a3b8;">/ alloc</span></td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>Visa Allocation (51 to 100 Allocations)</td>
+            <td class="item-price">AED 900 <span style="font-size: 11px; color:#94a3b8;">/ alloc</span></td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>Visa Allocation (101 and above)</td>
+            <td class="item-price">AED 800 <span style="font-size: 11px; color:#94a3b8;">/ alloc</span></td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>E-Channel Immigration Registration</td>
+            <td class="item-price">AED 2,280</td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>Establishment Card</td>
+            <td class="item-price">AED 640</td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>Investor / Partner Visa (2 Years) × 1</td>
+            <td class="item-price">AED 2,530</td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>Employee Employment Visa</td>
+            <td class="item-price">AED 3,700</td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>Change of Status × 1</td>
+            <td class="item-price">AED 700</td>
+          </tr>
+          <tr class="pricing-row">
+            <td class="item-name"><span class="item-bullet"></span>VIP Medical Screening & Emirates ID × 1</td>
+            <td class="item-price">AED 365</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="pricing-footer">
+        <a href="https://workdanbusiness.vercel.app/business-activities" target="_blank" class="pill-cta">
+          View All Activities →
+        </a>
+        <span class="note-text">(Full 100% foreign ownership permitted with zero local sponsor required)</span>
+      </div>
+
+      <div class="page-indicator">09</div>
+    </article>
+
+
+    <!-- =================================================================
+         SLIDE 10: DOCUMENTS ISSUED TO CLIENTS
+         ================================================================= -->
+    <article class="slide-page slide-docs" id="slide-10">
+      <div class="docs-left-col">
+        <div>
+          <h2 class="docs-heading">
+            Documents issued to<br>
+            clients when they<br>
+            start their business<br>
+            with Workdan:
+          </h2>
+
+          <div class="docs-list">
+            <div class="doc-item">
+              <span class="doc-icon">📜</span>
+              <span>Official Business Trade License</span>
+            </div>
+            <div class="doc-item">
+              <span class="doc-icon">🏛️</span>
+              <span>Certificate of Formation</span>
+            </div>
+            <div class="doc-item">
+              <span class="doc-icon">💼</span>
+              <span>Share Certificate (100% Ownership)</span>
+            </div>
+            <div class="doc-item">
+              <span class="doc-icon">🏢</span>
+              <span>Lease Agreement / Coworking Tenancy (Ejari)</span>
+            </div>
+            <div class="doc-item">
+              <span class="doc-icon">📋</span>
+              <span>Memorandum of Association (MOA)</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="font-size: 13px; color: #64748b;">
+          *All documents verified and ready for corporate banking & municipal approvals.
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div style="height: 280px; border-radius: 16px; overflow: hidden; box-shadow: 0 15px 30px rgba(6,19,42,0.15);">
+          <img src="../public/handshake.png" style="width: 100%; height: 100%; object-fit: cover;" alt="Partnership Handshake">
+        </div>
+
+        <div class="terms-banner">
+          <div class="terms-title">Terms & Compliance Guidelines</div>
+          <div class="terms-body">
+            • Original identity documents must be submitted electronically or verified within two months of license issuance.<br><br>
+            • Only certified digital copies of corporate documents are required from companies registered with international online registers.<br><br>
+            • Dedicated compliance review guarantees seamless account setup with UAE Central Bank regulated institutions.
+          </div>
+        </div>
+      </div>
+
+      <div class="page-indicator">10</div>
+    </article>
+
+
+    <!-- =================================================================
+         SLIDE 11: FACILITIES & WORKSPACES
+         ================================================================= -->
+    <article class="slide-page slide-facilities" id="slide-11">
+      <div class="fac-header">
+        <h2 class="fac-title">Facilities & Workspaces</h2>
+        <p class="fac-desc">
+          At Workdan Business, we offer flexible office solutions across prime Dubai and Sharjah locations designed for maximum scalability.
+        </p>
+      </div>
+
+      <div class="fac-grid">
+        <div class="fac-card">
+          <img src="../public/office-presentation.webp" class="fac-img" alt="Coworking space">
+          <div class="fac-content">
+            <h3 class="fac-card-title">Coworking Space</h3>
+            <p class="fac-card-text">High-speed connectivity, collaborative hot desks, meeting lounges and networking spaces for agile founders.</p>
+          </div>
+        </div>
+
+        <div class="fac-card">
+          <img src="../public/process-plan.png" class="fac-img" alt="Furnished office">
+          <div class="fac-content">
+            <h3 class="fac-card-title">Dedicated Private Office</h3>
+            <p class="fac-card-text">Fully furnished, prestigious private offices in Dubai (Deira) and Sharjah business centers with 24/7 keycard access.</p>
+          </div>
+        </div>
+
+        <div class="fac-card">
+          <img src="../public/dubai-team.png" class="fac-img" alt="Shell and core">
+          <div class="fac-content">
+            <h3 class="fac-card-title">Shell & Core Offices</h3>
+            <p class="fac-card-text">Bespoke customizable floor plates allowing enterprise teams to build custom interior layouts and executive suites.</p>
+          </div>
+        </div>
+
+        <div class="fac-card">
+          <img src="../public/support-agent.png" class="fac-img" alt="Virtual Office">
+          <div class="fac-content">
+            <h3 class="fac-card-title">Virtual Receptionist</h3>
+            <p class="fac-card-text">Prestigious registered business address, dedicated local landline number, and professional call handling.</p>
+          </div>
+        </div>
+
+        <div class="fac-card">
+          <img src="../public/activities-hero.webp" class="fac-img" alt="Retail spaces">
+          <div class="fac-content">
+            <h3 class="fac-card-title">Commercial & Retail</h3>
+            <p class="fac-card-text">High footfall streetfront and shopping concourse commercial units positioned in vibrant trade districts.</p>
+          </div>
+        </div>
+
+        <div class="fac-card">
+          <img src="../public/team-meeting.png" class="fac-img" alt="Warehousing">
+          <div class="fac-content">
+            <h3 class="fac-card-title">Warehousing & Logistics</h3>
+            <p class="fac-card-text">Insulated, customs-bonded storage facilities with direct access to Sharjah and Dubai international airports & seaports.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-indicator">11</div>
+    </article>
+
+
+    <!-- =================================================================
+         SLIDE 12: BACK COVER / CONTACT & LET'S CONNECT
+         ================================================================= -->
+    <article class="slide-page slide-contact" id="slide-12">
+      <!-- Background SVG Atmosphere with Golden Horizon -->
+      <img src="background-contact.svg" class="contact-svg-layer" alt="Sunset Skyline Background">
+
+      <div class="contact-overlay-content">
+        <div class="brand-cta-block">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <img src="../public/logo-workdane-light.png" style="height: 52px; width: auto;" alt="Workdan Logo">
+            <div style="border-left: 2px solid rgba(255,198,61,0.5); padding-left: 14px;">
+              <div style="font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; color: #ffffff;">WORKDANE</div>
+              <div style="font-size: 11px; font-weight: 700; color: var(--gold-light); letter-spacing: 1.5px; text-transform: uppercase;">Management Consultancy</div>
+            </div>
+          </div>
+
+          <a href="https://wa.me/971565374748" target="_blank" class="btn-connect">
+            Let’s Connect ➔
+          </a>
+        </div>
+
+        <div class="contact-card">
+          <div class="contact-row">
+            <span>🕒</span>
+            <span>Timings: <strong>Mon to Sat 8:00 A.M to 8:00 P.M</strong></span>
+          </div>
+
+          <div class="contact-row">
+            <span>✉️</span>
+            <span>workdaneuae@gmail.com</span>
+          </div>
+
+          <div class="contact-row featured">
+            <span>📞</span>
+            <span>+971 56 537 4748</span>
+          </div>
+
+          <div class="office-address">
+            <strong>Dubai Office:</strong> Al Khaimah Building, 3rd Floor, Office 34, Port Saeed, Deira, Dubai, UAE<br><br>
+            <strong>Sharjah Office:</strong> Ground Floor, Business Centre, Sharjah Publishing City FZ, Sharjah, UAE<br><br>
+            <strong>Web:</strong> https://workdanbusiness.vercel.app/
+          </div>
+        </div>
+      </div>
+
+      <div class="page-indicator" style="color: rgba(255,255,255,0.6);">12</div>
+    </article>
+
+  </main>
+
+  <footer style="margin-top: 40px; color: #94a3b8; font-size: 13px; text-align: center;">
+    © 2026 Workdane Management Consultancy (Workdane Trading LLC FZE). All rights reserved.<br>
+    Designed with pixel-precision based on corporate brochure specifications.
+  </footer>
+
+</body>
+</html>

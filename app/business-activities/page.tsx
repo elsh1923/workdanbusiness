@@ -19,6 +19,7 @@ export default function Page() {
           </>
         }
         intro={`Search ${ACTIVITY_COUNT.toLocaleString("en-US")} licensable activities by name, code or authority. Shortlist the ones you are considering and send them to us in one message.`}
+        image={{ src: "/activities-hero.webp", alt: "Two business partners shaking hands over a desk of financial documents and calculators", width: 1024, height: 1024 }}
       />
       <BusinessActivities />
     </>

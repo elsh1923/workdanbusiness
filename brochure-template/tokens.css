@@ -1,0 +1,117 @@
+/* ==========================================================================
+   WORKDANE BUSINESS — CSS Design Tokens (Brand System v2.0)
+   ==========================================================================
+   Copy these tokens into any HTML/CSS file to match the brand exactly.
+   Source of truth: lib/config.ts + globals.css in the Next.js app.
+   ========================================================================== */
+
+:root {
+
+  /* --- Core Palette --- */
+  --midnight:     #06132a;   /* Deepest navy — main dark bg, header */
+  --navy:         #07399d;   /* Primary navy — links, icons, accents */
+  --slate-accent: #022363;   /* Alternate deep blue */
+  --gold:         #c28500;   /* Primary gold — key accent */
+  --gold-light:   #ffc63d;   /* Light gold — CTAs, highlights, stars */
+  --bronze:       #8f5a00;   /* Bronze — gradient tail */
+
+  /* --- Surface / UI --- */
+  --surface:      #ffffff;   /* Main white */
+  --tint:         #f8fafc;   /* Pale background tint */
+  --line:         #e2e8f0;   /* Dividers & borders */
+  --heading:      #0b1730;   /* Heading text */
+  --body:         #4b5563;   /* Body text */
+  --muted:        #64748b;   /* Caption / label text */
+
+  /* --- Named Gradients --- */
+  --gd-gold:   linear-gradient(135deg, #ffc63d 0%, #d99a0b 55%, #8f5a00 100%);
+  --gd-navy:   linear-gradient(135deg, #07399d 0%, #06132a 100%);
+  --gd-bar:    linear-gradient(180deg, #07399d 0%, #d99a0b 50%, #06132a 100%);
+
+  /* --- Typography --- */
+  --font-body:    'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-display: 'Montserrat', system-ui, sans-serif;
+
+  /* --- Border Radii --- */
+  --radius-sm:  8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+
+  /* --- Shadows --- */
+  --shadow-sm: 0  4px  6px -1px rgba(6,19,42,0.05);
+  --shadow-md: 0 12px 24px -4px rgba(6,19,42,0.10);
+  --shadow-lg: 0 24px 48px -12px rgba(6,19,42,0.15);
+}
+
+/* --- Typography Utilities --- */
+.font-body    { font-family: var(--font-body); }
+.font-display { font-family: var(--font-display); }
+
+.text-midnight { color: var(--midnight); }
+.text-navy     { color: var(--navy); }
+.text-gold     { color: var(--gold); }
+.text-gold-light { color: var(--gold-light); }
+.text-heading  { color: var(--heading); }
+.text-body     { color: var(--body); }
+.text-muted    { color: var(--muted); }
+
+/* --- Background Utilities --- */
+.bg-midnight    { background: var(--midnight); }
+.bg-navy        { background: var(--navy); }
+.bg-surface     { background: var(--surface); }
+.bg-tint        { background: var(--tint); }
+.bg-gold-grad   { background: var(--gd-gold); }
+.bg-navy-grad   { background: var(--gd-navy); }
+.bg-bar-grad    { background: var(--gd-bar); }
+
+/* --- Common Components --- */
+.eyebrow {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.gold-bar {
+  width: 52px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--gd-gold);
+  margin: 14px 0;
+}
+
+.pill-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--navy);
+  color: #ffffff;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(7,57,157,0.3);
+}
+
+.pill-gold {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--gd-gold);
+  color: var(--midnight);
+  padding: 12px 28px;
+  border-radius: 30px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  text-decoration: none;
+  border: 1px solid #ffe8a3;
+}
