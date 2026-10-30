@@ -1,6 +1,7 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
+import { fullPhone } from "@/lib/countries";
 import PhoneField from "./PhoneField";
 import { useFormSubmit } from "./useFormSubmit";
 
@@ -37,7 +38,7 @@ export default function EnquiryForm({
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const get = (k: string) => String(fd.get(k) ?? "").trim();
-    const valueOf = (f: Field) => (f.type === "tel" && get(f.name) ? `${get(`${f.name}Dial`)} ${get(f.name)}` : get(f.name));
+    const valueOf = (f: Field) => (f.type === "tel" && get(f.name) ? fullPhone(get(`${f.name}Dial`), get(f.name)) : get(f.name));
     await submit(
       fields.map((f) => ({
         label: f.label,

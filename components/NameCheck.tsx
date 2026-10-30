@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AlertTriangle, CheckCircle2, Loader2, XCircle } from "lucide-react";
-import { countries } from "@/lib/countries";
+import { countries, fullPhone } from "@/lib/countries";
 import { useFormSubmit } from "./useFormSubmit";
 
 const field =
@@ -56,7 +56,7 @@ export default function NameCheck() {
         { label: "Instant check", value: v.title },
         { label: "Full name", value: form.fullName },
         { label: "Email", value: form.email, type: "email" },
-        { label: "Phone", value: `${form.dial} ${form.phone}`, type: "tel" },
+        { label: "Phone", value: fullPhone(form.dial, form.phone), type: "tel" },
       ],
       "",
     );
@@ -91,7 +91,7 @@ export default function NameCheck() {
       <div>
         <span className={label}>Phone *</span>
         <div className="flex gap-3">
-          <select value={form.dial} onChange={(e) => setForm({ ...form, dial: e.target.value })} aria-label="Country code" className={`${field} w-[8.5rem] shrink-0 bg-white`}>
+          <select value={form.dial} onChange={(e) => setForm({ ...form, dial: e.target.value })} aria-label="Country code" className={`${field} !w-[8.5rem] shrink-0 bg-white`}>
             {countries.map((c) => (
               <option key={c.name} value={c.dial}>
                 {c.dial} {c.name}
@@ -104,8 +104,8 @@ export default function NameCheck() {
             value={form.phone}
             onChange={(e) => setForm({ ...form, phone: e.target.value })}
             required
-            maxLength={15}
-            pattern="[\d\s\-()]{6,15}"
+            maxLength={20}
+            pattern="[\d\s\-()+]{6,20}"
             title="Enter the number without the country code"
             className={`${field} min-w-0 flex-1`}
           />

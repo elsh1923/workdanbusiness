@@ -2,11 +2,12 @@
 
 import { useDeferredValue, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowDown, Check, Loader2, Lock, Minus, Plus, Printer, Search, X } from "lucide-react";
+import { ArrowDown, Check, ClipboardList, HeartPulse, Loader2, LayoutGrid, Lock, Minus, Newspaper, Package, Plus, Printer, Search, ShieldCheck, Truck, Wrench, X, Briefcase } from "lucide-react";
 import { activities, type Activity } from "@/lib/activity-data";
 import { calc, popularCodes } from "@/lib/calculator-config";
+import { ACTIVITY_COUNT } from "@/lib/activities";
 import { INDICATIVE_NOTE } from "@/lib/config";
-import { countries } from "@/lib/countries";
+import { countries, fullPhone } from "@/lib/countries";
 import { useFormSubmit } from "./useFormSubmit";
 
 const fmt = (n: number) => n.toLocaleString("en-US");
@@ -66,6 +67,34 @@ function Toggle({ on, onClick, children, hint, price }: { on: boolean; onClick: 
   );
 }
 
+type Bucket = "Popular" | "Trading" | "Media & Publishing" | "Professional" | "Business Services" | "Industry & Transport" | "Health, Education & Leisure" | "Regulated" | "All";
+
+const buckets: { id: Bucket; label: string; icon: typeof Package }[] = [
+  { id: "Popular", label: "Popular", icon: LayoutGrid },
+  { id: "Trading", label: "Trading", icon: Package },
+  { id: "Media & Publishing", label: "Media & Publishing", icon: Newspaper },
+  { id: "Professional", label: "Professional", icon: Briefcase },
+  { id: "Business Services", label: "Business Services", icon: Wrench },
+  { id: "Industry & Transport", label: "Industry & Transport", icon: Truck },
+  { id: "Health, Education & Leisure", label: "Health, Education & Leisure", icon: HeartPulse },
+  { id: "Regulated", label: "Regulated", icon: ShieldCheck },
+];
+
+const bucketByIndustry: Record<string, Bucket> = {
+  "Wholesale and retail trade and repair of motor vehicles and motorcycles": "Trading",
+  "Electronic publishing activities": "Media & Publishing",
+  Publishing: "Media & Publishing",
+  "Professional, scientific and technical activities": "Professional",
+  "Financial and insurance activities": "Professional",
+  "Real estate activities": "Professional",
+  "Administrative and support service activities": "Business Services",
+  "Other service activities": "Business Services",
+  Manufacturing: "Industry & Transport",
+  Construction: "Industry & Transport",
+  "Transportation and storage": "Industry & Transport",
+};
+const bucketOf = (a: Activity): Bucket => bucketByIndustry[a.industry] ?? (a.industry.startsWith("Activities of households") ? "Business Services" : "Health, Education & Leisure");
+
 type Details = { name: string; email: string; dial: string; phone: string; nationality: string; website: string };
 
 export default function CostCalculator() {
@@ -96,20 +125,32 @@ export default function CostCalculator() {
 
   const popular = useMemo(() => popularCodes.map((c) => activities.find((a) => a.sub === c)).filter((a): a is Activity => !!a), []);
 
-  const results = useMemo(() => {
-    const words = deferredQuery.toLowerCase().split(/\s+/).filter(Boolean);
-    if (!words.length || deferredQuery.trim().length < 2) return [];
-    const taken = new Set(picked.map((p) => p.id));
-    const out: Activity[] = [];
+  const [bucket, setBucket] = useState<Bucket>("Popular");
+  const [shown, setShown] = useState(40);
+
+  const bucketCounts = useMemo(() => {
+    const c: Record<string, number> = { Popular: popular.length, All: activities.length, Regulated: 0 };
+    for (const b of buckets) if (b.id !== "Popular" && b.id !== "Regulated") c[b.id] = 0;
     for (const a of activities) {
-      if (taken.has(a.id)) continue;
-      if (words.every((w) => a.search.includes(w))) {
-        out.push(a);
-        if (out.length === 8) break;
-      }
+      c[bucketOf(a)] = (c[bucketOf(a)] ?? 0) + 1;
+      if (a.authority) c.Regulated += 1;
     }
-    return out;
-  }, [deferredQuery, picked]);
+    return c;
+  }, [popular]);
+
+  const listItems = useMemo(() => {
+    const words = deferredQuery.toLowerCase().split(/\s+/).filter(Boolean);
+    const base = words.length
+      ? activities
+      : bucket === "Popular"
+        ? popular
+        : bucket === "All"
+          ? activities
+          : bucket === "Regulated"
+            ? activities.filter((a) => a.authority)
+            : activities.filter((a) => bucketOf(a) === bucket);
+    return words.length ? base.filter((a) => words.every((w) => a.search.includes(w))) : base;
+  }, [deferredQuery, bucket, popular]);
 
   const add = (a: Activity) => {
     setPicked((p) => (p.some((x) => x.id === a.id) ? p : [...p, a]));
@@ -154,14 +195,14 @@ export default function CostCalculator() {
   }
   const total = lines.reduce((s, l) => s + l.amount, 0);
 
-  const detailsOk = details.name.trim().length > 1 && /^\S+@\S+\.\S+$/.test(details.email) && /^[\d\s\-()]{6,15}$/.test(details.phone) && consent;
+  const detailsOk = details.name.trim().length > 1 && /^\S+@\S+\.\S+$/.test(details.email) && (details.phone.replace(/\D/g, "").length >= 6 && details.phone.replace(/\D/g, "").length <= 15) && consent;
 
   const emailQuote = async () => {
     await submit(
       [
         { label: "Name", value: details.name },
         { label: "Email", value: details.email, type: "email" },
-        { label: "Phone", value: `${details.dial} ${details.phone}`, type: "tel" },
+        { label: "Phone", value: fullPhone(details.dial, details.phone), type: "tel" },
         { label: "Nationality", value: details.nationality },
         { label: "Website", value: details.website },
         { label: "Activities", value: picked.map((a) => `${a.sub} ${a.name}`).join("; ") },
@@ -264,6 +305,31 @@ export default function CostCalculator() {
           >
             See my full estimate
           </button>
+          {status === "sent" ? (
+            <p role="status" className="mt-3 rounded-xl bg-[#0f7d46]/10 p-3 text-[14px] font-bold leading-snug text-heading">
+              On its way. We will email you the full breakdown.
+            </p>
+          ) : (
+            <button
+              type="button"
+              onClick={emailQuote}
+              disabled={sending}
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-full border border-heading/25 py-3 text-[15px] font-bold text-heading transition hover:border-navy disabled:opacity-60"
+            >
+              {sending && <Loader2 className="h-4 w-4 animate-spin" />}
+              {sending ? "Sending..." : "Email me this quote"}
+            </button>
+          )}
+          {status === "error" && (
+            <p role="alert" className="mt-3 border-l-4 border-red-500 bg-red-50 p-3 text-[13px] leading-snug text-red-900">
+              {message}
+              {whatsapp && (
+                <a href={whatsapp} target="_blank" rel="noreferrer" className="mt-1 block font-bold underline">
+                  Send it on WhatsApp instead
+                </a>
+              )}
+            </p>
+          )}
         </>
       )}
       <p className="mt-5 text-[12px] leading-relaxed text-body">{INDICATIVE_NOTE}</p>
@@ -272,9 +338,9 @@ export default function CostCalculator() {
 
   return (
     <section id="calculator" className="scroll-mt-24 bg-tint px-6 py-16 sm:px-12 lg:px-16">
-      <div className="mx-auto grid max-w-[1320px] gap-8 lg:grid-cols-[230px_minmax(0,1fr)_320px]">
+      <div className="mx-auto grid max-w-[1320px] gap-8 lg:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[230px_minmax(0,1fr)_320px]">
         {/* progress rail */}
-        <aside className="hidden lg:block">
+        <aside className="hidden xl:block">
           <div className="sticky top-28 rounded-3xl border border-line bg-white p-6">
             <div className="flex items-center justify-between">
               <p className="text-[12px] font-extrabold uppercase tracking-[0.2em] text-bronze">Progress</p>
@@ -320,7 +386,7 @@ export default function CostCalculator() {
 
         {/* steps */}
         <div className="min-w-0 space-y-6">
-          <p className="text-[13px] font-bold text-heading lg:hidden">
+          <p className="text-[13px] font-bold text-heading xl:hidden">
             Step {progress} of 6
           </p>
 
@@ -343,7 +409,7 @@ export default function CostCalculator() {
               </div>
             ) : (
               <form
-                className="mt-8 grid gap-7 sm:grid-cols-2"
+                className="mt-8 grid gap-7 md:grid-cols-2"
                 onSubmit={(e) => {
                   e.preventDefault();
                   if (!detailsOk) return;
@@ -361,10 +427,10 @@ export default function CostCalculator() {
                   <span className={label}>Email *</span>
                   <input type="email" value={details.email} onChange={(e) => setDetails({ ...details, email: e.target.value })} required maxLength={150} autoComplete="email" className={field} />
                 </label>
-                <div className="block">
+                <div className="block md:col-span-2">
                   <span className={label}>Phone *</span>
                   <div className="flex gap-3">
-                    <select value={details.dial} onChange={(e) => setDetails({ ...details, dial: e.target.value })} aria-label="Country code" className={`${field} w-[8.5rem] shrink-0 bg-white`}>
+                    <select value={details.dial} onChange={(e) => setDetails({ ...details, dial: e.target.value })} aria-label="Country code" className={`${field} !w-[8.5rem] shrink-0 bg-white`}>
                       {countries.map((c) => (
                         <option key={c.name} value={c.dial}>
                           {c.dial} {c.name}
@@ -377,8 +443,8 @@ export default function CostCalculator() {
                       value={details.phone}
                       onChange={(e) => setDetails({ ...details, phone: e.target.value })}
                       required
-                      maxLength={15}
-                      pattern="[\d\s\-()]{6,15}"
+                      maxLength={20}
+                      pattern="[\d\s\-()+]{6,20}"
                       title="Enter the number without the country code"
                       className={`${field} min-w-0 flex-1`}
                     />
@@ -393,15 +459,15 @@ export default function CostCalculator() {
                     ))}
                   </select>
                 </label>
-                <label className="block sm:col-span-2">
+                <label className="block md:col-span-2">
                   <span className={label}>Website (optional)</span>
                   <input value={details.website} onChange={(e) => setDetails({ ...details, website: e.target.value })} maxLength={150} className={field} />
                 </label>
-                <label className="flex items-start gap-3 text-[14px] leading-relaxed sm:col-span-2">
+                <label className="flex items-start gap-3 text-[14px] leading-relaxed md:col-span-2">
                   <input type="checkbox" required checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-1 h-4 w-4 accent-[#07399d]" />
                   I consent to receiving my quote by email, phone or WhatsApp. An adviser may contact me to follow up on my enquiry.
                 </label>
-                <button type="submit" disabled={!detailsOk} className={`${nextBtn} sm:col-span-2 sm:justify-self-start`}>
+                <button type="submit" className={`${nextBtn} md:col-span-2 md:justify-self-start`}>
                   Unlock my estimate
                 </button>
               </form>
@@ -410,77 +476,166 @@ export default function CostCalculator() {
 
           {/* 02 activities */}
           <div id="calc-step-2" className={sectionCls(2)} aria-disabled={!reach(2)}>
-            <p className={stepNo}>02</p>
-            <h2 className={stepTitle}>Choose your business activities</h2>
-            <p className="mt-3 max-w-xl text-[15px] leading-relaxed">
-              Your {calc.includedGroups} largest activity groups are included in the licence. Activities from any further group are charged separately and shown as their own line.
-            </p>
-
-            <div className="relative mt-8">
-              <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-body" />
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search by activity name or code"
-                aria-label="Search activities"
-                className="w-full rounded-full border border-line bg-white py-4 pl-12 pr-5 text-[16px] outline-none focus:border-gold"
-              />
-              {results.length > 0 && (
-                <ul className="absolute z-10 mt-2 max-h-80 w-full overflow-auto rounded-2xl border border-line bg-white shadow-xl">
-                  {results.map((a) => (
-                    <li key={a.id}>
-                      <button type="button" onClick={() => add(a)} className="flex w-full items-start gap-4 border-b border-line px-5 py-3 text-left text-[15px] hover:bg-tint">
-                        <span className="w-20 shrink-0 font-mono text-[13px] font-bold text-bronze">{a.sub}</span>
-                        <span className="flex-1">{a.name}</span>
-                        <Plus className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div className="flex items-baseline gap-3">
+                <span className="text-[14px] font-extrabold tracking-widest text-navy">02</span>
+                <h2 className={stepTitle}>Choose your business activities</h2>
+              </div>
+              {step <= 2 && (
+                <button
+                  type="button"
+                  disabled={!picked.length}
+                  onClick={() => advance(3)}
+                  className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-[14px] font-bold transition ${picked.length ? "bg-navy text-white hover:bg-slate-accent" : "bg-navy/10 text-navy/70"}`}
+                >
+                  {picked.length ? "Next: Company details" : "Pick an activity first"} <ArrowDown className="h-4 w-4" />
+                </button>
               )}
             </div>
-            <p className="mt-3 text-[13px] text-body">
-              Not sure which to pick? Browse the <Link href="/business-activities" className="font-bold text-navy underline decoration-gold decoration-2 underline-offset-4">full activity list</Link>. Want to check a trade name first? Use the{" "}
-              <Link href="/name-check" className="font-bold text-navy underline decoration-gold decoration-2 underline-offset-4">name check</Link>.
+            <p className="mt-4 max-w-xl text-[15px] leading-relaxed">
+              Choose any {calc.includedGroups} business activity groups from a pool of {ACTIVITY_COUNT.toLocaleString("en-US")} activities. Mix and match activities from different groups freely!
             </p>
 
-            {picked.length === 0 ? (
-              <div className="mt-8">
-                <p className="text-[13px] font-bold uppercase tracking-widest text-bronze">A shortlist to start from</p>
-                <div className="mt-4 flex flex-wrap gap-3">
-                  {popular.map((a) => (
-                    <button key={a.id} type="button" onClick={() => add(a)} className="rounded-full border border-line bg-white px-4 py-2 text-[14px] font-semibold text-navy transition hover:border-gold">
-                      {a.name.length > 38 ? `${a.name.slice(0, 36)}…` : a.name} <span className="text-body">+</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className="mt-8">
-                <p className="text-[13px] font-bold uppercase tracking-widest text-bronze">
-                  Your chosen activities · {groupsUsed} {groupsUsed === 1 ? "group" : "groups"}
-                </p>
-                <ul className="mt-4 border-t border-heading/15">
-                  {picked.map((a) => (
-                    <li key={a.id} className="flex items-start gap-4 border-b border-heading/15 py-4 text-[15px]">
-                      <span className="w-20 shrink-0 font-mono text-[13px] font-bold text-bronze">{a.sub}</span>
-                      <span className="flex-1 leading-relaxed">
-                        {a.name}
-                        {!largestGroups.includes(a.group) && <span className="ml-2 rounded-full bg-gold/15 px-2 py-0.5 text-[12px] font-bold text-bronze">Extra group</span>}
-                        {a.authority && <span className="mt-1 block text-[13px] text-body">Needs approval from {a.authority}</span>}
-                      </span>
-                      <button type="button" onClick={() => remove(a.id)} aria-label={`Remove ${a.sub}`} className="shrink-0 text-body hover:text-heading">
-                        <X className="h-5 w-5" />
+            <p className="mt-8 text-[15px] font-bold text-heading">Browse activities</p>
+            <div className="relative mt-3">
+              <Search className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-body" />
+              <input
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setShown(40);
+                }}
+                placeholder="Explore business activity groups"
+                aria-label="Search activities"
+                className="w-full rounded-2xl border border-heading/30 bg-white py-4 pl-14 pr-5 text-[16px] outline-none focus:border-navy"
+              />
+            </div>
+            <p className="mt-4 text-[14px] leading-relaxed text-body">
+              Not sure your preferred trade name is available? Check our{" "}
+              <Link href="/name-check" className="font-semibold text-navy underline underline-offset-4">Company Name Check</Link> tool. Browse our{" "}
+              <Link href="/business-activities" className="font-semibold text-navy underline underline-offset-4">complete list of business activities</Link>.
+            </p>
+            <hr className="my-6 border-line" />
+
+            <div className="@container"><div className="grid overflow-hidden rounded-2xl border border-line @xl:grid-cols-[220px_1fr]">
+              <ul className="max-h-[420px] space-y-1 overflow-y-auto border-b border-line p-3 @xl:border-b-0 @xl:border-r" role="tablist" aria-label="Activity groups">
+                {buckets.map((b) => {
+                  const Icon = b.icon;
+                  const active = !query.trim() && bucket === b.id;
+                  return (
+                    <li key={b.id}>
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={active}
+                        onClick={() => {
+                          setBucket(b.id);
+                          setQuery("");
+                          setShown(40);
+                        }}
+                        className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition ${active ? "bg-navy/10" : "hover:bg-tint"}`}
+                      >
+                        <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${active ? "bg-navy text-white" : "bg-navy/10 text-navy"}`}>
+                          <Icon className="h-5 w-5" />
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block text-[15px] font-bold leading-tight text-heading">{b.label}</span>
+                          <span className="block text-[13px] text-body">{b.id === "Popular" ? "Most chosen" : b.id === "Regulated" ? `Needs approval · ${bucketCounts[b.id]}` : bucketCounts[b.id]}</span>
+                        </span>
                       </button>
                     </li>
-                  ))}
-                </ul>
-                {groupsUsed > calc.includedGroups && (
-                  <p className="mt-4 rounded-xl bg-gold/10 p-4 text-[14px] leading-relaxed text-heading">
-                    You have gone past {calc.includedGroups} activity groups. That is fine: your {calc.includedGroups} largest groups stay included and each activity in the other groups is added to the estimate.
-                  </p>
+                  );
+                })}
+              </ul>
+
+              <div className="max-h-[420px] overflow-y-auto p-3">
+                {listItems.length === 0 ? (
+                  <p className="p-6 text-[15px]">No activities match “{query}”. Try fewer words.</p>
+                ) : (
+                  <ul className="space-y-3">
+                    {listItems.slice(0, shown).map((a) => {
+                      const on = picked.some((p) => p.id === a.id);
+                      return (
+                        <li key={a.id} className="flex items-center gap-4 rounded-2xl border border-line bg-white p-4">
+                          <span className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-navy/10 text-navy sm:flex">
+                            <Newspaper className="h-5 w-5" />
+                          </span>
+                          <span className="min-w-0 flex-1">
+                            <span className="block text-[15px] font-bold leading-snug text-heading">{a.name.length > 90 ? `${a.name.slice(0, 88)}…` : a.name}</span>
+                            <span className="block text-[13px] text-body">
+                              Code {a.sub} · {a.type} licence{a.authority ? " · Needs approval" : ""}
+                            </span>
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => (on ? remove(a.id) : add(a))}
+                            aria-pressed={on}
+                            className={`shrink-0 rounded-xl border px-4 py-2 text-[14px] font-bold transition ${on ? "border-[#0f7d46] bg-[#0f7d46]/10 text-[#0f7d46]" : "border-navy text-navy hover:bg-navy hover:text-white"}`}
+                          >
+                            {on ? "Added ✓" : "Add +"}
+                          </button>
+                        </li>
+                      );
+                    })}
+                    {listItems.length > shown && (
+                      <li>
+                        <button type="button" onClick={() => setShown((n) => n + 60)} className="w-full rounded-xl border border-line py-3 text-[14px] font-bold text-navy hover:border-navy">
+                          Show more ({(listItems.length - shown).toLocaleString("en-US")} left)
+                        </button>
+                      </li>
+                    )}
+                  </ul>
                 )}
               </div>
+            </div></div>
+
+            <button
+              type="button"
+              onClick={() => {
+                setBucket("All");
+                setQuery("");
+                setShown(60);
+              }}
+              className="mt-4 flex w-full items-center justify-center gap-3 rounded-2xl border border-navy py-4 text-[15px] font-bold text-navy transition hover:bg-navy/5"
+            >
+              <ClipboardList className="h-5 w-5" />
+              Browse all {ACTIVITY_COUNT.toLocaleString("en-US")} activities
+            </button>
+
+            <div className="mt-8 flex flex-wrap items-baseline justify-between gap-2">
+              <p className="text-[15px] font-bold text-heading">Your chosen activities</p>
+              <p className="text-[13px] text-body">
+                {groupsUsed} {groupsUsed === 1 ? "group" : "groups"} · {Math.max(0, calc.includedGroups - groupsUsed)} more included
+              </p>
+            </div>
+            {picked.length === 0 ? (
+              <p className="mt-6 text-[14px] text-body">No activities selected. Search above to add your first activity.</p>
+            ) : (
+              <ul className="mt-4 border-t border-heading/15">
+                {picked.map((a) => (
+                  <li key={a.id} className="flex items-start gap-4 border-b border-heading/15 py-4 text-[15px]">
+                    <span className="w-20 shrink-0 font-mono text-[13px] font-bold text-bronze">{a.sub}</span>
+                    <span className="flex-1 leading-relaxed">
+                      {a.name}
+                      {!largestGroups.includes(a.group) && <span className="ml-2 rounded-full bg-gold/15 px-2 py-0.5 text-[12px] font-bold text-bronze">Extra group</span>}
+                      {a.authority && <span className="mt-1 block text-[13px] text-body">Needs approval from {a.authority}</span>}
+                    </span>
+                    <button type="button" onClick={() => remove(a.id)} aria-label={`Remove ${a.sub}`} className="shrink-0 text-body hover:text-heading">
+                      <X className="h-5 w-5" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {groupsUsed === calc.includedGroups && (
+              <p className="mt-4 rounded-xl bg-navy/5 p-4 text-[14px] leading-relaxed text-heading">
+                <strong>That is your last included group.</strong> Your {calc.includedGroups} largest groups come with the licence. Anything you add from a further group is charged at {aed(calc.extraGroupActivity)} per activity, shown as its own line on the estimate.
+              </p>
+            )}
+            {groupsUsed > calc.includedGroups && (
+              <p className="mt-4 rounded-xl bg-gold/10 p-4 text-[14px] leading-relaxed text-heading">
+                <strong>You have gone past {calc.includedGroups} activity groups.</strong> That is fine: your {calc.includedGroups} largest groups stay included and each activity in the groups beyond them adds {aed(calc.extraGroupActivity)}. The estimate shows it as its own line.
+              </p>
             )}
             {step <= 2 && (
               <button type="button" disabled={!picked.length} onClick={() => advance(3)} className={`${nextBtn} mt-8`}>
@@ -635,7 +790,7 @@ export default function CostCalculator() {
                 <div><dt className="text-body">Prepared for</dt><dd className="font-bold text-heading">{details.name || "—"}</dd></div>
                 <div><dt className="text-body">Date</dt><dd className="font-bold text-heading">{today}</dd></div>
                 <div><dt className="text-body">Email</dt><dd className="break-all font-bold text-heading">{details.email || "—"}</dd></div>
-                <div><dt className="text-body">Phone</dt><dd className="font-bold text-heading">{details.phone ? `${details.dial} ${details.phone}` : "—"}</dd></div>
+                <div><dt className="text-body">Phone</dt><dd className="font-bold text-heading">{details.phone ? fullPhone(details.dial, details.phone) : "—"}</dd></div>
               </dl>
               <p className="mt-6 text-[13px] font-bold uppercase tracking-widest text-bronze">Your estimated business setup cost</p>
               <p className="font-display text-[40px] font-bold leading-tight text-navy">{aed(total)}</p>

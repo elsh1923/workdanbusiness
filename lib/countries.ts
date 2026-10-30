@@ -85,3 +85,12 @@ export const countries: { name: string; dial: string }[] = [
 ];
 
 export const dialOptions = countries.map((c) => ({ label: `${c.name} ${c.dial}`, short: c.dial, name: c.name }));
+
+// Joins a country code and a number. If the visitor already typed a full international number, it is kept as is.
+export function fullPhone(dial: string, phone: string) {
+  const p = phone.trim();
+  if (!p) return "";
+  if (p.startsWith("+")) return p;
+  if (p.startsWith("00")) return "+" + p.slice(2);
+  return `${dial} ${p.replace(/^0+/, "")}`;
+}

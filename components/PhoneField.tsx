@@ -14,14 +14,14 @@ export default function PhoneField({
 }) {
   return (
     <div className="flex gap-3">
-      <select name={`${name}Dial`} defaultValue={defaultDial} aria-label="Country code" className={`${className} w-[8.5rem] shrink-0`}>
+      <select name={`${name}Dial`} defaultValue={defaultDial} aria-label="Country code" className={`${className} !w-[8.5rem] shrink-0`}>
         {countries.map((c) => (
           <option key={c.name} value={c.dial}>
             {c.dial} {c.name}
           </option>
         ))}
       </select>
-      <input name={name} type="tel" inputMode="tel" autoComplete="tel-national" required={required} maxLength={15} pattern="[\d\s\-()]{6,15}" title="Enter the number without the country code" className={`${className} min-w-0 flex-1`} />
+      <input name={name} type="tel" inputMode="tel" autoComplete="tel-national" required={required} maxLength={20} pattern="[\d\s\-()+]{6,20}" title="Enter the number without the country code" className={`${className} min-w-0 flex-1`} />
     </div>
   );
 }

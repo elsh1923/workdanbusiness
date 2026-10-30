@@ -3,7 +3,7 @@ import { MailNotConfigured, sendMail } from "@/lib/mail";
 type Field = { label: string; value: string; type: string };
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const PHONE = /^[+()\d\s-]{7,20}$/;
+const PHONE = /^[+()\d\s-]{7,25}$/;
 const WINDOW_MS = 15 * 60 * 1000;
 const MAX_PER_WINDOW = 5;
 const hits = new Map<string, number[]>();
