@@ -28,7 +28,7 @@ export default function Header() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-white/95 backdrop-blur-md" onMouseLeave={() => setOpen(null)}>
-      <div className="mx-auto flex h-[68px] max-w-[1840px] items-center gap-5 px-6 sm:px-12 lg:px-16">
+      <div className="mx-auto flex h-[68px] max-w-[1320px] items-center gap-5 px-6 sm:px-12 lg:px-16">
         <Link href="/" aria-label={`${COMPANY.name} home`} className="shrink-0">
           <Image src={LOGO.src} alt={COMPANY.name} width={LOGO.width} height={LOGO.height} priority className="h-[54px] w-auto" />
         </Link>
@@ -86,7 +86,7 @@ export default function Header() {
 
       {active && (
         <div className="rise absolute inset-x-0 top-full hidden border-t border-line bg-white shadow-[0_30px_60px_-30px_rgba(11,37,69,0.25)] 2xl:block">
-          <div className="mx-auto grid max-w-[1840px] grid-cols-[1fr_1fr_340px] gap-x-8 px-12 py-10 lg:px-16">
+          <div className="mx-auto grid max-w-[1320px] grid-cols-[1fr_1fr_340px] gap-x-8 px-12 py-10 lg:px-16">
             <div className="col-span-2 grid grid-cols-2 gap-x-6 gap-y-1">
               {active.items.map((item, idx) => {
                 const Icon = item.icon;

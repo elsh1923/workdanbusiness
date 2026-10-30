@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { MessageCircle } from "lucide-react";
 import { whatsappLink } from "@/lib/config";
@@ -10,8 +11,15 @@ export default function CtaBand() {
       <span aria-hidden className="float absolute -right-8 -top-8 -z-10 h-64 w-64 rounded-full border border-gold-light/25" style={{ animationDelay: "-3s" }} />
       <span aria-hidden className="absolute -bottom-32 left-1/4 -z-10 h-80 w-80 rounded-full bg-gold/15 blur-3xl" />
 
-      <div className="mx-auto flex max-w-[1840px] flex-wrap items-center justify-between gap-10">
-        <div>
+      <div className="mx-auto flex max-w-[1320px] flex-wrap items-center justify-between gap-10">
+        <Image
+          src="/support-agent.png"
+          alt="A friendly Workdane consultant at the support desk giving a thumbs up"
+          width={351}
+          height={626}
+          className="hidden h-52 w-40 rounded-2xl object-cover object-top ring-2 ring-gold/60 lg:block"
+        />
+        <div className="flex-1 basis-80">
           <h2 className="font-display text-[34px] font-bold leading-[1.15] sm:text-[38px]">Ready to start your business?</h2>
           <p className="mt-3 max-w-xl text-[18px] leading-relaxed text-white/90">
             Tell us your plan and we will reply with the right structure and a written quotation.

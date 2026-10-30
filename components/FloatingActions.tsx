@@ -25,17 +25,20 @@ export default function FloatingActions() {
         <div className="gold-gradient h-full" style={{ width: `${progress}%` }} />
       </div>
 
-      <div className="fixed bottom-5 right-5 z-30 flex flex-col items-end gap-3">
-        {showTop && (
+      {showTop && (
+        <div className="pointer-events-none fixed inset-x-0 bottom-5 z-30 flex justify-center">
           <button
             type="button"
             aria-label="Back to top"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="rise flex h-12 w-12 items-center justify-center rounded-full bg-navy text-white shadow-lg transition hover:bg-slate-accent"
+            className="rise pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full bg-navy text-white shadow-lg transition hover:bg-slate-accent"
           >
             <ArrowUp className="h-5 w-5" />
           </button>
-        )}
+        </div>
+      )}
+
+      <div className="fixed bottom-5 right-5 z-30 flex flex-col items-end gap-3">
         <a
           href={whatsappLink("Hello Workdane, I'd like to discuss company setup.")}
           target="_blank"

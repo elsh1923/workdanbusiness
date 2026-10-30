@@ -10,6 +10,7 @@ export default function InvestInUAE() {
         </>
       }
       intro="The UAE offers a range of structures, ownership options and trade connections. We help you choose the one that suits your plan."
+      image={{ src: "/dubai-team.png", alt: "Business advisers reviewing market data with a view over Dubai", width: 736, height: 414 }}
       points={[
         { title: "Ownership options", text: "Ownership rules vary by activity and structure. We confirm which options apply to your business." },
         { title: "Mainland or free zone", text: "Each structure suits different clients and activities. We compare them with you before you commit." },

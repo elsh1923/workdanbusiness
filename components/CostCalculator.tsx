@@ -27,7 +27,7 @@ export default function CostCalculator() {
 
   return (
     <section className="bg-surface px-6 pb-28 sm:px-12 lg:px-16">
-      <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-[1.4fr_1fr] lg:gap-24">
+      <div className="mx-auto grid max-w-[1320px] gap-16 lg:grid-cols-[1.4fr_1fr] lg:gap-24">
         <div className="space-y-16">
           <div>
             <p className={stepLabel}>1. Licence category</p>

@@ -16,7 +16,7 @@ export default function Partners() {
       />
 
       <section id="channel-partner" className="scroll-mt-28 bg-white px-6 py-28 sm:px-12 lg:px-16">
-        <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-2 lg:gap-24">
+        <div className="mx-auto grid max-w-[1320px] gap-16 lg:grid-cols-2 lg:gap-24">
           <div>
             <Eyebrow>Channel partner</Eyebrow>
             <h2 className="font-display text-[34px] font-bold leading-[1.15] text-heading sm:text-[38px]">Become a channel partner.</h2>
@@ -38,7 +38,7 @@ export default function Partners() {
       </section>
 
       <section id="partner-portal" className="scroll-mt-28 border-t border-heading/15 bg-surface px-6 py-28 sm:px-12 lg:px-16">
-        <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-2 lg:gap-24">
+        <div className="mx-auto grid max-w-[1320px] gap-16 lg:grid-cols-2 lg:gap-24">
           <div>
             <Eyebrow>Channel partner portal</Eyebrow>
             <h2 className="font-display text-[34px] font-bold leading-[1.15] text-heading sm:text-[38px]">Manage applications for your clients.</h2>
@@ -58,7 +58,7 @@ export default function Partners() {
       </section>
 
       <section id="corporate-partnerships" className="scroll-mt-28 border-t border-line bg-white px-6 py-28 sm:px-12 lg:px-16">
-        <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-2 lg:gap-24">
+        <div className="mx-auto grid max-w-[1320px] gap-16 lg:grid-cols-2 lg:gap-24">
           <div>
             <Eyebrow>Corporate partnerships</Eyebrow>
             <h2 className="font-display text-[34px] font-bold leading-[1.15] text-heading sm:text-[38px]">Set up services for your team.</h2>

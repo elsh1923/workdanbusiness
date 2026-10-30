@@ -19,7 +19,7 @@ export default function Home() {
       <Services />
 
       <section id="license-categories" className="scroll-mt-24 border-t border-line bg-white px-6 py-28 sm:px-12 lg:px-16">
-        <div className="mx-auto max-w-[1840px]">
+        <div className="mx-auto max-w-[1320px]">
           <Eyebrow>License categories</Eyebrow>
           <h2 className="font-display text-[34px] font-bold leading-[1.15] text-heading sm:text-[38px]">
             Pick the category that fits. <em className="gold-text italic">We handle the rest.</em>

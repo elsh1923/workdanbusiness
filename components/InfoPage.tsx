@@ -1,5 +1,5 @@
 import EnquiryForm, { type Field } from "./EnquiryForm";
-import PageHero from "./PageHero";
+import PageHero, { type HeroImage } from "./PageHero";
 
 export default function InfoPage({
   eyebrow,
@@ -10,6 +10,7 @@ export default function InfoPage({
   fields,
   submitLabel,
   note,
+  image,
 }: {
   eyebrow: string;
   title: React.ReactNode;
@@ -19,12 +20,13 @@ export default function InfoPage({
   fields: Field[];
   submitLabel: string;
   note?: string;
+  image?: HeroImage;
 }) {
   return (
     <>
-      <PageHero eyebrow={eyebrow} title={title} intro={intro} />
+      <PageHero eyebrow={eyebrow} title={title} intro={intro} image={image} />
       <section className="bg-surface px-6 py-28 sm:px-12 lg:px-16">
-        <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-2 lg:gap-24">
+        <div className="mx-auto grid max-w-[1320px] gap-16 lg:grid-cols-2 lg:gap-24">
           <ol className="border-t border-heading/15">
             {points.map((p, i) => (
               <li key={p.title} className="grid grid-cols-[3rem_1fr] gap-4 border-b border-heading/15 py-8">

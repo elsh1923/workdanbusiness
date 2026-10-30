@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Cog, Compass, FileText, Rocket } from "lucide-react";
 import Eyebrow from "./Eyebrow";
 import { Reveal } from "./motion";
@@ -14,13 +15,30 @@ const steps = [
 export default function Process() {
   return (
     <section id="process" className="scroll-mt-24 bg-white px-6 py-28 sm:px-12 lg:px-16">
-      <div className="mx-auto max-w-[1840px]">
-        <Reveal>
-          <Eyebrow>How it works</Eyebrow>
-          <h2 className="max-w-3xl font-display text-[34px] font-bold leading-[1.15] text-heading sm:text-[38px]">
-            From first call to <em className="gold-text italic">fully running.</em>
-          </h2>
-        </Reveal>
+      <div className="mx-auto max-w-[1320px]">
+        <div className="grid items-center gap-12 lg:grid-cols-[1fr_1fr] lg:gap-20">
+          <Reveal>
+            <Eyebrow>How it works</Eyebrow>
+            <h2 className="max-w-3xl font-display text-[34px] font-bold leading-[1.15] text-heading sm:text-[38px]">
+              From first call to <em className="gold-text italic">fully running.</em>
+            </h2>
+            <p className="mt-6 max-w-md text-[15px] leading-relaxed">
+              Four clear steps, each confirmed in writing, so you always know what happens next.
+            </p>
+          </Reveal>
+          <Reveal delay={120}>
+            <div className="relative">
+              <div aria-hidden className="absolute -bottom-3 -right-3 h-full w-full rounded-2xl border-2 border-gold/60" />
+              <Image
+                src="/process-plan.png"
+                alt="Two advisers planning a company setup on a printed step-by-step chart"
+                width={736}
+                height={410}
+                className="relative aspect-[16/9] w-full rounded-2xl object-cover"
+              />
+            </div>
+          </Reveal>
+        </div>
 
         <div className="relative mt-20">
           <svg aria-hidden className="absolute inset-x-0 top-0 hidden h-14 w-full lg:block" viewBox="0 0 1000 56" preserveAspectRatio="none" fill="none">

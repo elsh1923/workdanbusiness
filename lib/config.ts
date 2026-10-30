@@ -11,9 +11,10 @@ export const CONTACT = {
   licenceNo: "4413932.01",
 };
 
-export const OFFICES = [
+export const OFFICES: { name: string; lines: string[]; mapUrl?: string }[] = [
   {
     name: "Dubai",
+    mapUrl: "https://share.google/jkiOCyFmkdMb7r8VF", // Google business listing
     lines: ["Al Khaimah Building, 3rd Floor, Office No. 34", "Port Saeed, Deira, Dubai", "United Arab Emirates"],
   },
   {

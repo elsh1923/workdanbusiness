@@ -130,7 +130,7 @@ export default function Hero() {
       </svg>
       <Skyline className="parallax-b pointer-events-none absolute bottom-0 left-[-4rem] -z-10 h-[220px] w-[calc(100%+8rem)]" />
 
-      <div className="mx-auto grid max-w-[1840px] gap-16 px-6 sm:px-12 lg:px-16 lg:grid-cols-[1.1fr_1fr] lg:gap-20">
+      <div className="mx-auto grid max-w-[1320px] gap-16 px-6 sm:px-12 lg:px-16 lg:grid-cols-[1.1fr_1fr] lg:gap-20">
         <div>
           <div className="rise">
             <Eyebrow light>Company setup &amp; business services, UAE</Eyebrow>

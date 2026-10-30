@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { services } from "@/lib/services";
 import Eyebrow from "./Eyebrow";
 import { Reveal } from "./motion";
@@ -20,7 +21,7 @@ export default function Services() {
       </div>
 
       <section id="services" className="scroll-mt-24 bg-surface px-6 py-28 sm:px-12 lg:px-16">
-        <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-[5fr_7fr] lg:gap-24">
+        <div className="mx-auto grid max-w-[1320px] gap-16 lg:grid-cols-[5fr_7fr] lg:gap-24">
           <Reveal className="lg:sticky lg:top-32 lg:self-start">
             <Eyebrow>What we do</Eyebrow>
             <h2 className="font-display text-[34px] font-bold leading-[1.15] text-heading sm:text-[38px]">
@@ -29,6 +30,16 @@ export default function Services() {
             <p className="mt-6 max-w-md text-[15px] leading-relaxed">
               You get one team and one point of contact, from the first licence application to the renewal reminder that comes after.
             </p>
+            <div className="relative mt-10 max-w-md">
+              <div aria-hidden className="absolute -bottom-3 -left-3 h-full w-full rounded-2xl border-2 border-gold/60" />
+              <Image
+                src="/handshake.png"
+                alt="Two business partners shaking hands after agreeing a deal"
+                width={736}
+                height={412}
+                className="relative aspect-[4/3] w-full rounded-2xl object-cover"
+              />
+            </div>
           </Reveal>
 
           <ol className="border-t border-heading/15">

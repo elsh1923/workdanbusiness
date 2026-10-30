@@ -59,7 +59,7 @@ export default function Contact() {
 
   return (
     <section id="contact" className="scroll-mt-24 border-t border-line bg-white px-6 py-28 sm:px-12 lg:px-16">
-      <div className="mx-auto max-w-[1840px]">
+      <div className="mx-auto max-w-[1320px]">
         <Reveal>
           <Eyebrow>Contact</Eyebrow>
           <div className="flex flex-wrap items-end justify-between gap-6">
@@ -103,7 +103,7 @@ export default function Contact() {
                     </p>
                     <p className="mt-2 text-[15px] leading-relaxed text-white/90">{o.lines.join(", ")}</p>
                     <a
-                      href={mapsLink(o.lines)}
+                      href={o.mapUrl ?? mapsLink(o.lines)}
                       target="_blank"
                       rel="noreferrer"
                       className="mt-2 inline-flex items-center gap-1 text-[14px] font-semibold text-white underline decoration-gold-light decoration-2 underline-offset-4 hover:text-gold-light"
