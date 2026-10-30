@@ -10,6 +10,7 @@ import FAQ from "@/components/FAQ";
 import Contact from "@/components/Contact";
 import Eyebrow from "@/components/Eyebrow";
 import { licenseCategories } from "@/lib/content";
+import { categorySlug } from "@/lib/service-pages";
 
 export default function Home() {
   return (
@@ -30,7 +31,7 @@ export default function Home() {
               return (
                 <li key={c.name}>
                   <Link
-                    href={`/business-activities?category=${encodeURIComponent(c.name)}`}
+                    href={`/license-categories/${categorySlug(c.name)}`}
                     className="group flex items-center gap-4 border-b border-heading/15 row-wipe py-6 sm:px-2"
                   >
                     <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-navy/5 text-navy transition duration-500 group-hover:bg-navy group-hover:text-gold-light">

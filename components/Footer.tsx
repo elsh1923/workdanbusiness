@@ -10,6 +10,8 @@ const company = [
   { label: "Insights", href: "/insights" },
   { label: "Partners", href: "/partners" },
   { label: "Resource Hub", href: "/resource-hub" },
+  { label: "Careers", href: "/careers" },
+  { label: "Customer Feedback", href: "/customer-feedback" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -89,7 +91,14 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-[1320px] flex-wrap justify-between gap-4 px-6 pb-24 pt-6 text-[13px] text-white/70 sm:px-12 lg:px-16 sm:pb-6 sm:pr-28">
           <span>© 2026 {COMPANY.name}. All rights reserved.</span>
-          <span>Company setup and business services, UAE</span>
+          <span className="flex gap-6">
+            <Link href="/privacy-policy" className="transition hover:text-white">
+              Privacy Policy
+            </Link>
+            <Link href="/terms-and-conditions" className="transition hover:text-white">
+              Terms and Conditions
+            </Link>
+          </span>
         </div>
       </div>
     </footer>

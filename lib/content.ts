@@ -29,6 +29,7 @@ import {
   Wallet,
 } from "lucide-react";
 import { categories, type Category } from "./activities";
+import { categorySlug } from "./service-pages";
 
 export type Item = { label: string; href: string; desc: string; icon: LucideIcon };
 
@@ -62,7 +63,7 @@ export const licenseCategories = categories.map((name) => ({ name, ...categoryMe
 
 export const licenseItems: Item[] = licenseCategories.map((c) => ({
   label: c.name,
-  href: `/business-activities?category=${encodeURIComponent(c.name)}`,
+  href: `/license-categories/${categorySlug(c.name)}`,
   desc: c.text,
   icon: c.icon,
 }));
@@ -81,19 +82,20 @@ export const plusServices = [
 
 export const plusItems: Item[] = plusServices.map((s) => ({
   label: s.title,
-  href: `/workdane-plus#${s.id}`,
+  href: `/workdane-plus/${s.id}`,
   desc: s.text,
   icon: s.icon,
 }));
 
 export const insightItems: Item[] = [
-  { label: "Blogs", href: "/insights#blogs", desc: "Practical guides on setup, visas, VAT and running a business.", icon: Newspaper },
-  { label: "Featured In", href: "/insights#featured", desc: "Press mentions and client success stories.", icon: Award },
-  { label: "Activity Hub", href: "/insights#activity-hub", desc: "Events, workshops and networking sessions.", icon: CalendarDays },
+  { label: "Blogs", href: "/blogs", desc: "Practical guides on setup, visas, VAT and running a business.", icon: Newspaper },
+  { label: "Featured In", href: "/featured-in", desc: "Press mentions and client success stories.", icon: Award },
+  { label: "Activity Hub", href: "/activity-hub", desc: "Events, workshops and networking sessions.", icon: CalendarDays },
   { label: "FAQs", href: "/insights#faqs", desc: "Quick answers to common setup questions.", icon: CircleHelp },
 ];
 
 export const partnerItems: Item[] = [
+  { label: "Our Partners", href: "/our-partners", desc: "The banks and providers we work with to support your business.", icon: Landmark },
   { label: "Become a Channel Partner", href: "/partners#channel-partner", desc: "Refer clients to us and share in their success.", icon: Handshake },
   { label: "Channel Partner Portal", href: "/partners#partner-portal", desc: "Tools for approved partners to manage client applications.", icon: Monitor },
   { label: "Corporate Partnerships", href: "/partners#corporate-partnerships", desc: "Set up services for your team or your clients as a group.", icon: Building2 },

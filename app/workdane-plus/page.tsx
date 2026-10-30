@@ -26,8 +26,8 @@ export default function WorkdanePlus() {
                 </span>
                 <h2 className="font-display text-[26px] font-bold text-heading">{s.title}</h2>
                 <p className="mt-4 max-w-md text-[15px] leading-relaxed">{s.text}</p>
-                <Link href="/#contact" className="group mt-6 inline-flex items-center gap-2 text-[15px] font-bold text-navy">
-                  Ask about this service
+                <Link href={`/workdane-plus/${s.id}`} className="group mt-6 inline-flex items-center gap-2 text-[15px] font-bold text-navy">
+                  Learn more
                   <ArrowRight className="h-4 w-4 text-gold transition group-hover:translate-x-1" />
                 </Link>
               </article>
