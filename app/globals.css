@@ -271,6 +271,27 @@ body {
   transform: scaleX(1);
 }
 
+/* Solid, full-width highlight that wipes across a menu item */
+.card-wipe {
+  position: relative;
+  isolation: isolate;
+}
+.card-wipe::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: #fdf3da;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.card-wipe:hover::before,
+.card-wipe:focus-visible::before {
+  transform: scaleX(1);
+}
+
 /* Text that rolls up to reveal a second copy on hover */
 .roll {
   display: inline-block;
@@ -352,6 +373,7 @@ a[class*="rounded-full"]:active {
     display: none;
   }
   .row-wipe::before,
+  .card-wipe::before,
   .roll-in {
     transition: none;
   }

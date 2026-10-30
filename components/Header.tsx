@@ -86,7 +86,7 @@ export default function Header() {
 
       {active && (
         <div className="rise absolute inset-x-0 top-full hidden border-t border-line bg-white shadow-[0_30px_60px_-30px_rgba(11,37,69,0.25)] 2xl:block">
-          <div className="mx-auto grid max-w-[1600px] grid-cols-[1fr_1fr_360px] gap-x-10 px-10 py-10">
+          <div className="mx-auto grid max-w-none grid-cols-[1fr_1fr_340px] gap-x-8 px-9 py-10">
             <div className="col-span-2 grid grid-cols-2 gap-x-6 gap-y-1">
               {active.items.map((item, idx) => {
                 const Icon = item.icon;
@@ -95,7 +95,7 @@ export default function Header() {
                     key={item.label}
                     href={item.href}
                     onClick={() => setOpen(null)}
-                    className="rise row-wipe group flex gap-4 overflow-hidden rounded-xl p-4" style={{ animationDelay: `${idx * 75}ms` }}
+                    className="rise card-wipe group flex gap-4 overflow-hidden rounded-2xl p-4" style={{ animationDelay: `${idx * 75}ms` }}
                   >
                     <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-navy/5 text-navy transition group-hover:bg-navy group-hover:text-gold-light">
                       <Icon className="h-5 w-5" />
