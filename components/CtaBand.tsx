@@ -17,7 +17,7 @@ export default function CtaBand() {
           alt="A friendly Workdane consultant at the support desk giving a thumbs up"
           width={351}
           height={626}
-          className="hidden h-52 w-40 rounded-2xl object-cover object-top ring-2 ring-gold/60 lg:block"
+          className="hidden h-72 w-56 rounded-2xl object-cover object-top shadow-2xl ring-2 ring-gold/60 lg:block"
         />
         <div className="flex-1 basis-80">
           <h2 className="font-display text-[34px] font-bold leading-[1.15] sm:text-[38px]">Ready to start your business?</h2>
