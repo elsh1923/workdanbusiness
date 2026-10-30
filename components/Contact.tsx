@@ -37,8 +37,8 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="scroll-mt-24 border-t border-line bg-white px-5 py-28 sm:px-8">
-      <div className="mx-auto grid max-w-7xl gap-16 lg:grid-cols-[1fr_1.1fr] lg:gap-24">
+    <section id="contact" className="scroll-mt-24 border-t border-line bg-white px-5 py-28 sm:px-9">
+      <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-[1fr_1.1fr] lg:gap-24">
         <Reveal>
           <Eyebrow>Contact</Eyebrow>
           <h2 className="font-display text-[40px] font-bold leading-[1.15] text-heading sm:text-[44px]">

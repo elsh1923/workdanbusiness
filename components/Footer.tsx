@@ -18,7 +18,7 @@ const heading = "mb-5 text-[14px] font-extrabold uppercase tracking-[0.3em] text
 export default function Footer() {
   return (
     <footer className="bg-midnight text-white/70">
-      <div className="mx-auto grid max-w-[1400px] gap-14 px-5 py-20 sm:px-8 md:grid-cols-2 xl:grid-cols-[1.2fr_1fr_1fr_1.2fr] xl:px-10">
+      <div className="mx-auto grid max-w-[1840px] gap-14 px-5 py-20 sm:px-9 md:grid-cols-2 xl:grid-cols-[1.2fr_1fr_1fr_1.2fr]">
         <div>
           <div className="inline-block rounded-xl bg-white p-3">
             <Image src={LOGO.src} alt={COMPANY.name} width={LOGO.width} height={LOGO.height} className="h-20 w-auto" />
@@ -87,7 +87,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-[1400px] flex-wrap justify-between gap-4 px-5 py-6 text-[14px] text-white/45 sm:px-8 xl:px-10">
+        <div className="mx-auto flex max-w-[1840px] flex-wrap justify-between gap-4 px-5 py-6 text-[14px] text-white/45 sm:px-9">
           <span>© 2026 {COMPANY.name}. All rights reserved.</span>
           <span>Company setup and business services, UAE</span>
         </div>

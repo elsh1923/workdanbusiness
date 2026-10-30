@@ -18,10 +18,10 @@ export default function Home() {
       <Facts />
       <Services />
 
-      <section id="license-categories" className="scroll-mt-24 border-t border-line bg-white px-5 py-24 sm:px-8">
-        <div className="mx-auto max-w-7xl">
+      <section id="license-categories" className="scroll-mt-24 border-t border-line bg-white px-5 py-28 sm:px-9">
+        <div className="mx-auto max-w-[1840px]">
           <Eyebrow>License categories</Eyebrow>
-          <h2 className="font-display text-[40px] font-bold leading-[1.15] text-heading">
+          <h2 className="font-display text-[40px] font-bold leading-[1.15] text-heading sm:text-[44px]">
             Pick the category that fits. <em className="gold-text italic">We handle the rest.</em>
           </h2>
           <ul className="mt-12 grid border-t border-heading/15 md:grid-cols-2 md:gap-x-16 lg:grid-cols-3">

@@ -14,8 +14,8 @@ export default function LicenseCategories() {
         }
         intro="Each category lists the activities it covers. Open one to see its activities, indicative fees and any extra approvals."
       />
-      <section className="bg-surface px-5 pb-28 pt-4 sm:px-8">
-        <div className="mx-auto max-w-7xl">
+      <section className="bg-surface px-5 pb-28 pt-4 sm:px-9">
+        <div className="mx-auto max-w-[1840px]">
           <LinkRows items={licenseItems} />
         </div>
       </section>

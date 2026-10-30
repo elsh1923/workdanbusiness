@@ -15,8 +15,8 @@ export default function WorkdanePlus() {
         }
         intro="Banking, visas, medical screening, documentation and a dedicated account manager, all arranged through one team."
       />
-      <section className="bg-surface px-5 py-24 sm:px-8">
-        <div className="mx-auto grid max-w-7xl gap-x-16 md:grid-cols-2">
+      <section className="bg-surface px-5 py-28 sm:px-9">
+        <div className="mx-auto grid max-w-[1840px] gap-x-16 md:grid-cols-2">
           {plusServices.map((s) => {
             const Icon = s.icon;
             return (
@@ -34,7 +34,7 @@ export default function WorkdanePlus() {
             );
           })}
         </div>
-        <p className="mx-auto mt-12 max-w-7xl text-[14px] leading-relaxed text-body">
+        <p className="mx-auto mt-12 max-w-[1840px] text-[14px] leading-relaxed text-body">
           Availability and terms for each service are confirmed by our team for your business.
         </p>
       </section>

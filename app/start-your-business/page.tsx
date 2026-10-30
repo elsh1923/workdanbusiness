@@ -14,8 +14,8 @@ export default function StartYourBusiness() {
         }
         intro="Choose a starting point. Each one opens a dedicated page with the detail and the next step."
       />
-      <section className="bg-surface px-5 pb-28 pt-4 sm:px-8">
-        <div className="mx-auto max-w-7xl">
+      <section className="bg-surface px-5 pb-28 pt-4 sm:px-9">
+        <div className="mx-auto max-w-[1840px]">
           <LinkRows items={startItems} />
         </div>
       </section>

@@ -53,12 +53,12 @@ export default function BusinessActivities({ initialCategory = "All" }: { initia
   const viewingOn = viewing ? shortlist.includes(viewing.code) : false;
 
   return (
-    <section id="business-activities" className="scroll-mt-24 bg-white px-5 py-28 sm:px-8">
-      <div className="mx-auto max-w-7xl">
+    <section id="business-activities" className="scroll-mt-24 bg-white px-5 py-28 sm:px-9">
+      <div className="mx-auto max-w-[1840px]">
         <Reveal>
           <Eyebrow>Business activities</Eyebrow>
           <div className="flex flex-wrap items-end justify-between gap-8">
-            <h2 className="max-w-2xl font-display text-[40px] font-bold leading-[1.05] text-heading sm:text-[44px]">
+            <h2 className="max-w-2xl font-display text-[40px] font-bold leading-[1.15] text-heading sm:text-[44px]">
               Find the activity for your <em className="gold-text italic">licence.</em>
             </h2>
             <p className="max-w-sm text-[16px] leading-relaxed">

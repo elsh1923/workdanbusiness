@@ -11,10 +11,10 @@ const reasons = [
 
 export default function Why() {
   return (
-    <section className="hero-bg grain relative isolate overflow-clip px-5 py-28 text-white sm:px-8">
+    <section className="hero-bg grain relative isolate overflow-clip px-5 py-28 text-white sm:px-9">
       <div aria-hidden className="blueprint-grid pointer-events-none absolute inset-0 -z-10" />
       <div aria-hidden className="drift pointer-events-none absolute -right-24 top-10 -z-10 h-[380px] w-[380px] rounded-full bg-gold/15 blur-3xl" />
-      <div className="mx-auto grid max-w-7xl gap-16 lg:grid-cols-[5fr_7fr] lg:gap-24">
+      <div className="mx-auto grid max-w-[1840px] gap-16 lg:grid-cols-[5fr_7fr] lg:gap-24">
         <Reveal>
           <Eyebrow light>Why Workdane</Eyebrow>
           <h2 className="font-display text-[40px] font-bold leading-[1.15] sm:text-[44px]">

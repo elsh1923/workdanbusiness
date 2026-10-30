@@ -24,8 +24,8 @@ export default function ResourceHub() {
         }
         intro="Tools and guides to help you plan, price and prepare your business setup."
       />
-      <section className="bg-surface px-5 pb-28 pt-4 sm:px-8">
-        <div className="mx-auto max-w-7xl">
+      <section className="bg-surface px-5 pb-28 pt-4 sm:px-9">
+        <div className="mx-auto max-w-[1840px]">
           <LinkRows items={resources} />
         </div>
       </section>
