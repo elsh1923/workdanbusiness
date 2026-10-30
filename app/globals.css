@@ -2,9 +2,9 @@
 
 :root {
   --midnight: #06132a;
-  --navy: #1c52ad;
-  --slate-accent: #153f8f;
-  --sky-deep: #143f8f;
+  --navy: #07399d;
+  --slate-accent: #022363;
+  --sky-deep: #022363;
   --gold: #c28500;
   --gold-light: #ffc63d;
   --bronze: #8f5a00;
@@ -58,7 +58,7 @@ body {
   background:
     radial-gradient(circle at 85% 15%, rgba(255, 198, 61, 0.22), transparent 45%),
     radial-gradient(circle at 5% 100%, rgba(110, 165, 245, 0.32), transparent 55%),
-    linear-gradient(160deg, #123f93, #2358b6 75%);
+    linear-gradient(160deg, #022364, #063798 75%);
 }
 
 .blueprint-grid {

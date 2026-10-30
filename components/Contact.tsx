@@ -203,7 +203,7 @@ export default function Contact() {
                     </div>
 
                     <label className="flex items-start gap-3 text-[13px] leading-relaxed text-body">
-                      <input required type="checkbox" className="mt-0.5 h-4 w-4 accent-[#1c52ad]" />
+                      <input required type="checkbox" className="mt-0.5 h-4 w-4 accent-[#07399d]" />
                       <span>I agree to be contacted by Workdane about my enquiry by email, phone or WhatsApp.</span>
                     </label>
 
