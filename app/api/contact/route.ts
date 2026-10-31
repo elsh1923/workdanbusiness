@@ -57,7 +57,7 @@ export async function POST(req: Request) {
     `</table>`;
 
   try {
-    await sendMail({ subject: `[Website] ${form}${who ? ` - ${who}` : ""}`, text, html, replyTo: email?.value });
+    await sendMail({ subject: `[Website] ${form}${who ? ` - ${who}` : ""}`.replace(/[\r\n]+/g, " "), text, html, replyTo: email?.value });
     hits.set(ip, [...recent, now]);
     return reply(200, "Sent");
   } catch (err) {

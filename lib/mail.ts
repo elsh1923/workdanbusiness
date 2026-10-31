@@ -18,7 +18,7 @@ export async function sendMail(mail: Mail) {
   if (process.env.CONTACT_DRY_RUN === "true") {
     const { attachments, ...rest } = mail;
     // CONTACT_DRY_RUN_DIR lets a developer open the generated attachments without sending anything.
-    if (process.env.CONTACT_DRY_RUN_DIR && attachments?.length) {
+    if (process.env.NODE_ENV !== "production" && process.env.CONTACT_DRY_RUN_DIR && attachments?.length) {
       const { mkdirSync, writeFileSync } = await import("node:fs");
       mkdirSync(process.env.CONTACT_DRY_RUN_DIR, { recursive: true });
       for (const a of attachments) writeFileSync(`${process.env.CONTACT_DRY_RUN_DIR}/${a.filename}`, a.content);

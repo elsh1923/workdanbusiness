@@ -239,7 +239,9 @@ export default function RegistrationForm() {
     if (!ready || status === "sent") return;
     const t = setTimeout(() => {
       try {
-        localStorage.setItem(DRAFT_KEY, JSON.stringify(data));
+        // Passport and family details are not kept in the browser, because the computer may be shared.
+        const safeDraft = { ...data, shareholders: data.shareholders.map((h) => ({ ...h, passportNo: "", passportExpiry: "", fatherName: "", motherName: "", address: "" })) };
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(safeDraft));
       } catch {}
     }, 500);
     return () => clearTimeout(t);
@@ -376,6 +378,7 @@ export default function RegistrationForm() {
         setStatus("sent");
         try {
           localStorage.removeItem(DRAFT_KEY);
+          localStorage.removeItem(PREFILL_KEY);
         } catch {}
         top.current?.scrollIntoView({ behavior: "smooth", block: "start" });
         return;

@@ -11,6 +11,17 @@ const WINDOW_MS = 30 * 60 * 1000;
 const MAX_PER_WINDOW = 3;
 const hits = new Map<string, number[]>();
 
+// Checks the first bytes of a file, so a renamed program cannot pass as a PDF or an image.
+const looksLike = (type: string, b: Uint8Array) => {
+  const at = (i: number, s: string) => s.split("").every((c, k) => b[i + k] === c.charCodeAt(0));
+  if (type === "application/pdf") return at(0, "%PDF");
+  if (type === "image/png") return b[0] === 0x89 && at(1, "PNG");
+  if (type === "image/jpeg") return b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff;
+  if (type === "image/webp") return at(0, "RIFF") && at(8, "WEBP");
+  return false;
+};
+const oneLine = (s: string) => s.replace(/[\r\n]+/g, " ");
+
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const clean = (v: unknown, max = 500) => (typeof v === "string" ? v.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "").trim().slice(0, max) : "");
 const list = (v: unknown, allowed?: readonly string[]) =>
@@ -42,7 +53,7 @@ export async function POST(req: Request) {
     return reply(400, "We could not read your form. Please try again.");
   }
 
-  const holders = (Array.isArray(raw.shareholders) ? raw.shareholders : []).slice(0, MAX_SHAREHOLDERS);
+  const holders = (Array.isArray(raw.shareholders) ? raw.shareholders : []).filter((h) => h && typeof h === "object").slice(0, MAX_SHAREHOLDERS);
   if (holders.length < 1) return reply(400, "Add at least one shareholder.");
 
   const sh = holders.map((h) => ({
@@ -63,6 +74,7 @@ export async function POST(req: Request) {
   const names = (Array.isArray(raw.names) ? raw.names : []).map((n) => clean(n, 120));
   if (!names[0] || !names[1] || !names[2]) return reply(400, "Please give three company name options.");
 
+  if (sh.some((h) => !(parseFloat(h.percent) > 0 && parseFloat(h.percent) <= 100))) return reply(400, "Each shareholding percentage must be more than 0% and at most 100%.");
   const total = sh.reduce((t, h) => t + (parseFloat(h.percent) || 0), 0);
   if (Math.abs(total - 100) > 0.01) return reply(400, "The shareholding percentages must add up to 100%.");
   for (const [i, h] of sh.entries()) {
@@ -91,12 +103,14 @@ export async function POST(req: Request) {
       totalBytes += v.size;
       if (totalBytes > MAX_TOTAL) return reply(400, "The uploaded files are too large in total. Please compress them and try again.");
       const ext = v.type === "application/pdf" ? "pdf" : v.type === "image/png" ? "png" : v.type === "image/webp" ? "webp" : "jpg";
+      const bytes = new Uint8Array(await v.arrayBuffer());
+      if (!looksLike(v.type, bytes)) return reply(400, `${slot.label} (shareholder ${i + 1}) is not a valid ${ext.toUpperCase()} file.`);
       docs.push({
         holder: i + 1,
         label: slot.label,
         filename: `Shareholder${i + 1}-${slot.key}-${(sh[i].fullName || "").replace(/[^a-z0-9]+/gi, "_").slice(0, 30)}.${ext}`,
         type: v.type,
-        data: new Uint8Array(await v.arrayBuffer()),
+        data: bytes,
       });
     }
   }
@@ -204,7 +218,7 @@ export async function POST(req: Request) {
     "\n\nThe completed form and all uploaded documents are attached as one PDF.";
 
   try {
-    await sendMail({ subject: `[Website] Company registration ${ref} - ${sh[0].fullName}`, text, html, replyTo: sh[0].email, attachments });
+    await sendMail({ subject: oneLine(`[Website] Company registration ${ref} - ${sh[0].fullName}`), text, html, replyTo: sh[0].email, attachments });
     hits.set(ip, [...recent, now]);
     return reply(200, "Sent", { ref });
   } catch (err) {
