@@ -15,7 +15,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const l = landingBySlug(slug);
-  return l ? { title: `${l.label} | Workdane Management Consultancy`, description: l.intro } : {};
+  return l ? { title: l.seoTitle ?? `${l.label} | Workdane Management Consultancy`, description: l.description ?? l.intro, alternates: { canonical: `/business-setup/${l.slug}` } } : {};
 }
 
 async function LandingContent({ params }: { params: Promise<{ slug: string }> }) {
@@ -43,6 +43,23 @@ async function LandingContent({ params }: { params: Promise<{ slug: string }> })
           </Link>
         </div>
       </PageHero>
+
+      {l.sections && (
+        <section className="bg-white px-6 py-24 sm:px-12 lg:px-16">
+          <div className="mx-auto max-w-3xl space-y-12">
+            {l.sections.map((sec) => (
+              <div key={sec.heading}>
+                <h2 className="font-display text-[26px] font-bold leading-snug text-heading sm:text-[30px]">{sec.heading}</h2>
+                {sec.paragraphs.map((p) => (
+                  <p key={p} className="mt-4 text-[16px] leading-relaxed">
+                    {p}
+                  </p>
+                ))}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="bg-surface px-6 py-24 sm:px-12 lg:px-16">
         <div className="mx-auto max-w-[1320px]">
