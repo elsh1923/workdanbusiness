@@ -10,6 +10,7 @@ import { ACTIVITY_COUNT } from "@/lib/activities";
 import { CONTACT, INDICATIVE_NOTE, LOGO_LIGHT, OFFICES } from "@/lib/config";
 import { countries, fullPhone } from "@/lib/countries";
 import { PREFILL_KEY, type Prefill } from "@/lib/registration";
+import DialSelect from "./DialSelect";
 import { useFormSubmit } from "./useFormSubmit";
 
 const fmt = (n: number) => n.toLocaleString("en-US");
@@ -460,13 +461,7 @@ export default function CostCalculator() {
                 <div className="block md:col-span-2">
                   <span className={label}>Phone *</span>
                   <div className="flex gap-3">
-                    <select value={details.dial} onChange={(e) => setDetails({ ...details, dial: e.target.value })} aria-label="Country code" className={`${field} !w-[8.5rem] shrink-0 bg-white`}>
-                      {countries.map((c) => (
-                        <option key={c.name} value={c.dial}>
-                          {c.dial} {c.name}
-                        </option>
-                      ))}
-                    </select>
+                    <DialSelect value={details.dial} onChange={(dial) => setDetails({ ...details, dial })} className={field} />
                     <input
                       type="tel"
                       inputMode="tel"

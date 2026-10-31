@@ -107,3 +107,7 @@ export const SHAREHOLDER_QUESTION = 6;
 export const holderNumber = () => SHAREHOLDER_QUESTION;
 export const questionNumber = (base: number) => base;
 // The printed form repeats questions 13 to 16 as 17 to 20.
+
+// A full name has at least two words (for example a first and a last name).
+export const isFullName = (v: string) => v.trim().split(/\s+/).filter(Boolean).length >= 2;
+export const FULL_NAME_MESSAGE = "Please enter the full name (at least first and last name)";

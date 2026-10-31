@@ -21,6 +21,8 @@ import {
   questionNumber,
   WEALTH_SOURCES,
   emptyShareholder,
+  isFullName,
+  FULL_NAME_MESSAGE,
   type FileKey,
   type Prefill,
   type RegistrationData,
@@ -276,10 +278,13 @@ export default function RegistrationForm() {
         if (!h.roles.length) e[`${p}roles`] = "Choose at least one role";
         need(`${p}percent`, h.percent, "Required");
         need(`${p}fullName`, h.fullName, "Required");
+        if (h.fullName.trim() && !isFullName(h.fullName)) e[`${p}fullName`] = FULL_NAME_MESSAGE;
         need(`${p}phone`, h.phone, "Required");
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(h.email)) e[`${p}email`] = "Enter a valid email";
         need(`${p}address`, h.address, "Required");
         need(`${p}fatherName`, h.fatherName, "Required");
+        if (h.fatherName.trim() && !isFullName(h.fatherName)) e[`${p}fatherName`] = FULL_NAME_MESSAGE;
+        if (h.motherName.trim() && !isFullName(h.motherName)) e[`${p}motherName`] = FULL_NAME_MESSAGE;
         need(`${p}passportNo`, h.passportNo, "Required");
         need(`${p}nationality`, h.nationality, "Required");
         need(`${p}passportExpiry`, h.passportExpiry, "Required");
@@ -618,12 +623,12 @@ export default function RegistrationForm() {
                         <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-body">%</span>
                       </div>
                     </Field>
-                    {text("fullName", "Full name", { autoComplete: "name" })}
+                    {text("fullName", "Full name (as in passport)", { autoComplete: "name", ph: "First name and last name" })}
                     {text("phone", "Contact number", { type: "tel", autoComplete: "tel", ph: "+971 5X XXX XXXX" })}
                     {text("email", "Email", { type: "email", autoComplete: "email" })}
                     {text("address", "Home address", { wide: true })}
-                    {text("fatherName", "Father’s name")}
-                    {text("motherName", "Mother’s name", { required: false })}
+                    {text("fatherName", "Father’s full name", { ph: "First name and last name" })}
+                    {text("motherName", "Mother’s full name", { required: false, ph: "First name and last name" })}
                     {text("passportNo", "Passport number")}
                     <Field id={`${p}nationality`} label="Nationality *" error={er("nationality")}>
                       <select

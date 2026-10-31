@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { AlertTriangle, CheckCircle2, Loader2, XCircle } from "lucide-react";
-import { countries, fullPhone } from "@/lib/countries";
+import { fullPhone } from "@/lib/countries";
+import DialSelect from "./DialSelect";
 import { useFormSubmit } from "./useFormSubmit";
 
 const field =
@@ -91,13 +92,7 @@ export default function NameCheck() {
       <div>
         <span className={label}>Phone *</span>
         <div className="flex gap-3">
-          <select value={form.dial} onChange={(e) => setForm({ ...form, dial: e.target.value })} aria-label="Country code" className={`${field} !w-[8.5rem] shrink-0 bg-white`}>
-            {countries.map((c) => (
-              <option key={c.name} value={c.dial}>
-                {c.dial} {c.name}
-              </option>
-            ))}
-          </select>
+          <DialSelect value={form.dial} onChange={(dial) => setForm({ ...form, dial })} className={field} />
           <input
             type="tel"
             inputMode="tel"

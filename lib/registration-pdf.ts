@@ -258,8 +258,8 @@ async function drawForm(pdf: PDFDocument, d: PdfInput, pageOf: (doc: Doc) => num
     field(`Share holder ${n}: Contact Number`, h.phone, true);
     field(`Share holder ${n}: Email ID`, h.email, true);
     field(`Share holder ${n}: Home Address`, h.address, true);
-    field(`Share holder ${n}: Father Name`, h.fatherName, true);
-    field(`Share holder ${n}: Mother Name`, h.motherName);
+    field(`Share holder ${n}: Father's Full Name`, h.fatherName, true);
+    field(`Share holder ${n}: Mother's Full Name`, h.motherName);
     field(`Share holder ${n}: Passport Number`, h.passportNo);
     field(`Share holder ${n}: Nationality`, h.nationality);
     field(`Share holder ${n}: Passport Expiry Date`, h.passportExpiry);

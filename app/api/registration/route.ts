@@ -1,6 +1,6 @@
 import { MailNotConfigured, sendMail, type Attachment } from "@/lib/mail";
 import { buildRegistrationPdf, type PdfInput } from "@/lib/registration-pdf";
-import { FILE_SLOTS, MAX_SHAREHOLDERS, holderNumber, questionNumber, type RegistrationData } from "@/lib/registration";
+import { FILE_SLOTS, FULL_NAME_MESSAGE, MAX_SHAREHOLDERS, holderNumber, isFullName, questionNumber, type RegistrationData } from "@/lib/registration";
 
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -70,6 +70,9 @@ export async function POST(req: Request) {
     if (!h.fullName || !h.phone || !h.address || !h.fatherName || !h.passportNo || !h.nationality || !h.passportExpiry || !h.uaeResident)
       return reply(400, `${label}: please complete all required fields.`);
     if (!EMAIL.test(h.email)) return reply(400, `${label}: please enter a valid email address.`);
+    if (!isFullName(h.fullName)) return reply(400, `${label}: ${FULL_NAME_MESSAGE.toLowerCase()}.`);
+    if (!isFullName(h.fatherName)) return reply(400, `${label}: father's full name. ${FULL_NAME_MESSAGE}.`);
+    if (h.motherName && !isFullName(h.motherName)) return reply(400, `${label}: mother's full name. ${FULL_NAME_MESSAGE}.`);
   }
 
   // files
@@ -164,8 +167,8 @@ export async function POST(req: Request) {
         q("", `Share holder ${n}: Contact Number`, h.phone) +
         q("", `Share holder ${n}: Email ID`, h.email) +
         q("", `Share holder ${n}: Home Address`, h.address) +
-        q("", `Share holder ${n}: Father Name`, h.fatherName) +
-        q("", `Share holder ${n}: Mother Name`, h.motherName) +
+        q("", `Share holder ${n}: Father's Full Name`, h.fatherName) +
+        q("", `Share holder ${n}: Mother's Full Name`, h.motherName) +
         q("", `Share holder ${n}: Passport Number`, h.passportNo) +
         q("", `Share holder ${n}: Nationality`, h.nationality) +
         q("", `Share holder ${n}: Passport Expiry Date`, h.passportExpiry) +
