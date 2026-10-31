@@ -1,6 +1,6 @@
 import { MailNotConfigured, sendMail, type Attachment } from "@/lib/mail";
 import { buildRegistrationPdf, type PdfInput } from "@/lib/registration-pdf";
-import { FILE_SLOTS, MAX_SHAREHOLDERS, type RegistrationData } from "@/lib/registration";
+import { FILE_SLOTS, MAX_SHAREHOLDERS, holderNumber, questionNumber, type RegistrationData } from "@/lib/registration";
 
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -140,6 +140,7 @@ export async function POST(req: Request) {
   const q = (n: string, label: string, value: string) =>
     `<tr><td style="color:#07399d;font-weight:bold;vertical-align:top;padding:5px 10px 5px 0;white-space:nowrap">${esc(n)}</td><td style="color:#444;vertical-align:top;padding:5px 14px 5px 0">${esc(label)}</td><td style="padding:5px 0"><strong>${esc(value || "-").replace(/\n/g, "<br>")}</strong></td></tr>`;
   const block = (rows: string) => `<table cellpadding="0" style="font-family:Arial,sans-serif;font-size:14px;border-collapse:collapse;margin-bottom:6px">${rows}</table>`;
+  const qn = (b: number) => questionNumber(b);
   const totalVisas = (parseInt(d.investorVisas, 10) || 0) + (parseInt(d.employeeVisas, 10) || 0);
   const acts = d.activities.map((a, i) => q(i === 0 ? "5" : "", `Business Activity ${i + 1}`, `${a.code} ${a.name}`.trim())).join("");
 
@@ -153,10 +154,9 @@ export async function POST(req: Request) {
       q("", "Employment Visa", d.employeeVisas || "0") +
       acts,
   );
-  html += `<h3 style="margin:18px 0 4px;color:#07399d;font-family:Arial,sans-serif">6. SHARE HOLDERS</h3>`;
   sh.forEach((h, i) => {
     const n = i + 1;
-    html += `<p style="font-family:Arial,sans-serif;font-weight:bold;margin:12px 0 2px">Share holder ${n}</p>`;
+    html += `<h3 style="margin:18px 0 2px;color:#07399d;font-family:Arial,sans-serif">${holderNumber()}. SHARE HOLDERS</h3><p style="font-family:Arial,sans-serif;font-weight:bold;margin:2px 0 2px">Share holder ${n}</p>`;
     html += block(
       q("", "Role", h.roles.join(", ")) +
         q("", `Share holder ${n}: share holding percentage`, `From 100% - ${h.percent}%`) +
@@ -173,16 +173,20 @@ export async function POST(req: Request) {
     );
   });
   html += block(
-    q("7", "Expected Annual Turnover (AED)", d.turnover) +
-      q("8", "Previous Employment/Business Experience", d.experience) +
-      q("9", "Brief description of your intended business in UAE", d.businessDescription) +
-      q("10", "Countries where your targeted customers will be based", d.targetCountries) +
-      q("11", "Payment methods accepted from customers", d.paymentFromCustomers) +
-      q("12", "Primary payment method with suppliers", d.paymentToSuppliers) +
-      q("13", "Hold any other business license?", `${d.otherLicence}${d.otherLicenceDetails ? ` - ${d.otherLicenceDetails}` : ""}`) +
-      q("14", "Involved in any of the below activities", `${d.crime.join(", ") || "-"}${d.crimeOther ? ` (${d.crimeOther})` : ""}`) +
-      q("15", "Involved in any of the below", d.pep.join(", ") || "-") +
-      q("16", "Source of wealth declaration", `${d.wealth.join(", ")}${d.wealthOther ? ` (${d.wealthOther})` : ""}`),
+    q(String(qn(7)), "Expected Annual Turnover (AED)", d.turnover) +
+      q(String(qn(8)), "Previous Employment/Business Experience", d.experience) +
+      q(String(qn(9)), "Brief description of your intended business in UAE", d.businessDescription) +
+      q(String(qn(10)), "Countries where your targeted customers will be based", d.targetCountries) +
+      q(String(qn(11)), "Payment methods accepted from customers", d.paymentFromCustomers) +
+      q(String(qn(12)), "Primary payment method with suppliers", d.paymentToSuppliers) +
+      q(String(qn(13)), "Hold any other business license?", `${d.otherLicence}${d.otherLicenceDetails ? ` - ${d.otherLicenceDetails}` : ""}`) +
+      q(String(qn(14)), "Involved in any of the below activities", `${d.crime.join(", ") || "-"}${d.crimeOther ? ` (${d.crimeOther})` : ""}`) +
+      q(String(qn(15)), "Involved in any of the below", d.pep.join(", ") || "-") +
+      q(String(qn(16)), "Source of wealth declaration", `${d.wealth.join(", ")}${d.wealthOther ? ` (${d.wealthOther})` : ""}`) +
+      q(String(qn(17)), "Hold any other business license?", `${d.otherLicence}${d.otherLicenceDetails ? ` - ${d.otherLicenceDetails}` : ""}`) +
+      q(String(qn(18)), "Involved in any of the below activities", `${d.crime.join(", ") || "-"}${d.crimeOther ? ` (${d.crimeOther})` : ""}`) +
+      q(String(qn(19)), "Involved in any of the below", d.pep.join(", ") || "-") +
+      q(String(qn(20)), "Source of wealth declaration", `${d.wealth.join(", ")}${d.wealthOther ? ` (${d.wealthOther})` : ""}`),
   );
   html += `<p style="font-family:Arial,sans-serif;color:#666;margin-top:20px">Declaration confirmed by the applicant. The completed form and all uploaded documents are attached as one PDF.</p>`;
 
@@ -190,9 +194,9 @@ export async function POST(req: Request) {
     `Company registration form ${ref}\n\n` +
     `1. Registration Authority: ${d.authority}\n2. Business Consultant Name: ${d.consultant}\n` +
     `3. Company Names: ${names.join(" | ")}\n4. Number of Visa: ${totalVisas} (investor/partner ${d.investorVisas}, employment ${d.employeeVisas})\n` +
-    `5. Business activities: ${d.activities.map((a) => `${a.code} ${a.name}`).join("; ")}\n6. SHARE HOLDERS` +
-    sh.map((h, i) => `\n   Share holder ${i + 1}: ${h.fullName} (${h.percent}%) ${h.email} ${h.phone}`).join("") +
-    `\n7. Expected Annual Turnover: ${d.turnover}\n11. Payments from customers: ${d.paymentFromCustomers}\n12. Payments to suppliers: ${d.paymentToSuppliers}` +
+    `5. Business activities: ${d.activities.map((a) => `${a.code} ${a.name}`).join("; ")}` +
+    sh.map((h, i) => `\n${holderNumber()}. SHARE HOLDERS - Share holder ${i + 1}: ${h.fullName} (${h.percent}%) ${h.email} ${h.phone}`).join("") +
+    `\n${qn(7)}. Expected Annual Turnover: ${d.turnover}\n${qn(11)}. Payments from customers: ${d.paymentFromCustomers}\n${qn(12)}. Payments to suppliers: ${d.paymentToSuppliers}` +
     "\n\nThe completed form and all uploaded documents are attached as one PDF.";
 
   try {

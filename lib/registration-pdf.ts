@@ -1,5 +1,5 @@
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from "pdf-lib";
-import { CRIME_OPTIONS, FILE_SLOTS, PEP_OPTIONS, WEALTH_SOURCES } from "./registration";
+import { CRIME_OPTIONS, FILE_SLOTS, PEP_OPTIONS, WEALTH_SOURCES, holderNumber, questionNumber } from "./registration";
 
 export type PdfShareholder = {
   roles: string[];
@@ -49,12 +49,21 @@ const MX = 54;
 const TOP = H - 64;
 const BOTTOM = 62;
 const BLACK = rgb(0.1, 0.1, 0.1);
-const GREY = rgb(0.45, 0.45, 0.45);
+const GREY = rgb(0.55, 0.55, 0.55);
 const ANSWER = rgb(0.03, 0.2, 0.55);
 const RED = rgb(0.85, 0.1, 0.1);
-const RULE = rgb(0.75, 0.75, 0.75);
+const RULE = rgb(0.72, 0.72, 0.72);
 
-// The form follows the layout and numbering of Workdane's own registration form, with the answers filled in.
+// Wording of each upload line, as printed on Workdane's registration form.
+const PRINTED_FILE: Record<string, string> = {
+  passport: "Upload: Passport scanned File",
+  photo: "Upload: Passport size photo",
+  address: "File Upload: Proof of Address (ID, Driving License, Bill, Contract or anyother....)",
+  bank: "File Upload: 3 to 6 months Bank Statement",
+  experience: "Previous Employment/Business Experience",
+};
+
+// The form follows the printed Workdane form page by page, with the answers filled in.
 // It is drawn twice: first to count its pages, then again with the page numbers of the attached documents.
 async function drawForm(pdf: PDFDocument, d: PdfInput, pageOf: (doc: Doc) => number | null) {
   const font = await pdf.embedFont(StandardFonts.Helvetica);
@@ -67,6 +76,7 @@ async function drawForm(pdf: PDFDocument, d: PdfInput, pageOf: (doc: Doc) => num
       .map((c) => (charset.has(c.codePointAt(0)!) ? c : "?"))
       .join("");
 
+  const qn = (b: number) => questionNumber(b);
   let page: PDFPage = pdf.addPage([W, H]);
   let y = TOP;
 
@@ -78,12 +88,13 @@ async function drawForm(pdf: PDFDocument, d: PdfInput, pageOf: (doc: Doc) => num
   };
   frame(page);
 
+  const newPage = () => {
+    page = pdf.addPage([W, H]);
+    frame(page);
+    y = TOP;
+  };
   const ensure = (h: number) => {
-    if (y - h < BOTTOM) {
-      page = pdf.addPage([W, H]);
-      frame(page);
-      y = TOP;
-    }
+    if (y - h < BOTTOM) newPage();
   };
 
   const wrap = (text: string, f: PDFFont, size: number, width: number) => {
@@ -109,22 +120,30 @@ async function drawForm(pdf: PDFDocument, d: PdfInput, pageOf: (doc: Doc) => num
     return lines.length ? lines : [""];
   };
 
-  // numbered question heading, e.g. "3.  Company Name:"
-  const heading = (n: string, text: string, required = false, hint?: string) => {
-    ensure(40);
+  // numbered question heading, e.g. "3.  Company Name:" (long questions wrap, like the printed form)
+  const heading = (n: string, text: string, opts: { required?: boolean; hint?: string; right?: string } = {}) => {
+    const lines = wrap(`${n}.  ${text}`, bold, 11.5, W - MX * 2 - (opts.right ? 40 : 0));
+    ensure(34 + lines.length * 14);
     y -= 14;
-    const t = safe(`${n}.  ${text}`);
-    page.drawText(t, { x: MX, y, size: 11.5, font: bold, color: BLACK });
-    if (required) page.drawText("*", { x: MX + bold.widthOfTextAtSize(t, 11.5) + 2, y, size: 11.5, font: bold, color: RED });
-    y -= 6;
-    if (hint) {
-      y -= 11;
-      page.drawText(safe(hint), { x: MX, y, size: 8.5, font: italic, color: GREY });
+    lines.forEach((l, i) => {
+      page.drawText(l, { x: MX + (i ? 16 : 0), y, size: 11.5, font: bold, color: BLACK });
+      if (i === lines.length - 1 && opts.required) page.drawText("*", { x: MX + (i ? 16 : 0) + bold.widthOfTextAtSize(l, 11.5) + 2, y, size: 11.5, font: bold, color: RED });
+      if (i < lines.length - 1) y -= 14;
+    });
+    if (opts.right) {
+      const r = safe(opts.right);
+      page.drawText(r, { x: W - MX - bold.widthOfTextAtSize(r, 10.5), y: y - 14, size: 10.5, font: bold, color: BLACK });
+      y -= 12;
     }
-    y -= hint ? 20 : 8;
+    y -= 8;
+    if (opts.hint) {
+      page.drawText(safe(opts.hint), { x: MX, y: y - 3, size: 8.5, font: italic, color: GREY });
+      y -= 14;
+    }
+    y -= 6;
   };
 
-  // "Label:   answer" line, answer wraps under the label when long
+  // "Label" line with the answer under it
   const field = (label: string, answer: string, required = false, rule = false) => {
     const lines = wrap(answer || "", bold, 10.5, W - MX * 2 - 12);
     ensure(18 + lines.length * 14);
@@ -141,6 +160,17 @@ async function drawForm(pdf: PDFDocument, d: PdfInput, pageOf: (doc: Doc) => num
     y -= 6;
   };
 
+  const hintLine = (text: string) => {
+    ensure(16);
+    page.drawText(safe(text), { x: MX, y, size: 8.5, font: italic, color: GREY });
+    y -= 14;
+  };
+
+  const check = (x: number, yy: number) => {
+    page.drawLine({ start: { x, y: yy + 3 }, end: { x: x + 3, y: yy }, thickness: 1.4, color: ANSWER });
+    page.drawLine({ start: { x: x + 3, y: yy }, end: { x: x + 9, y: yy + 8 }, thickness: 1.4, color: ANSWER });
+  };
+
   const box = (x: number, yy: number, on: boolean) => {
     page.drawRectangle({ x, y: yy - 1, width: 9, height: 9, borderWidth: 0.8, borderColor: BLACK });
     if (on) {
@@ -149,58 +179,71 @@ async function drawForm(pdf: PDFDocument, d: PdfInput, pageOf: (doc: Doc) => num
     }
   };
 
-  const options = (opts: readonly string[], chosen: string[]) => {
+  // "o" bullets like the printed form; a filled bullet means chosen
+  const bullet = (x: number, yy: number, on: boolean) => {
+    page.drawCircle({ x: x + 3, y: yy + 3, size: 3, borderWidth: 0.8, borderColor: BLACK, color: on ? ANSWER : rgb(1, 1, 1) });
+  };
+  const options = (opts: readonly string[], chosen: string[], labelOf: (o: string) => string = (o) => o) => {
     opts.forEach((o) => {
-      const lines = wrap(o, font, 10, W - MX * 2 - 36);
-      ensure(lines.length * 13 + 6);
-      box(MX + 12, y, chosen.includes(o));
-      lines.forEach((ln, i) => page.drawText(ln, { x: MX + 30, y: y - i * 13, size: 10, font: chosen.includes(o) ? bold : font, color: chosen.includes(o) ? ANSWER : BLACK }));
-      y -= lines.length * 13 + 4;
+      const on = chosen.includes(o);
+      const lines = wrap(labelOf(o), on ? bold : font, 10, W - MX * 2 - 60);
+      ensure(lines.length * 13 + 8);
+      bullet(MX + 24, y, on);
+      lines.forEach((ln, i) => page.drawText(ln, { x: MX + 42, y: y - i * 13, size: 10, font: on ? bold : font, color: on ? ANSWER : BLACK }));
+      y -= lines.length * 13 + 8;
     });
+  };
+  const specify = (label: string, value: string) => {
+    ensure(30);
+    page.drawText(safe(label), { x: MX + 42, y, size: 10, font, color: BLACK });
+    y -= 14;
+    if (value) {
+      wrap(value, bold, 10, W - MX * 2 - 60).forEach((ln) => {
+        page.drawText(ln, { x: MX + 42, y, size: 10, font: bold, color: ANSWER });
+        y -= 13;
+      });
+    }
+    y -= 4;
   };
 
   // 1-3
-  heading("1", "Registration Authority", true, "The Authority you are registering your company");
-  page.drawText(safe(d.authority.toUpperCase()), { x: MX + 8, y, size: 11, font: bold, color: ANSWER });
-  y -= 20;
+  heading("1", "Registration Authority", { required: true });
+  page.drawText(safe(d.authority.toUpperCase()), { x: MX + 8, y: y + 4, size: 10.5, font: bold, color: ANSWER });
+  y -= 14;
+  hintLine("The Authority you are registering your company");
   heading("2", "Business Consultant Name");
-  page.drawText(safe(d.consultant), { x: MX + 8, y, size: 11, font: bold, color: ANSWER });
-  y -= 20;
+  page.drawText(safe(d.consultant), { x: MX + 8, y: y + 4, size: 10.5, font: bold, color: ANSWER });
+  y -= 18;
   heading("3", "Company Name:");
   d.names.forEach((n, i) => field(`Company Name Option ${i + 1}:`, n, true, true));
 
   // 4
   const total = (parseInt(d.investorVisas, 10) || 0) + (parseInt(d.employeeVisas, 10) || 0);
-  heading("4", "Number of Visa", true);
+  heading("4", "Number of Visa", { required: true });
   field("Number of Visa", String(total));
   field("Investor/partner Visa", d.investorVisas || "0");
   field("Employment Visa", d.employeeVisas || "0");
 
   // 5
   heading("5", "Mention your business activities including Codes");
-  const acts = d.activities.length ? d.activities : [];
-  const rows = Math.max(5, acts.length);
+  const rows = Math.max(5, d.activities.length);
   for (let i = 0; i < rows; i++) {
-    const a = acts[i];
+    const a = d.activities[i];
     field(`Business Activity ${i + 1}`, a ? `${a.code} ${a.name}`.trim() : "");
   }
-  ensure(16);
-  page.drawText("Note: Additional activity is chargeable", { x: MX + 8, y, size: 8.5, font: italic, color: GREY });
-  y -= 16;
+  hintLine("Note: Additional activity is chargeable");
 
-  // 6
-  ensure(60);
-  y -= 10;
-  page.drawText("6.  SHARE HOLDERS", { x: MX, y, size: 12, font: bold, color: BLACK });
-  y -= 10;
+  // 6 - every shareholder has a page of its own; question 6 is printed once, on the first
   d.shareholders.forEach((h, i) => {
     const n = i + 1;
-    ensure(90);
-    y -= 12;
-    page.drawLine({ start: { x: MX, y: y + 8 }, end: { x: W - MX, y: y + 8 }, thickness: 0.8, color: RULE });
-    page.drawText(`Share holder ${n}`, { x: MX, y: y - 6, size: 11, font: bold, color: BLACK });
-    y -= 26;
-    // roles
+    newPage();
+    y = TOP - 14;
+    if (i === 0) {
+      page.drawText(`${holderNumber()}.  SHARE HOLDERS`, { x: MX, y, size: 12, font: bold, color: BLACK });
+      y -= 18;
+    }
+    page.drawText(`Share holder ${n}`, { x: MX, y, size: 11, font: bold, color: BLACK });
+    y -= 22;
     let rx = MX;
     ["General Manager", "Board of Director", "Share Holder"].forEach((role, ri) => {
       const key = ["General Manager", "Board of Director", "Shareholder"][ri];
@@ -208,8 +251,9 @@ async function drawForm(pdf: PDFDocument, d: PdfInput, pageOf: (doc: Doc) => num
       page.drawText(role, { x: rx + 14, y: y + 0.5, size: 9.5, font: h.roles.includes(key) ? bold : font, color: h.roles.includes(key) ? ANSWER : BLACK });
       rx += 14 + font.widthOfTextAtSize(role, 9.5) + 26;
     });
-    y -= 20;
+    y -= 22;
     field(`Share holder ${n}: share holding percentage`, `From 100% - ${h.percent}%`, true);
+    hintLine("Provide share holding percentage");
     field(`Share holder ${n}: Full Name`, h.fullName, true);
     field(`Share holder ${n}: Contact Number`, h.phone, true);
     field(`Share holder ${n}: Email ID`, h.email, true);
@@ -219,58 +263,80 @@ async function drawForm(pdf: PDFDocument, d: PdfInput, pageOf: (doc: Doc) => num
     field(`Share holder ${n}: Passport Number`, h.passportNo);
     field(`Share holder ${n}: Nationality`, h.nationality);
     field(`Share holder ${n}: Passport Expiry Date`, h.passportExpiry);
-    field(`Share holder ${n}: Are you A UAE Resident?  Yes / No`, h.uaeResident);
+    field(`Share holder ${n}: Are you A UAE Resident? Yes /No`, h.uaeResident);
 
-    ensure(30 + FILE_SLOTS.length * 16);
-    page.drawText("File that should Attached:", { x: MX, y, size: 11, font: bold, color: BLACK });
+    ensure(40 + FILE_SLOTS.length * 18);
+    y -= 6;
+    page.drawText("File that should Attached:", { x: MX, y, size: 12, font: bold, color: BLACK });
+    y -= 20;
+    page.drawText(`Share holder ${n}`, { x: MX + 12, y, size: 10.5, font: bold, color: BLACK });
     y -= 18;
     FILE_SLOTS.forEach((slot) => {
       const doc = d.documents.find((x) => x.holder === n && x.label === slot.label);
       const pg = doc ? pageOf(doc) : null;
-      const label = `${slot.label}`;
-      box(MX + 12, y, !!doc);
-      page.drawText(safe(label), { x: MX + 30, y: y + 0.5, size: 10, font, color: BLACK });
+      if (doc) check(MX + 14, y);
+      const lines = wrap(PRINTED_FILE[slot.key] ?? slot.label, doc ? bold : font, 10, W - MX * 2 - 150);
+      lines.forEach((ln, li) => page.drawText(ln, { x: MX + 32, y: y - li * 12 + 0.5, size: 10, font: doc ? bold : font, color: doc ? ANSWER : BLACK }));
       const status = doc ? (pg ? `attached, page ${pg}` : "attached separately") : slot.required ? "not attached" : "not provided";
       page.drawText(safe(status), { x: W - MX - font.widthOfTextAtSize(safe(status), 9), y: y + 0.5, size: 9, font: doc ? bold : italic, color: doc ? ANSWER : GREY });
-      y -= 16;
+      y -= lines.length * 12 + 7;
     });
-    y -= 6;
   });
 
-  // 7-12
-  heading("7", "Expected Annual Turnover");
-  field("Amount", d.turnover ? `${d.turnover} AED` : "");
-  heading("8", "Previous Employment/Business Experience");
-  field("Provide brief description of your previous work experience", d.experience);
-  heading("9", "Brief description of your intended business in UAE");
-  field("Provide brief description of your intended business", d.businessDescription);
-  heading("10", "List all the countries where your targeted customers will be based", false, "(UAE and international)");
+  // 7-16, starting on a fresh page like the printed form
+  newPage();
+  y = TOP - 4;
+  heading(String(qn(7)), "Expected Annual Turnover");
+  page.drawLine({ start: { x: MX + 8, y: y - 3 }, end: { x: W - MX - 34, y: y - 3 }, thickness: 0.6, color: RULE });
+  page.drawText(safe(d.turnover), { x: MX + 12, y, size: 10.5, font: bold, color: ANSWER });
+  page.drawText("AED", { x: W - MX - 28, y, size: 9.5, font: bold, color: BLACK });
+  y -= 14;
+  heading(String(qn(8)), "Previous Employment/Business Experience");
+  field("Provide Brief description of your previous work experience", d.experience);
+  heading(String(qn(9)), "Brief description of your intended business in UAE");
+  field("Provide Brief description of your intended business", d.businessDescription);
+  heading(String(qn(10)), "List all the countries where your targeted customers will be based (UAE and international)");
   field("Countries", d.targetCountries);
-  heading("11", "Mention the relevant payment methods you will be accepting from customers? Example, cash, bank transfers etc", true);
+  heading(String(qn(11)), "Mention the relevant payment methods you will be accepting from customers? Example, cash, bank transfers etc", { required: true });
   field("Answer", d.paymentFromCustomers);
-  heading("12", "Mention the primary payment method your company will use, when transacting with suppliers? Example, cash, bank transfers, card etc");
+  heading(String(qn(12)), "Mention the primary payment method your company will use, when transacting with suppliers? Example, cash, bank transfers, card etc");
   field("Answer", d.paymentToSuppliers);
 
-  // 13-16
-  heading("13", "Do you hold any other business license - in the UAE or other country?");
-  options(["Yes", "No"], d.otherLicence ? [d.otherLicence] : []);
-  if (d.otherLicence === "Yes") field("If yes, please list the company name and which country it is based in", d.otherLicenceDetails);
+  // 13-16, then the same four questions again as 17-20, exactly as the printed form continues
+  const licenceBlock = (n: number) => {
+    heading(String(n), "Do you hold any other business license- in the UAE or other country?", { right: "Yes/No" });
+    page.drawText(safe((d.otherLicence || "").toUpperCase()), { x: MX + 8, y: y + 8, size: 10.5, font: bold, color: ANSWER });
+    y -= 6;
+    hintLine("If yes, please list the company name and which country it is based in.");
+    if (d.otherLicence === "Yes" && d.otherLicenceDetails) field("Company name and country", d.otherLicenceDetails);
+  };
+  const crimeBlock = (n: number) => {
+    heading(String(n), "Have you been involved in any of the below activities:");
+    options(CRIME_OPTIONS, d.crime);
+    specify("If Other, Please specify", d.crime.includes("Other") ? d.crimeOther : "");
+  };
+  const pepBlock = (n: number) => {
+    heading(String(n), "Have you been involved in any of the below:");
+    options(PEP_OPTIONS, d.pep);
+  };
+  const wealthBlock = (n: number) => {
+    heading(String(n), "SOURCE OF WEALTH DECLARATION", { required: true });
+    options(WEALTH_SOURCES, d.wealth, (o) => (o === "Other" ? "Other," : o));
+    specify("Please specify:", d.wealth.includes("Other") ? d.wealthOther : "");
+  };
 
-  heading("14", "Have you been involved in any of the below activities:");
-  options(CRIME_OPTIONS, d.crime);
-  if (d.crime.includes("Other")) field("If Other, please specify", d.crimeOther);
-
-  heading("15", "Have you been involved in any of the below:");
-  options(PEP_OPTIONS, d.pep);
-
-  heading("16", "SOURCE OF WEALTH DECLARATION", true);
-  options(WEALTH_SOURCES, d.wealth);
-  if (d.wealth.includes("Other")) field("Please specify", d.wealthOther);
+  licenceBlock(qn(13));
+  crimeBlock(qn(14));
+  pepBlock(qn(15));
+  wealthBlock(qn(16));
+  licenceBlock(qn(17));
+  crimeBlock(qn(18));
+  pepBlock(qn(19));
+  wealthBlock(qn(20));
 
   ensure(40);
   y -= 8;
-  const decl = wrap("Declaration: the applicant confirmed electronically that the information and documents given are true and complete.", italic, 8.5, W - MX * 2);
-  decl.forEach((l) => {
+  wrap("Declaration: the applicant confirmed electronically that the information and documents given are true and complete.", italic, 8.5, W - MX * 2).forEach((l) => {
     page.drawText(l, { x: MX, y, size: 8.5, font: italic, color: GREY });
     y -= 12;
   });
@@ -309,14 +375,13 @@ export async function buildRegistrationPdf(d: PdfInput): Promise<{ bytes: Uint8A
   pdf.setTitle(`Company registration form ${d.ref}`);
   pdf.setAuthor("Workdane Management Consultancy");
   const { count, font, bold } = await drawForm(pdf, d, (doc) => startPage.get(doc) ?? null);
-  const totalPages = count + [...pagesOf.entries()].filter(([k]) => !bad.has(k)).reduce((t, [, n]) => t + n, 0);
 
   const unmerged: Doc[] = [...bad];
+  const captionSet = new Set(font.getCharacterSet());
   for (const doc of d.documents) {
     if (bad.has(doc)) continue;
-    const caption = `Shareholder ${doc.holder} - ${doc.label}`
-      .split("")
-      .filter((c) => new Set(font.getCharacterSet()).has(c.codePointAt(0)!))
+    const caption = Array.from(`Shareholder ${doc.holder} - ${doc.label}`)
+      .filter((c) => captionSet.has(c.codePointAt(0)!))
       .join("");
     try {
       if (doc.type === "application/pdf") {
@@ -345,7 +410,7 @@ export async function buildRegistrationPdf(d: PdfInput): Promise<{ bytes: Uint8A
     }
   }
 
-  // page numbers, bottom right, like the original form
+  // page numbers, bottom right, like the printed form
   const all = pdf.getPageCount();
   for (let i = 0; i < all; i++) {
     const p = pdf.getPage(i);
@@ -353,7 +418,6 @@ export async function buildRegistrationPdf(d: PdfInput): Promise<{ bytes: Uint8A
     const t = `${i + 1}`;
     p.drawText(t, { x: width - 40 - font.widthOfTextAtSize(t, 9), y: i < count ? 36 : 20, size: 9, font, color: GREY });
   }
-  void totalPages;
 
   return { bytes: await pdf.save(), unmerged };
 }

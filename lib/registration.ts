@@ -20,7 +20,7 @@ export type Prefill = {
 export const ROLES = ["General Manager", "Board of Director", "Shareholder"] as const;
 
 export const WEALTH_SOURCES = [
-  "Capital of company, dividends or income from business",
+  "Capital of company/ dividends or income from business",
   "Professional salary",
   "Profit from sold or maturing investments",
   "Profits from property sale or lease",
@@ -30,8 +30,10 @@ export const WEALTH_SOURCES = [
   "Other",
 ] as const;
 
-export const CRIME_OPTIONS = ["Money laundering", "Corruption", "Fraud", "Criminal offence", "Other", "None of the above"] as const;
-export const PEP_OPTIONS = ["Politically exposed person (PEP)", "Government official", "None of the above"] as const;
+export const CRIME_OPTIONS = ["Money Laundering", "Corruption", "Fraud", "Criminal Offence", "Other", "None of the above"] as const;
+export const PEP_OPTIONS = ["Politically Exposed Person (PEP)", "Govt. Official", "None of the Above"] as const;
+export const NONE_CRIME = "None of the above";
+export const NONE_PEP = "None of the Above";
 
 export const FILE_SLOTS = [
   { key: "passport", label: "Passport scan", hint: "Clear colour scan of the photo page", required: true },
@@ -98,3 +100,10 @@ export const emptyShareholder = (): Shareholder => ({
 
 export const AUTHORITY = "Workdane Trading LLC";
 export const CONSULTANT = "Daniel Abebaw Anteneh";
+
+// Question numbers are fixed, whatever the number of shareholders: every shareholder sits under question 6,
+// and the questions after them are always 7 to 16.
+export const SHAREHOLDER_QUESTION = 6;
+export const holderNumber = () => SHAREHOLDER_QUESTION;
+export const questionNumber = (base: number) => base;
+// The printed form repeats questions 13 to 16 as 17 to 20.

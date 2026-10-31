@@ -9,12 +9,16 @@ import {
   AUTHORITY,
   CONSULTANT,
   CRIME_OPTIONS,
+  NONE_CRIME,
+  NONE_PEP,
   DRAFT_KEY,
   FILE_SLOTS,
   MAX_SHAREHOLDERS,
   PEP_OPTIONS,
   PREFILL_KEY,
   ROLES,
+  holderNumber,
+  questionNumber,
   WEALTH_SOURCES,
   emptyShareholder,
   type FileKey,
@@ -353,6 +357,7 @@ export default function RegistrationForm() {
     setStatus("error");
   };
 
+  const qn = (b: number) => questionNumber(b);
   const errCount = Object.values(errors).filter(Boolean).length;
 
   if (status === "sent") {
@@ -519,7 +524,7 @@ export default function RegistrationForm() {
         {step === 2 && (
           <div className="space-y-6">
             <div className={card}>
-              <h2 className="font-display text-[26px] font-bold text-heading">6. Share holders</h2>
+              <h2 className="font-display text-[26px] font-bold text-heading">{holderNumber()}. Share holders</h2>
               <p className="mt-2 text-[15px] leading-relaxed">Add every shareholder. You can have up to {MAX_SHAREHOLDERS}. The percentages must add up to 100%.</p>
               <div className="mt-6 flex flex-wrap items-center justify-between gap-5">
                 <div>
@@ -677,22 +682,22 @@ export default function RegistrationForm() {
             <h2 className="font-display text-[26px] font-bold text-heading">About your business</h2>
             <p className="mt-2 text-[15px] leading-relaxed">A few questions so we can understand how your company will operate.</p>
             <div className="mt-8 grid gap-6">
-              <Field id="turnover" label="7. Expected annual turnover (AED)">
+              <Field id="turnover" label={`${qn(7)}. Expected annual turnover (AED)`}>
                 <input id="turnover" inputMode="numeric" value={data.turnover} maxLength={20} onChange={(e) => set("turnover", e.target.value.replace(/[^\d,.]/g, ""))} placeholder="For example 500,000" className={input} />
               </Field>
-              <Field id="experience" label="8. Previous employment/business experience" hint="A brief description of your previous work experience.">
+              <Field id="experience" label={`${qn(8)}. Previous employment/business experience`} hint="A brief description of your previous work experience.">
                 <textarea id="experience" rows={3} maxLength={1500} value={data.experience} onChange={(e) => set("experience", e.target.value)} className={input} />
               </Field>
-              <Field id="businessDescription" label="9. Brief description of your intended business in UAE *" error={errors["businessDescription"]}>
+              <Field id="businessDescription" label={`${qn(9)}. Brief description of your intended business in UAE *`} error={errors["businessDescription"]}>
                 <textarea id="businessDescription" rows={4} maxLength={1500} value={data.businessDescription} aria-invalid={!!errors["businessDescription"]} onChange={(e) => { set("businessDescription", e.target.value); clearErr("businessDescription"); }} className={input} />
               </Field>
-              <Field id="targetCountries" label="10. List all the countries where your targeted customers will be based" hint="Include the UAE and any international markets.">
+              <Field id="targetCountries" label={`${qn(10)}. List all the countries where your targeted customers will be based`} hint="Include the UAE and any international markets.">
                 <textarea id="targetCountries" rows={2} maxLength={600} value={data.targetCountries} onChange={(e) => set("targetCountries", e.target.value)} className={input} />
               </Field>
-              <Field id="paymentFromCustomers" label="11. Mention the relevant payment methods you will be accepting from customers *" error={errors["paymentFromCustomers"]} hint="For example cash, bank transfer, card.">
+              <Field id="paymentFromCustomers" label={`${qn(11)}. Mention the relevant payment methods you will be accepting from customers *`} error={errors["paymentFromCustomers"]} hint="For example cash, bank transfer, card.">
                 <textarea id="paymentFromCustomers" rows={2} maxLength={600} value={data.paymentFromCustomers} aria-invalid={!!errors["paymentFromCustomers"]} onChange={(e) => { set("paymentFromCustomers", e.target.value); clearErr("paymentFromCustomers"); }} className={input} />
               </Field>
-              <Field id="paymentToSuppliers" label="12. Mention the primary payment method your company will use when transacting with suppliers *" error={errors["paymentToSuppliers"]} hint="For example cash, bank transfer, card.">
+              <Field id="paymentToSuppliers" label={`${qn(12)}. Mention the primary payment method your company will use when transacting with suppliers *`} error={errors["paymentToSuppliers"]} hint="For example cash, bank transfer, card.">
                 <textarea id="paymentToSuppliers" rows={2} maxLength={600} value={data.paymentToSuppliers} aria-invalid={!!errors["paymentToSuppliers"]} onChange={(e) => { set("paymentToSuppliers", e.target.value); clearErr("paymentToSuppliers"); }} className={input} />
               </Field>
             </div>
@@ -707,7 +712,7 @@ export default function RegistrationForm() {
 
             <div className="mt-8 space-y-9">
               <div data-field="otherLicence">
-                <p className={labelCls}>13. Do you hold any other business licence in the UAE or other country? *</p>
+                <p className={labelCls}>{qn(13)}. Do you hold any other business licence in the UAE or other country? *</p>
                 <Pills id="otherLicence" options={["Yes", "No"]} value={data.otherLicence ? [data.otherLicence] : []} invalid={!!errors["otherLicence"]} onChange={(v) => { set("otherLicence", (v[0] as "Yes" | "No") ?? ""); clearErr("otherLicence"); }} />
                 {data.otherLicence === "Yes" && (
                   <input aria-label="Other licence details" placeholder="Company name and the country it is based in" value={data.otherLicenceDetails} maxLength={400} onChange={(e) => set("otherLicenceDetails", e.target.value)} className={`${input} mt-3`} />
@@ -716,23 +721,44 @@ export default function RegistrationForm() {
               </div>
 
               <div data-field="crime">
-                <p className={labelCls}>14. Have you been involved in any of the below activities? *</p>
-                <Pills multi id="crime" options={CRIME_OPTIONS} value={data.crime} invalid={!!errors["crime"]} onChange={(v) => { set("crime", v.includes("None of the above") && !data.crime.includes("None of the above") ? ["None of the above"] : v.filter((x) => x !== "None of the above" || v.length === 1)); clearErr("crime"); }} />
+                <p className={labelCls}>{qn(14)}. Have you been involved in any of the below activities? *</p>
+                <Pills multi id="crime" options={CRIME_OPTIONS} value={data.crime} invalid={!!errors["crime"]} onChange={(v) => { set("crime", v.includes(NONE_CRIME) && !data.crime.includes(NONE_CRIME) ? [NONE_CRIME] : v.filter((x) => x !== NONE_CRIME || v.length === 1)); clearErr("crime"); }} />
                 {data.crime.includes("Other") && <input aria-label="Please specify" placeholder="Please specify" value={data.crimeOther} maxLength={300} onChange={(e) => set("crimeOther", e.target.value)} className={`${input} mt-3`} />}
                 {errors["crime"] && <p role="alert" className="mt-1.5 text-[13px] font-semibold text-red-600">{errors["crime"]}</p>}
               </div>
 
               <div data-field="pep">
-                <p className={labelCls}>15. Have you been involved in any of the below? *</p>
-                <Pills multi id="pep" options={PEP_OPTIONS} value={data.pep} invalid={!!errors["pep"]} onChange={(v) => { set("pep", v.includes("None of the above") && !data.pep.includes("None of the above") ? ["None of the above"] : v.filter((x) => x !== "None of the above" || v.length === 1)); clearErr("pep"); }} />
+                <p className={labelCls}>{qn(15)}. Have you been involved in any of the below? *</p>
+                <Pills multi id="pep" options={PEP_OPTIONS} value={data.pep} invalid={!!errors["pep"]} onChange={(v) => { set("pep", v.includes(NONE_PEP) && !data.pep.includes(NONE_PEP) ? [NONE_PEP] : v.filter((x) => x !== NONE_PEP || v.length === 1)); clearErr("pep"); }} />
                 {errors["pep"] && <p role="alert" className="mt-1.5 text-[13px] font-semibold text-red-600">{errors["pep"]}</p>}
               </div>
 
               <div data-field="wealth">
-                <p className={labelCls}>16. Source of wealth declaration * <span className="font-normal text-body">(choose all that apply)</span></p>
+                <p className={labelCls}>{qn(16)}. Source of wealth declaration * <span className="font-normal text-body">(choose all that apply)</span></p>
                 <Pills multi id="wealth" options={WEALTH_SOURCES} value={data.wealth} invalid={!!errors["wealth"]} onChange={(v) => { set("wealth", v); clearErr("wealth"); }} />
                 {data.wealth.includes("Other") && <input aria-label="Please specify" placeholder="Please specify" value={data.wealthOther} maxLength={300} onChange={(e) => set("wealthOther", e.target.value)} className={`${input} mt-3`} />}
                 {errors["wealth"] && <p role="alert" className="mt-1.5 text-[13px] font-semibold text-red-600">{errors["wealth"]}</p>}
+              </div>
+
+              <div className="rounded-2xl border border-dashed border-heading/25 bg-tint/60 p-5">
+                <p className="text-[15px] font-bold text-heading">{qn(17)} to {qn(20)} · The same four questions again</p>
+                <p className="mt-1 text-[13px] leading-relaxed text-body">Our printed form repeats questions {qn(13)} to {qn(16)} as {qn(17)} to {qn(20)}. We copy your answers, so you do not need to answer twice.</p>
+                <dl className="mt-4 space-y-3 text-[14px]">
+                  {[
+                    [qn(17), "Do you hold any other business licence?", data.otherLicence ? `${data.otherLicence}${data.otherLicence === "Yes" && data.otherLicenceDetails ? ` - ${data.otherLicenceDetails}` : ""}` : "-"],
+                    [qn(18), "Involved in any of the below activities", data.crime.length ? `${data.crime.join(", ")}${data.crimeOther ? ` (${data.crimeOther})` : ""}` : "-"],
+                    [qn(19), "Involved in any of the below", data.pep.length ? data.pep.join(", ") : "-"],
+                    [qn(20), "Source of wealth declaration", data.wealth.length ? `${data.wealth.join(", ")}${data.wealthOther ? ` (${data.wealthOther})` : ""}` : "-"],
+                  ].map(([n, q, a]) => (
+                    <div key={String(n)} className="grid grid-cols-[2.5rem_1fr] gap-2">
+                      <dt className="font-bold text-navy">{n}.</dt>
+                      <dd>
+                        <span className="block text-body">{q}</span>
+                        <strong className="text-heading">{a}</strong>
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
               </div>
 
               <div data-field="declaration" className={`rounded-2xl border p-5 ${errors["declaration"] ? "border-red-500 bg-red-50" : "border-line bg-tint"}`}>
