@@ -3,6 +3,12 @@ import EnquiryForm from "@/components/EnquiryForm";
 import Eyebrow from "@/components/Eyebrow";
 import FAQ from "@/components/FAQ";
 import PageHero from "@/components/PageHero";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "UAE Business Insights, Guides and FAQs | Workdane",
+  description: "Guides, news, events and answers to the questions founders ask most about starting and running a business in the UAE.",
+};
 
 const subscribe = [
   { name: "name", label: "Full name", required: true },

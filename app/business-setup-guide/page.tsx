@@ -6,6 +6,12 @@ import PageHero from "@/components/PageHero";
 import { setupSteps } from "@/lib/content";
 import { faqGroups } from "@/lib/faqs";
 import { landings } from "@/lib/landing-pages";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "UAE Business Setup Guide: Steps, Documents and FAQs | Workdane",
+  description: "A plain step-by-step guide to setting up a business in the UAE, with a document checklist and answers to common questions.",
+};
 
 const checklist = [
   { title: "Passport copies", text: "A clear copy of the passport for every owner and for each person who will manage the company." },

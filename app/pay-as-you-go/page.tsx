@@ -1,4 +1,10 @@
 import InfoPage from "@/components/InfoPage";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Pay-as-you-go UAE Company Setup | Workdane",
+  description: "Pay for your licence first and add visas, banking and other services as your business needs them. Ask Workdane about flexible company setup.",
+};
 
 export default function PayAsYouGo() {
   return (

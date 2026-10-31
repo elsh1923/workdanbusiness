@@ -4,7 +4,8 @@ import PageHero from "@/components/PageHero";
 import { ACTIVITY_COUNT } from "@/lib/activities";
 
 export const metadata: Metadata = {
-  title: "Business Activities | Workdane Management Consultancy",
+  alternates: { canonical: "/" },
+  title: "2,000+ Business Activities for a UAE Licence | Workdane Management Consultancy",
   description: "Search over 2,000 licensable business activities, see which need third-party approval and shortlist the ones you are considering.",
 };
 

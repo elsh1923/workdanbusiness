@@ -1,6 +1,12 @@
 import LinkRows from "@/components/LinkRows";
 import PageHero from "@/components/PageHero";
 import { startItems } from "@/lib/content";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Start Your Business in the UAE | Company Setup | Workdane",
+  description: "Everything you need to start a company in the UAE: choose your activities, estimate costs, check your trade name and follow the setup steps with Workdane.",
+};
 
 export default function StartYourBusiness() {
   return (

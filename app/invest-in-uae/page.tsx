@@ -1,4 +1,10 @@
 import InfoPage from "@/components/InfoPage";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Invest in the UAE: Ownership, Mainland or Free Zone | Workdane",
+  description: "Learn about ownership options, mainland and free zone structures and the advantages of setting up a business in the UAE.",
+};
 
 export default function InvestInUAE() {
   return (

@@ -1,6 +1,12 @@
 import LinkRows from "@/components/LinkRows";
 import PageHero from "@/components/PageHero";
 import { licenseItems } from "@/lib/content";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "UAE Business Licence Categories: Trading, Professional, IT, E-Commerce | Workdane",
+  description: "Compare the six UAE licence categories: general trading, professional services, IT services, e-commerce, administrative and marketing services.",
+};
 
 export default function LicenseCategories() {
   return (

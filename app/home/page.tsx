@@ -11,6 +11,12 @@ import Contact from "@/components/Contact";
 import Eyebrow from "@/components/Eyebrow";
 import { licenseCategories, plusServices } from "@/lib/content";
 import { categorySlug } from "@/lib/service-pages";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Business Consultants in the UAE | Company Setup in Dubai & Sharjah | Workdane",
+  description: "Workdane Management Consultancy helps you set up a company in the UAE: licences, visas, bank accounts, VAT and renewals, with offices in Dubai and Sharjah.",
+};
 
 export default function Home() {
   return (

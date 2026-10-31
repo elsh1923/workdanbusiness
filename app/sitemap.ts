@@ -6,8 +6,8 @@ import { categoryPages, plusPages } from "@/lib/service-pages";
 const base = process.env.SITE_URL ?? "http://localhost:3000";
 
 const pages = [
+  "/",
   "/home",
-  "/business-activities",
   "/start-your-business",
   "/license-categories",
   "/cost-calculator",

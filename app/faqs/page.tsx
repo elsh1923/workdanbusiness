@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import CtaBand from "@/components/CtaBand";
 import FaqSearch from "@/components/FaqSearch";
 import PageHero from "@/components/PageHero";
+import { allFaqs } from "@/lib/faqs";
 
 export const metadata: Metadata = {
   title: "FAQs | Workdane Management Consultancy",
@@ -11,6 +12,16 @@ export const metadata: Metadata = {
 export default function Faqs() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: allFaqs.map((q) => ({ "@type": "Question", name: q.q, acceptedAnswer: { "@type": "Answer", text: q.a } })),
+          }).replace(/</g, "\u003c"),
+        }}
+      />
       <PageHero
         eyebrow="FAQs"
         title={

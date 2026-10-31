@@ -2,6 +2,12 @@ import { BookOpen, Calculator, ClipboardList, HelpCircle, Newspaper, Search } fr
 import LinkRows from "@/components/LinkRows";
 import PageHero from "@/components/PageHero";
 import type { Item } from "@/lib/content";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Resource Hub | UAE Business Setup Resources | Workdane",
+  description: "Guides, tools and resources for setting up and running a business in the UAE.",
+};
 
 const resources: Item[] = [
   { label: "Business Setup Guide", href: "/business-setup-guide", desc: "Step-by-step guide from idea to licence.", icon: BookOpen },

@@ -1,4 +1,10 @@
 import InfoPage from "@/components/InfoPage";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Refer and Earn | Workdane Management Consultancy",
+  description: "Introduce a business to Workdane and share the reward when they set up a company in the UAE.",
+};
 
 export default function ReferAndEarn() {
   return (

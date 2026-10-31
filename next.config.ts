@@ -17,10 +17,12 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  // The site opens on the business activities page; the home page lives at /home.
+  // The site opens on the business activities page, without a redirect; the home page lives at /home.
+  async rewrites() {
+    return { beforeFiles: [{ source: "/", destination: "/business-activities" }], afterFiles: [], fallback: [] };
+  },
   async redirects() {
     return [
-      { source: "/", destination: "/business-activities", permanent: false },
       // Addresses people may type from other free zone sites.
       { source: "/business-activities/general-trading", destination: "/license-categories/general-trading", permanent: true },
       { source: "/business-activities/professional-services", destination: "/license-categories/professional-services", permanent: true },

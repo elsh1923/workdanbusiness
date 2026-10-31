@@ -2,6 +2,12 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import PageHero from "@/components/PageHero";
 import { plusServices } from "@/lib/content";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Workdane Plus: Banking, Visas, Documentation and Support | Workdane",
+  description: "Services beyond the licence: corporate banking assistance, visas, medical screening, documentation, customs code, coworking and a dedicated account manager.",
+};
 
 export default function WorkdanePlus() {
   return (

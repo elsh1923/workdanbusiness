@@ -1,6 +1,12 @@
 import EnquiryForm from "@/components/EnquiryForm";
 import Eyebrow from "@/components/Eyebrow";
 import PageHero from "@/components/PageHero";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Partner with Workdane | Channel and Corporate Partners in the UAE",
+  description: "Become a channel partner, request portal access or arrange corporate company setup services with Workdane Management Consultancy.",
+};
 
 export default function Partners() {
   return (
