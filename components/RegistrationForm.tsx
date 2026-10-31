@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Building2, Check, CircleAlert, FileCheck2, FileUp, Loader2, Minus, Plus, ShieldCheck, Trash2, UserRound, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Building2, CalendarDays, Check, CircleAlert, FileCheck2, FileUp, IdCard, Loader2, Mail, MapPin, Minus, Phone, Plus, ShieldCheck, Trash2, User, UserRound, Users, X, type LucideIcon } from "lucide-react";
 import { whatsappLink } from "@/lib/config";
 import { countries } from "@/lib/countries";
 import {
@@ -21,6 +21,10 @@ import {
   questionNumber,
   WEALTH_SOURCES,
   emptyShareholder,
+  EXPIRED_MESSAGE,
+  EXPIRES_SOON_MESSAGE,
+  expiresSoon,
+  isPastDate,
   isFullName,
   FULL_NAME_MESSAGE,
   type FileKey,
@@ -31,7 +35,7 @@ import {
 const input =
   "w-full rounded-xl border border-heading/20 bg-white px-4 py-3 text-[16px] text-heading outline-none transition placeholder:text-body/50 focus:border-navy focus:ring-2 focus:ring-navy/15 aria-[invalid=true]:border-red-500 aria-[invalid=true]:ring-2 aria-[invalid=true]:ring-red-500/15";
 const labelCls = "mb-1.5 block text-[13px] font-bold text-heading";
-const card = "rounded-3xl border border-line bg-white p-6 shadow-[0_24px_60px_-40px_rgba(12,42,85,0.35)] sm:p-9";
+const card = "rounded-3xl border border-line bg-white p-6 shadow-[0_30px_70px_-40px_rgba(12,42,85,0.45)] sm:p-9";
 
 const STEPS = [
   { id: 1, label: "Company", icon: Building2 },
@@ -82,6 +86,25 @@ async function prepare(file: File): Promise<File> {
     if (blob && blob.size < file.size) return new File([blob], file.name.replace(/\.\w+$/, "") + ".jpg", { type: "image/jpeg" });
   } catch {}
   return file;
+}
+
+function StepHeader({ n, icon: Icon, title, text }: { n: number; icon: LucideIcon; title: string; text: string }) {
+  return (
+    <div className="relative -mx-6 -mt-6 mb-8 overflow-hidden rounded-t-3xl bg-gradient-to-r from-[#022364] to-[#073eab] px-6 py-6 text-white sm:-mx-9 sm:-mt-9 sm:px-9 sm:py-7">
+      <span aria-hidden className="absolute -right-10 -top-16 h-44 w-44 rounded-full bg-gold/25 blur-2xl" />
+      <div className="relative flex items-center gap-4">
+        <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/12 ring-1 ring-white/25">
+          <Icon className="h-7 w-7 text-gold-light" />
+        </span>
+        <div className="min-w-0">
+          <p className="text-[11px] font-extrabold uppercase tracking-[0.28em] text-gold-light">Step {n} of 4</p>
+          <h2 className="font-display text-[24px] font-bold leading-tight sm:text-[27px]">{title}</h2>
+          <p className="mt-1 text-[14px] leading-relaxed text-white/85">{text}</p>
+        </div>
+      </div>
+      <span aria-hidden className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-gold to-gold-light" />
+    </div>
+  );
 }
 
 function Field({ id, label, error, hint, children, className = "" }: { id: string; label: string; error?: string; hint?: string; children: React.ReactNode; className?: string }) {
@@ -181,6 +204,7 @@ export default function RegistrationForm() {
   const [files, setFiles] = useState<Record<string, File>>({});
   const [step, setStep] = useState(1);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [warns, setWarns] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [serverMsg, setServerMsg] = useState("");
   const [ref, setRef] = useState("");
@@ -288,6 +312,7 @@ export default function RegistrationForm() {
         need(`${p}passportNo`, h.passportNo, "Required");
         need(`${p}nationality`, h.nationality, "Required");
         need(`${p}passportExpiry`, h.passportExpiry, "Required");
+        if (h.passportExpiry && isPastDate(h.passportExpiry)) e[`${p}passportExpiry`] = EXPIRED_MESSAGE;
         if (!h.uaeResident) e[`${p}uaeResident`] = "Please choose";
         FILE_SLOTS.forEach((slot) => {
           if (slot.required && !files[`sh${i}_${slot.key}`]) e[`sh${i}_${slot.key}`] = "Please upload this document";
@@ -392,7 +417,8 @@ export default function RegistrationForm() {
     <section ref={top} className="scroll-mt-24 bg-tint px-6 py-14 sm:px-12 lg:px-16">
       <div className="mx-auto max-w-[1040px]">
         {/* stepper */}
-        <ol className="mb-8 grid grid-cols-4 gap-2 sm:gap-4">
+        <div className="mb-8 rounded-3xl border border-line bg-white p-5 shadow-[0_20px_50px_-35px_rgba(12,42,85,0.4)] sm:p-6">
+        <ol className="grid grid-cols-4 gap-2 sm:gap-4">
           {STEPS.map((s) => {
             const Icon = s.icon;
             const done = step > s.id;
@@ -412,8 +438,9 @@ export default function RegistrationForm() {
             );
           })}
         </ol>
-        <div className="mb-6 h-1.5 overflow-hidden rounded-full bg-white">
-          <div className="h-full rounded-full bg-navy transition-all duration-500" style={{ width: `${(step / 4) * 100}%` }} />
+        <div className="mt-5 h-2 overflow-hidden rounded-full bg-tint">
+          <div className="h-full rounded-full bg-gradient-to-r from-navy to-[#0b52d6] transition-all duration-500" style={{ width: `${(step / 4) * 100}%` }} />
+        </div>
         </div>
 
         {prefilled && step === 1 && (
@@ -426,8 +453,7 @@ export default function RegistrationForm() {
         {/* STEP 1 */}
         {step === 1 && (
           <div className={card}>
-            <h2 className="font-display text-[26px] font-bold text-heading">Company details</h2>
-            <p className="mt-2 text-[15px] leading-relaxed">Tell us what your company will be called and what it will do.</p>
+            <StepHeader n={1} icon={Building2} title="Company details" text="Tell us what your company will be called and what it will do." />
 
             <div className="mt-8 grid gap-6 sm:grid-cols-2">
               <Field id="authority" label="1. Registration authority">
@@ -529,8 +555,7 @@ export default function RegistrationForm() {
         {step === 2 && (
           <div className="space-y-6">
             <div className={card}>
-              <h2 className="font-display text-[26px] font-bold text-heading">{holderNumber()}. Share holders</h2>
-              <p className="mt-2 text-[15px] leading-relaxed">Add every shareholder. You can have up to {MAX_SHAREHOLDERS}. The percentages must add up to 100%.</p>
+              <StepHeader n={2} icon={UserRound} title={`${holderNumber()}. Share holders`} text={`Add every shareholder. You can have up to ${MAX_SHAREHOLDERS}. The percentages must add up to 100%.`} />
               <div className="mt-6 flex flex-wrap items-center justify-between gap-5">
                 <div>
                   <p className={labelCls}>Number of shareholders</p>
@@ -569,8 +594,9 @@ export default function RegistrationForm() {
             {data.shareholders.map((h, i) => {
               const p = `sh-${i}-`;
               const er = (k: string) => errors[`${p}${k}`];
-              const text = (k: keyof typeof h, label: string, opts: { type?: string; required?: boolean; autoComplete?: string; wide?: boolean; ph?: string } = {}) => (
-                <Field id={`${p}${k}`} label={`${label}${opts.required === false ? "" : " *"}`} error={er(k)} className={opts.wide ? "sm:col-span-2" : ""}>
+              const text = (k: keyof typeof h, label: string, opts: { type?: string; required?: boolean; autoComplete?: string; wide?: boolean; ph?: string; icon?: LucideIcon } = {}) => {
+                const Icon = opts.icon;
+                const el = (
                   <input
                     id={`${p}${k}`}
                     type={opts.type ?? "text"}
@@ -582,25 +608,53 @@ export default function RegistrationForm() {
                     onChange={(e) => {
                       setHolder(i, { [k]: e.target.value } as Partial<typeof h>);
                       clearErr(`${p}${k}`);
+                      if (k === "passportExpiry") {
+                        const v = e.target.value;
+                        setWarns((w) => ({ ...w, [`${p}${k}`]: v && expiresSoon(v) ? EXPIRES_SOON_MESSAGE : "" }));
+                      }
                     }}
-                    className={input}
+                    className={Icon ? `${input} pl-11` : input}
                   />
-                </Field>
-              );
+                );
+                return (
+                  <Field id={`${p}${k}`} label={`${label}${opts.required === false ? "" : " *"}`} error={er(k)} className={opts.wide ? "sm:col-span-2" : ""}>
+                    {k === "passportExpiry" && warns[`${p}${k}`] && !er(k) && (
+                      <p className="mb-2 flex items-start gap-2 rounded-lg bg-gold/15 px-3 py-2 text-[12px] font-semibold leading-snug text-bronze">
+                        <CircleAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                        {warns[`${p}${k}`]}
+                      </p>
+                    )}
+                    {Icon ? (
+                      <div className="relative">
+                        <Icon className="pointer-events-none absolute left-4 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-navy/60" />
+                        {el}
+                      </div>
+                    ) : (
+                      el
+                    )}
+                  </Field>
+                );
+              };
               return (
                 <div key={i} className={card}>
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-11 w-11 items-center justify-center rounded-full bg-navy text-[16px] font-bold text-white">{i + 1}</span>
-                    <h3 className="font-display text-[22px] font-bold text-heading">Share holder {i + 1}</h3>
+                  <div className="-mx-6 -mt-6 mb-7 flex items-center gap-4 rounded-t-3xl border-b border-line bg-gradient-to-r from-navy/8 to-transparent px-6 py-5 sm:-mx-9 sm:-mt-9 sm:px-9">
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-navy text-[18px] font-bold text-white shadow-[0_10px_24px_-10px_rgba(7,57,157,0.8)]">{i + 1}</span>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-display text-[22px] font-bold leading-tight text-heading">Share holder {i + 1}</h3>
+                      <p className="truncate text-[13px] text-body">{h.fullName || "Details of this shareholder"}</p>
+                    </div>
+                    {h.percent && <span className="shrink-0 rounded-full bg-gold/20 px-4 py-1.5 text-[15px] font-bold text-bronze">{h.percent}%</span>}
                   </div>
+                  <p className="mb-3 text-[12px] font-extrabold uppercase tracking-[0.22em] text-bronze">Role and share</p>
 
-                  <div className="mt-6" data-field={`${p}roles`}>
+                  <div data-field={`${p}roles`}>
                     <p className={labelCls}>Role * <span className="font-normal text-body">(choose all that apply)</span></p>
                     <Pills multi id={`${p}roles`} options={ROLES} value={h.roles} invalid={!!er("roles")} onChange={(v) => { setHolder(i, { roles: v }); clearErr(`${p}roles`); }} />
                     {er("roles") && <p role="alert" className="mt-1.5 text-[13px] font-semibold text-red-600">{er("roles")}</p>}
                   </div>
 
-                  <div className="mt-6 grid gap-5 sm:grid-cols-2">
+                  <p className="mb-3 mt-9 text-[12px] font-extrabold uppercase tracking-[0.22em] text-bronze">Personal details</p>
+                  <div className="grid gap-5 sm:grid-cols-2">
                     <Field id={`${p}percent`} label="Shareholding percentage *" error={er("percent")} hint="From 100%">
                       <div className="relative">
                         <input
@@ -623,13 +677,13 @@ export default function RegistrationForm() {
                         <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-body">%</span>
                       </div>
                     </Field>
-                    {text("fullName", "Full name (as in passport)", { autoComplete: "name", ph: "First name and last name" })}
-                    {text("phone", "Contact number", { type: "tel", autoComplete: "tel", ph: "+971 5X XXX XXXX" })}
-                    {text("email", "Email", { type: "email", autoComplete: "email" })}
-                    {text("address", "Home address", { wide: true })}
-                    {text("fatherName", "Father’s full name", { ph: "First name and last name" })}
-                    {text("motherName", "Mother’s full name", { required: false, ph: "First name and last name" })}
-                    {text("passportNo", "Passport number")}
+                    {text("fullName", "Full name (as in passport)", { autoComplete: "name", ph: "First name and last name", icon: User })}
+                    {text("phone", "Contact number", { type: "tel", autoComplete: "tel", ph: "+971 5X XXX XXXX", icon: Phone })}
+                    {text("email", "Email", { type: "email", autoComplete: "email", ph: "name@example.com", icon: Mail })}
+                    {text("address", "Home address", { wide: true, ph: "Street, city, country", icon: MapPin })}
+                    {text("fatherName", "Father’s full name", { ph: "First name and last name", icon: Users })}
+                    {text("motherName", "Mother’s full name", { required: false, ph: "First name and last name", icon: Users })}
+                    {text("passportNo", "Passport number", { icon: IdCard })}
                     <Field id={`${p}nationality`} label="Nationality *" error={er("nationality")}>
                       <select
                         id={`${p}nationality`}
@@ -647,7 +701,7 @@ export default function RegistrationForm() {
                         ))}
                       </select>
                     </Field>
-                    {text("passportExpiry", "Passport expiry date", { type: "date" })}
+                    {text("passportExpiry", "Passport expiry date", { type: "date", icon: CalendarDays })}
                     <div data-field={`${p}uaeResident`}>
                       <p className={labelCls}>Are you a UAE resident? *</p>
                       <Pills id={`${p}uaeResident`} options={["Yes", "No"]} value={h.uaeResident ? [h.uaeResident] : []} invalid={!!er("uaeResident")} onChange={(v) => { setHolder(i, { uaeResident: (v[0] as "Yes" | "No") ?? "" }); clearErr(`${p}uaeResident`); }} />
@@ -684,8 +738,7 @@ export default function RegistrationForm() {
         {/* STEP 3 */}
         {step === 3 && (
           <div className={card}>
-            <h2 className="font-display text-[26px] font-bold text-heading">About your business</h2>
-            <p className="mt-2 text-[15px] leading-relaxed">A few questions so we can understand how your company will operate.</p>
+            <StepHeader n={3} icon={FileCheck2} title="About your business" text="A few questions so we can understand how your company will operate." />
             <div className="mt-8 grid gap-6">
               <Field id="turnover" label={`${qn(7)}. Expected annual turnover (AED)`}>
                 <input id="turnover" inputMode="numeric" value={data.turnover} maxLength={20} onChange={(e) => set("turnover", e.target.value.replace(/[^\d,.]/g, ""))} placeholder="For example 500,000" className={input} />
@@ -712,8 +765,7 @@ export default function RegistrationForm() {
         {/* STEP 4 */}
         {step === 4 && (
           <div className={card}>
-            <h2 className="font-display text-[26px] font-bold text-heading">Declarations</h2>
-            <p className="mt-2 text-[15px] leading-relaxed">These are standard compliance questions. Please answer honestly.</p>
+            <StepHeader n={4} icon={ShieldCheck} title="Declarations" text="These are standard compliance questions. Please answer honestly." />
 
             <div className="mt-8 space-y-9">
               <div data-field="otherLicence">
@@ -794,7 +846,7 @@ export default function RegistrationForm() {
           </p>
         )}
 
-        <div className="mt-8 flex items-center justify-between gap-4">
+        <div className="sticky bottom-4 z-20 mt-8 flex items-center justify-between gap-4 rounded-2xl border border-line bg-white/95 p-3 shadow-[0_20px_50px_-20px_rgba(12,42,85,0.5)] backdrop-blur sm:p-4">
           <button type="button" onClick={back} disabled={step === 1 || status === "sending"} className="flex items-center gap-2 rounded-full border border-heading/25 px-6 py-3.5 text-[15px] font-bold text-heading transition hover:border-navy disabled:invisible">
             <ArrowLeft className="h-4 w-4" /> Back
           </button>

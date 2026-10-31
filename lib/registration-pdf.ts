@@ -1,5 +1,5 @@
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from "pdf-lib";
-import { CRIME_OPTIONS, FILE_SLOTS, PEP_OPTIONS, WEALTH_SOURCES, holderNumber, questionNumber } from "./registration";
+import { CRIME_OPTIONS, FILE_SLOTS, PEP_OPTIONS, WEALTH_SOURCES, formatDate, holderNumber, questionNumber } from "./registration";
 
 export type PdfShareholder = {
   roles: string[];
@@ -262,7 +262,7 @@ async function drawForm(pdf: PDFDocument, d: PdfInput, pageOf: (doc: Doc) => num
     field(`Share holder ${n}: Mother's Full Name`, h.motherName);
     field(`Share holder ${n}: Passport Number`, h.passportNo);
     field(`Share holder ${n}: Nationality`, h.nationality);
-    field(`Share holder ${n}: Passport Expiry Date`, h.passportExpiry);
+    field(`Share holder ${n}: Passport Expiry Date`, formatDate(h.passportExpiry));
     field(`Share holder ${n}: Are you A UAE Resident? Yes /No`, h.uaeResident);
 
     ensure(40 + FILE_SLOTS.length * 18);

@@ -2,7 +2,7 @@
 
 import { useDeferredValue, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowDown, ArrowRight, ArrowLeftRight, Briefcase, Building2, Check, ChevronDown, ClipboardList, FileDown, HeartPulse, IdCard, Landmark, LayoutGrid, Loader2, Lock, Minus, Newspaper, Package, Percent, PhoneCall, Plus, Receipt, ScanFace, Search, ShieldCheck, Stamp, Truck, Users, Wrench, X } from "lucide-react";
+import { ArrowDown, Globe, Link2, LockOpen, Mail, User, ArrowRight, ArrowLeftRight, Briefcase, Building2, Check, ChevronDown, ClipboardList, FileDown, HeartPulse, IdCard, Landmark, LayoutGrid, Loader2, Lock, Minus, Newspaper, Package, Percent, PhoneCall, Plus, Receipt, ScanFace, Search, ShieldCheck, Stamp, Truck, Users, Wrench, X } from "lucide-react";
 import Image from "next/image";
 import { activities, type Activity } from "@/lib/activity-data";
 import { calc, employeeVisaTotal, investorVisaTotal, popularCodes } from "@/lib/calculator-config";
@@ -17,10 +17,9 @@ const fmt = (n: number) => n.toLocaleString("en-US");
 const aed = (n: number) => `AED ${fmt(Math.round(n))}`;
 
 const stepTitle = "font-display text-[26px] font-bold text-heading";
-const stepNo = "mb-3 text-[13px] font-extrabold uppercase tracking-[0.25em] text-bronze";
-const field =
-  "w-full border-b border-heading/25 bg-transparent py-3 text-[16px] text-heading outline-none transition placeholder:text-body/50 focus:border-gold";
-const label = "mb-1 block text-[12px] font-extrabold uppercase tracking-[0.2em] text-bronze";
+const box =
+  "w-full rounded-xl border border-heading/20 bg-white py-3.5 pl-11 pr-4 text-[16px] text-heading outline-none transition placeholder:text-body/45 hover:border-heading/40 focus:border-navy focus:ring-4 focus:ring-navy/10";
+const boxLabel = "mb-2 block text-[13px] font-bold text-heading";
 
 function Stepper({ value, onChange, min = 0, max, name }: { value: number; onChange: (n: number) => void; min?: number; max: number; name: string }) {
   return (
@@ -422,9 +421,13 @@ export default function CostCalculator() {
 
           {/* 01 details */}
           <div id="calc-step-1" className={`${sectionCls(1)} !pointer-events-auto !opacity-100`}>
-            <p className={stepNo}>01</p>
-            <h2 className={stepTitle}>First, a few quick details!</h2>
-            <p className="mt-3 max-w-xl text-[15px] leading-relaxed">Let’s get started by sharing some basic information about yourself. Nothing is sent until you ask for the quote.</p>
+            <div className="flex items-center gap-4">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-navy text-[15px] font-extrabold text-white shadow-[0_10px_24px_-10px_rgba(7,57,157,0.8)]">01</span>
+              <div>
+                <h2 className={stepTitle}>First, a few quick details!</h2>
+                <p className="mt-1 max-w-xl text-[15px] leading-relaxed">Tell us who you are so we can prepare your estimate. Nothing is sent until you ask for the quote.</p>
+              </div>
+            </div>
             {unlocked ? (
               <div className="mt-8 flex flex-wrap items-center gap-4 rounded-2xl border border-line bg-tint p-5 text-[15px]">
                 <Check className="h-5 w-5 text-[#0f7d46]" />
@@ -439,7 +442,7 @@ export default function CostCalculator() {
               </div>
             ) : (
               <form
-                className="mt-8 grid gap-7 md:grid-cols-2"
+                className="mt-8 grid gap-6 md:grid-cols-2"
                 onSubmit={(e) => {
                   e.preventDefault();
                   if (!detailsOk) return;
@@ -451,17 +454,33 @@ export default function CostCalculator() {
                 }}
               >
                 <label className="block">
-                  <span className={label}>Full name *</span>
-                  <input value={details.name} onChange={(e) => setDetails({ ...details, name: e.target.value })} required maxLength={100} autoComplete="name" className={field} />
+                  <span className={boxLabel}>
+                    Full name <span className="text-red-500">*</span>
+                  </span>
+                  <span className="relative block">
+                    <User className="pointer-events-none absolute left-4 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-navy/60" />
+                    <input value={details.name} onChange={(e) => setDetails({ ...details, name: e.target.value })} required maxLength={100} autoComplete="name" placeholder="Your full name" className={box} />
+                  </span>
                 </label>
                 <label className="block">
-                  <span className={label}>Email *</span>
-                  <input type="email" value={details.email} onChange={(e) => setDetails({ ...details, email: e.target.value })} required maxLength={150} autoComplete="email" className={field} />
+                  <span className={boxLabel}>
+                    Email <span className="text-red-500">*</span>
+                  </span>
+                  <span className="relative block">
+                    <Mail className="pointer-events-none absolute left-4 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-navy/60" />
+                    <input type="email" value={details.email} onChange={(e) => setDetails({ ...details, email: e.target.value })} required maxLength={150} autoComplete="email" placeholder="you@company.com" className={box} />
+                  </span>
                 </label>
                 <div className="block md:col-span-2">
-                  <span className={label}>Phone *</span>
+                  <span className={boxLabel}>
+                    Phone / WhatsApp <span className="text-red-500">*</span>
+                  </span>
                   <div className="flex gap-3">
-                    <DialSelect value={details.dial} onChange={(dial) => setDetails({ ...details, dial })} className={field} />
+                    <DialSelect
+                      value={details.dial}
+                      onChange={(dial) => setDetails({ ...details, dial })}
+                      className="rounded-xl border border-heading/20 bg-white px-3.5 py-3.5 transition hover:border-heading/40 focus:border-navy focus:ring-4 focus:ring-navy/10"
+                    />
                     <input
                       type="tel"
                       inputMode="tel"
@@ -471,30 +490,51 @@ export default function CostCalculator() {
                       maxLength={20}
                       pattern="[\d\s\-()+]{6,20}"
                       title="Enter the number without the country code"
-                      className={`${field} min-w-0 flex-1`}
+                      autoComplete="tel-national"
+                      placeholder="5X XXX XXXX"
+                      className={`${box} min-w-0 flex-1 !pl-4`}
                     />
                   </div>
+                  <p className="mt-2 text-[12px] text-body">We may contact you here to follow up on your quote.</p>
                 </div>
                 <label className="block">
-                  <span className={label}>Nationality (optional)</span>
-                  <select value={details.nationality} onChange={(e) => setDetails({ ...details, nationality: e.target.value })} className={`${field} bg-white`}>
-                    <option value="">Select your nationality</option>
-                    {countries.map((c) => (
-                      <option key={c.name}>{c.name}</option>
-                    ))}
-                  </select>
+                  <span className={boxLabel}>
+                    Nationality <span className="font-normal text-body">(optional)</span>
+                  </span>
+                  <span className="relative block">
+                    <Globe className="pointer-events-none absolute left-4 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-navy/60" />
+                    <select value={details.nationality} onChange={(e) => setDetails({ ...details, nationality: e.target.value })} className={`${box} appearance-none`}>
+                      <option value="">Select nationality</option>
+                      {countries.map((c) => (
+                        <option key={c.name}>{c.name}</option>
+                      ))}
+                    </select>
+                    <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-body" />
+                  </span>
                 </label>
-                <label className="block md:col-span-2">
-                  <span className={label}>Website (optional)</span>
-                  <input value={details.website} onChange={(e) => setDetails({ ...details, website: e.target.value })} maxLength={150} className={field} />
+                <label className="block">
+                  <span className={boxLabel}>
+                    Website <span className="font-normal text-body">(optional)</span>
+                  </span>
+                  <span className="relative block">
+                    <Link2 className="pointer-events-none absolute left-4 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-navy/60" />
+                    <input value={details.website} onChange={(e) => setDetails({ ...details, website: e.target.value })} maxLength={150} placeholder="yourcompany.com" className={box} />
+                  </span>
                 </label>
-                <label className="flex items-start gap-3 text-[14px] leading-relaxed md:col-span-2">
-                  <input type="checkbox" required checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-1 h-4 w-4 accent-[#07399d]" />
-                  I consent to receiving my quote by email, phone or WhatsApp. An adviser may contact me to follow up on my enquiry.
+                <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-line bg-tint p-4 text-[14px] leading-relaxed md:col-span-2">
+                  <input type="checkbox" required checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-0.5 h-5 w-5 shrink-0 accent-[#07399d]" />
+                  <span>I consent to receiving my quote by email, phone or WhatsApp. An adviser may contact me to follow up on my enquiry.</span>
                 </label>
-                <button type="submit" className={`${nextBtn} md:col-span-2 md:justify-self-start`}>
-                  Unlock my estimate
-                </button>
+                <div className="flex flex-wrap items-center gap-x-6 gap-y-3 md:col-span-2">
+                  <button type="submit" className="gold-gradient btn-shine flex items-center gap-2.5 rounded-full px-9 py-4 text-[16px] font-bold text-midnight shadow-[0_14px_30px_-14px_rgba(217,154,11,0.8)] transition hover:-translate-y-0.5">
+                    <LockOpen className="h-5 w-5" />
+                    Unlock my estimate
+                  </button>
+                  <p className="flex items-center gap-2 text-[13px] text-body">
+                    <Check className="h-4 w-4 text-[#0f7d46]" />
+                    Free to use. No payment. No obligation.
+                  </p>
+                </div>
               </form>
             )}
           </div>

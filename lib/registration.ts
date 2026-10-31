@@ -111,3 +111,29 @@ export const questionNumber = (base: number) => base;
 // A full name has at least two words (for example a first and a last name).
 export const isFullName = (v: string) => v.trim().split(/\s+/).filter(Boolean).length >= 2;
 export const FULL_NAME_MESSAGE = "Please enter the full name (at least first and last name)";
+
+// Passport expiry helpers. Dates arrive from the date picker as "YYYY-MM-DD".
+const toDate = (iso: string) => {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  return m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])) : null;
+};
+export const isPastDate = (iso: string, now = new Date()) => {
+  const d = toDate(iso);
+  if (!d) return false;
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return d < today;
+};
+// True when the date is today or later but within the next six months.
+export const expiresSoon = (iso: string, now = new Date()) => {
+  const d = toDate(iso);
+  if (!d || isPastDate(iso, now)) return false;
+  const limit = new Date(now.getFullYear(), now.getMonth() + 6, now.getDate());
+  return d < limit;
+};
+// "2030-01-01" -> "01/01/2030", the way the printed form and most readers write it.
+export const formatDate = (iso: string) => {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  return m ? `${m[3]}/${m[2]}/${m[1]}` : iso;
+};
+export const EXPIRED_MESSAGE = "This passport has expired. Please enter a passport that is still valid.";
+export const EXPIRES_SOON_MESSAGE = "This passport expires within 6 months. Visa applications usually need longer validity. You can still continue.";

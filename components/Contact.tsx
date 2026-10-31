@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { ArrowUpRight, CheckCircle2, Loader2, Mail, MapPin, MessageCircle, Phone, ShieldCheck } from "lucide-react";
 import { CONTACT, OFFICES, whatsappLink } from "@/lib/config";
+import { fullPhone } from "@/lib/countries";
+import PhoneField from "./PhoneField";
 import Eyebrow from "./Eyebrow";
 import { Reveal } from "./motion";
 import { useFormSubmit } from "./useFormSubmit";
@@ -47,7 +49,7 @@ export default function Contact() {
     await submit(
       [
         { label: "Full name", value: get("name") },
-        { label: "Phone / WhatsApp", value: get("phone"), type: "tel" },
+        { label: "Phone / WhatsApp", value: fullPhone(get("phoneDial"), get("phone")), type: "tel" },
         { label: "Email", value: get("email"), type: "email" },
         { label: "Needs help with", value: get("interest") },
         { label: "Message", value: get("message") },
@@ -148,17 +150,7 @@ export default function Contact() {
                       </label>
                       <label className="block">
                         <span className={label}>Phone / WhatsApp *</span>
-                        <input
-                          required
-                          type="tel"
-                          name="phone"
-                          autoComplete="tel"
-                          inputMode="tel"
-                          placeholder="+971 5X XXX XXXX"
-                          pattern="[+()\d\s\-]{7,20}"
-                          title="Enter a valid phone number, for example +971 56 537 4748"
-                          className={input}
-                        />
+                        <PhoneField name="phone" required className={input} />
                       </label>
                     </div>
 
