@@ -30,7 +30,7 @@ export const calc = {
 
   // TODO: placeholder.
   includedShareholders: 5,
-  maxShareholders: 10,
+  maxShareholders: 7,
   extraShareholder: 500,
 
   // TODO: placeholder. Licence length in years, and the percentage taken off for committing to it.

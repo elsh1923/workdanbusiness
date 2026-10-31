@@ -9,6 +9,7 @@ import { calc, employeeVisaTotal, investorVisaTotal, popularCodes } from "@/lib/
 import { ACTIVITY_COUNT } from "@/lib/activities";
 import { CONTACT, INDICATIVE_NOTE, LOGO_LIGHT, OFFICES } from "@/lib/config";
 import { countries, fullPhone } from "@/lib/countries";
+import { PREFILL_KEY, type Prefill } from "@/lib/registration";
 import { useFormSubmit } from "./useFormSubmit";
 
 const fmt = (n: number) => n.toLocaleString("en-US");
@@ -208,7 +209,7 @@ export default function CostCalculator() {
   const detailsOk = details.name.trim().length > 1 && /^\S+@\S+\.\S+$/.test(details.email) && (details.phone.replace(/\D/g, "").length >= 6 && details.phone.replace(/\D/g, "").length <= 15) && consent;
 
   const emailQuote = async () => {
-    await submit(
+    const ok = await submit(
       [
         { label: "Name", value: details.name },
         { label: "Email", value: details.email, type: "email" },
@@ -224,6 +225,24 @@ export default function CostCalculator() {
       ],
       "",
     );
+    if (ok) {
+      // Lets the registration form start from what the visitor chose here.
+      const prefill: Prefill = {
+        name: details.name,
+        email: details.email,
+        dial: details.dial,
+        phone: details.phone,
+        nationality: details.nationality,
+        activities: picked.map((a) => ({ code: a.sub, name: a.name })),
+        shareholders,
+        investorVisas: needVisa ? investor : 0,
+        employeeVisas: needVisa ? employee : 0,
+      };
+      try {
+        localStorage.setItem(PREFILL_KEY, JSON.stringify(prefill));
+        localStorage.removeItem("workdane-registration-draft");
+      } catch {}
+    }
   };
 
   const minLicence = Math.min(...Object.values(calc.licence));
@@ -259,10 +278,13 @@ export default function CostCalculator() {
   const nextBtn = "gold-gradient btn-shine rounded-full px-7 py-3.5 text-[15px] font-bold text-midnight transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60";
 
   const sumOf = (pred: (label: string) => boolean) => lines.filter((l) => pred(l.label)).reduce((t, l) => t + l.amount, 0);
+  // The office lease and management fee are added when the visitor reaches the final estimate.
+  const otherFees = sumOf((l) => /^(Office lease|Management fee)/.test(l));
+  const finalReached = step >= 6;
+  const summaryTotal = finalReached ? total : total - otherFees;
   const summaryRows = [
     { label: "Business licence", amount: sumOf((l) => groupOf(l) === "Business licence" && !/^(Office lease|Management fee)/.test(l)) },
-    { label: "Office lease agreement", amount: sumOf((l) => l.startsWith("Office lease")) },
-    { label: "Management fee", amount: sumOf((l) => l.startsWith("Management fee")) },
+    ...(finalReached ? [{ label: "Other fees", amount: otherFees }] : []),
     { label: "Visa fees", amount: sumOf((l) => groupOf(l) === "Visa fees") },
     { label: "Value-added services", amount: sumOf((l) => groupOf(l) === "Value-added services") },
   ].filter((r) => r.amount !== 0);
@@ -322,7 +344,7 @@ export default function CostCalculator() {
           <hr className="my-5 border-line" />
           <div className="flex items-center justify-between gap-3">
             <p className="text-[16px] font-bold text-heading">Estimated total</p>
-            <p className="font-display text-[28px] font-extrabold leading-none text-heading">{aed(total)}</p>
+            <p className="font-display text-[28px] font-extrabold leading-none text-heading">{aed(summaryTotal)}</p>
           </div>
           <p className="mt-4 text-[14px] text-body">
             Prefer to split your costs?{" "}
@@ -1007,6 +1029,10 @@ export default function CostCalculator() {
                 <div role="status" className="mt-6 rounded-xl bg-[#0f7d46]/10 p-4 text-[15px] leading-relaxed text-heading">
                   <p className="font-bold">On its way.</p>
                   We have your selections and will email you the full breakdown. An adviser will follow up shortly.
+                  <Link href="/company-registration" className="gold-gradient btn-shine mt-4 flex w-fit items-center gap-2 rounded-full px-7 py-3.5 text-[15px] font-bold text-midnight">
+                    Continue to the registration form <ArrowRight className="h-4 w-4" />
+                  </Link>
+                  <p className="mt-2 text-[13px] text-body">Your activities, visas and contact details are filled in for you.</p>
                 </div>
               ) : (
                 <div className="mt-6 flex flex-wrap items-center gap-3 print:hidden">

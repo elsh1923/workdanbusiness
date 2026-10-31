@@ -7,7 +7,8 @@ export class MailNotConfigured extends Error {
   }
 }
 
-export type Mail = { subject: string; text: string; html: string; replyTo?: string };
+export type Attachment = { filename: string; content: Buffer; contentType?: string };
+export type Mail = { subject: string; text: string; html: string; replyTo?: string; attachments?: Attachment[] };
 
 // Sends the enquiry to the team inbox. Configure SMTP_USER and SMTP_PASS in .env.local (see .env.example).
 export async function sendMail(mail: Mail) {
@@ -15,12 +16,19 @@ export async function sendMail(mail: Mail) {
 
   // Test mode: builds the message without sending it.
   if (process.env.CONTACT_DRY_RUN === "true") {
+    const { attachments, ...rest } = mail;
+    // CONTACT_DRY_RUN_DIR lets a developer open the generated attachments without sending anything.
+    if (process.env.CONTACT_DRY_RUN_DIR && attachments?.length) {
+      const { mkdirSync, writeFileSync } = await import("node:fs");
+      mkdirSync(process.env.CONTACT_DRY_RUN_DIR, { recursive: true });
+      for (const a of attachments) writeFileSync(`${process.env.CONTACT_DRY_RUN_DIR}/${a.filename}`, a.content);
+    }
     const info = await nodemailer.createTransport({ jsonTransport: true }).sendMail({
       from: "website@workdane.local",
       to,
-      ...mail,
+      ...rest,
     });
-    console.log("[contact dry run]", info.message);
+    console.log("[contact dry run]", info.message, attachments?.length ? `| ${attachments.length} attachments: ${attachments.map((a) => `${a.filename} (${a.content.length} bytes)`).join(", ")}` : "");
     return;
   }
 
