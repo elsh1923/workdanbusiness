@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Calculator, ChevronDown, Menu, X } from "lucide-react";
 import { COMPANY, LOGO } from "@/lib/config";
 import { navGroups } from "@/lib/content";
@@ -12,6 +12,7 @@ export default function Header() {
   const [open, setOpen] = useState<string | null>(null);
   const [menu, setMenu] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -20,14 +21,22 @@ export default function Header() {
         setMenu(false);
       }
     };
+    // The desktop menus open on click only, so a click anywhere outside the header closes them.
+    const onDown = (e: MouseEvent) => {
+      if (!headerRef.current?.contains(e.target as Node)) setOpen(null);
+    };
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    document.addEventListener("mousedown", onDown);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("mousedown", onDown);
+    };
   }, []);
 
   const active = navGroups.find((g) => g.label === open);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-white/95 backdrop-blur-md" onMouseLeave={() => setOpen(null)}>
+    <header ref={headerRef} className="fixed inset-x-0 top-0 z-50 border-b border-line bg-white/95 backdrop-blur-md">
       <div className="mx-auto flex h-[68px] max-w-[1320px] items-center gap-5 px-6 sm:px-12 lg:px-16">
         <Link href="/home" aria-label={`${COMPANY.name} home`} className="shrink-0">
           <Image src={LOGO.src} alt={COMPANY.name} width={LOGO.width} height={LOGO.height} priority className="h-[54px] w-auto" />
@@ -41,8 +50,6 @@ export default function Header() {
             <button
               key={g.label}
               type="button"
-              onMouseEnter={() => setOpen(g.label)}
-              onFocus={() => setOpen(g.label)}
               onClick={() => setOpen(open === g.label ? null : g.label)}
               aria-expanded={open === g.label}
               className={`relative flex items-center gap-1 px-2.5 py-2 text-[15px] font-semibold transition hover:text-navy ${
