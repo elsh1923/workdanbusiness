@@ -17,9 +17,9 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  // The site opens on the business activities page, without a redirect; the home page lives at /home.
+  // The site opens on the cost calculator page, without a redirect; the home page lives at /home.
   async rewrites() {
-    return { beforeFiles: [{ source: "/", destination: "/business-activities" }], afterFiles: [], fallback: [] };
+    return { beforeFiles: [{ source: "/", destination: "/cost-calculator" }], afterFiles: [], fallback: [] };
   },
   async redirects() {
     return [

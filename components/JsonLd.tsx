@@ -4,12 +4,14 @@ const siteUrl = process.env.SITE_URL ?? "http://localhost:3000";
 
 // Tells Google who the business is, where it works and how to contact it (schema.org markup).
 export default function JsonLd() {
-  const data = {
+  const business = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
     name: COMPANY.name,
     legalName: CONTACT.legalName,
     url: siteUrl,
+    logo: `${siteUrl}/icon.png`,
+    image: `${siteUrl}/icon.png`,
     telephone: CONTACT.phone,
     email: CONTACT.email,
     description:
@@ -22,5 +24,7 @@ export default function JsonLd() {
       address: { "@type": "PostalAddress", streetAddress: o.lines.slice(0, -1).join(", "), addressCountry: "AE" },
     })),
   };
+  const website = { "@context": "https://schema.org", "@type": "WebSite", name: COMPANY.name, alternateName: "Workdane", url: siteUrl };
+  const data = [business, website];
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }} />;
 }
