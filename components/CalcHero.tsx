@@ -6,6 +6,12 @@ import Skyline from "./Skyline";
 
 const minLicence = Math.min(...Object.values(calc.licence));
 
+const steps = [
+  { n: "1", title: "Share your details", text: "Your name, email and phone number." },
+  { n: "2", title: "Choose your activities", text: `Pick from ${ACTIVITY_COUNT.toLocaleString("en-US")} business activities.` },
+  { n: "3", title: "See your estimate", text: "Add visas and extras, then get your full quote." },
+];
+
 export default function CalcHero() {
   return (
     <section className="hero-bg grain relative isolate overflow-clip px-6 pb-28 pt-32 text-white sm:px-12 sm:pt-40 lg:px-16">
@@ -22,33 +28,34 @@ export default function CalcHero() {
             <span className="font-semibold text-white">Cost calculator</span>
           </nav>
           <h1 className="rise max-w-3xl font-display text-[34px] font-bold leading-[1.2] sm:text-[48px]">
-            Calculate your business setup cost <em className="gold-text italic">in real time.</em>
+            How much does it cost to start a company in the UAE? <em className="gold-text italic">Find out in 3 steps.</em>
           </h1>
           <p className="rise mt-6 max-w-xl text-[18px] leading-relaxed text-white/90" style={{ animationDelay: "0.15s" }}>
-            Select your business activities, then add the number of visas you need along with any value-added services.
+            Free and with no obligation. Choose your business activities, add the visas you need, and see your estimated setup cost straight away.
           </p>
-          <dl className="rise mt-10 flex flex-wrap gap-x-10 gap-y-6" style={{ animationDelay: "0.25s" }}>
-            <div>
-              <dt className="sr-only">Activities</dt>
-              <dd className="font-display text-[30px] font-bold leading-none">{ACTIVITY_COUNT.toLocaleString("en-US")}</dd>
-              <p className="mt-1 text-[14px] text-white/80">Activities</p>
-            </div>
-            <div className="border-l border-white/20 pl-10">
-              <dd className="font-display text-[30px] font-bold leading-none">1 to 10</dd>
-              <p className="mt-1 text-[14px] text-white/80">Year licences</p>
-            </div>
-            <div className="border-l border-white/20 pl-10">
-              <dd className="font-display text-[30px] font-bold leading-none">6</dd>
-              <p className="mt-1 text-[14px] text-white/80">Licence categories</p>
-            </div>
-          </dl>
+
+          <ol className="rise mt-9 grid max-w-2xl gap-5 sm:grid-cols-3" style={{ animationDelay: "0.25s" }}>
+            {steps.map((s) => (
+              <li key={s.n} className="flex items-start gap-3 sm:block">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold text-[15px] font-extrabold text-midnight">{s.n}</span>
+                <span className="block sm:mt-3">
+                  <span className="block text-[16px] font-bold">{s.title}</span>
+                  <span className="mt-1 block text-[14px] leading-snug text-white/80">{s.text}</span>
+                </span>
+              </li>
+            ))}
+          </ol>
+
           <a
             href="#calculator"
             className="gold-gradient btn-shine rise mt-10 inline-flex items-center gap-2 rounded-full px-8 py-4 text-[15px] font-bold text-midnight"
             style={{ animationDelay: "0.3s" }}
           >
-            Calculate my costs <ArrowDown className="h-4 w-4" />
+            Start my free estimate <ArrowDown className="h-4 w-4" />
           </a>
+          <p className="rise mt-3 text-[14px] text-white/80" style={{ animationDelay: "0.35s" }}>
+            Takes about 2 minutes. Licences from AED {minLicence.toLocaleString("en-US")}.
+          </p>
         </div>
 
         <div className="rise rounded-3xl bg-white p-7 text-heading shadow-2xl max-lg:hidden" style={{ animationDelay: "0.2s" }} aria-hidden>
